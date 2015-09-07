@@ -3,4 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="main_menu_title">Assembly Fun</string>
+    <string name="main_menu_solve_tasks">Solve tasks</string>
+    <string name="main_menu_make_tasks">Make tasks</string>
 </resources>
