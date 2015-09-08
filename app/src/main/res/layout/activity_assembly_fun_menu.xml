@@ -30,12 +30,13 @@
         android:layout_centerHorizontal="true" />
 
     <ImageView
-        android:layout_width="500sp"
-        android:layout_height="500sp"
+        android:layout_width="350sp"
+        android:layout_height="350sp"
         android:id="@+id/imageView"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:src="@mipmap/ic_launcher"
-        android:contentDescription="Background image" />
+        android:src="@mipmap/ic_assemblyfun_576"
+        android:contentDescription="Background image"
+        android:layout_below="@+id/main_menu_make_tasks"
+        android:layout_alignRight="@+id/main_menu_make_tasks"
+        android:layout_alignEnd="@+id/main_menu_make_tasks" />
 
 </RelativeLayout>
