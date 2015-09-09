@@ -1,16 +1,27 @@
 package me.havard.assemblyfun;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class AssemblyFunMenu extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assembly_fun_menu);
+    }
+
+    public void solveTasksButton(View v) {
+        Intent intent = new Intent(this, TaskBrowser.class);
+        startActivity(intent);
+    }
+
+    public void makeTasksButton(View v) {
+
     }
 
     @Override

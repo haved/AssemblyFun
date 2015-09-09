@@ -19,7 +19,9 @@
         android:text="@string/main_menu_solve_tasks_button"
         android:id="@+id/main_menu_solve_tasks"
         android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:nestedScrollingEnabled="true"
+        android:onClick="solveTasksButton" />
 
     <Button
         android:layout_width="fill_parent"
@@ -27,16 +29,18 @@
         android:text="@string/main_menu_make_tasks_button"
         android:id="@+id/main_menu_make_tasks"
         android:layout_below="@+id/main_menu_solve_tasks"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="makeTasksButton" />
 
     <ImageView
-        android:layout_width="300sp"
-        android:layout_height="300sp"
+        android:layout_width="500sp"
+        android:layout_height="wrap_content"
         android:id="@+id/menuLogo"
         android:src="@mipmap/ic_assemblyfun_576"
         android:contentDescription="@string/main_menu_logo_desc"
         android:layout_above="@+id/loggedInDisplay"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/main_menu_make_tasks" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
