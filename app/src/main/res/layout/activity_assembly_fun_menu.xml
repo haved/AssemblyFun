@@ -16,7 +16,7 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/main_menu_solve_tasks"
+        android:text="@string/main_menu_solve_tasks_button"
         android:id="@+id/main_menu_solve_tasks"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true" />
@@ -24,19 +24,41 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/main_menu_make_tasks"
+        android:text="@string/main_menu_make_tasks_button"
         android:id="@+id/main_menu_make_tasks"
         android:layout_below="@+id/main_menu_solve_tasks"
         android:layout_centerHorizontal="true" />
 
     <ImageView
-        android:layout_width="350sp"
-        android:layout_height="350sp"
-        android:id="@+id/imageView"
+        android:layout_width="300sp"
+        android:layout_height="300sp"
+        android:id="@+id/menuLogo"
         android:src="@mipmap/ic_assemblyfun_576"
-        android:contentDescription="Background image"
-        android:layout_below="@+id/main_menu_make_tasks"
-        android:layout_alignRight="@+id/main_menu_make_tasks"
-        android:layout_alignEnd="@+id/main_menu_make_tasks" />
+        android:contentDescription="@string/main_menu_logo_desc"
+        android:layout_above="@+id/loggedInDisplay"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/main_menu_settings_button"
+        android:id="@+id/settingsButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignLeft="@+id/loggedInDisplay"
+        android:layout_alignRight="@+id/loggedInDisplay" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/not_logged_in_label"
+        android:id="@+id/loggedInDisplay"
+        android:layout_above="@+id/settingsButton"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
