@@ -36,7 +36,7 @@
         android:layout_width="500sp"
         android:layout_height="wrap_content"
         android:id="@+id/menuLogo"
-        android:src="@mipmap/ic_assemblyfun_576"
+        android:src="@drawable/logo_assemblyfun_576"
         android:contentDescription="@string/main_menu_logo_desc"
         android:layout_above="@+id/loggedInDisplay"
         android:layout_centerHorizontal="true"

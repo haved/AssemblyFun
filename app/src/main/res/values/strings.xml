@@ -10,10 +10,10 @@
     <string name="main_menu_logo_desc">Background image</string>
     <string name="not_logged_in_label">Not logged in</string>
     <string name="title_activity_task_browser">Solve Tasks</string>
+    <string name="title_activity_solve_options">Solve Options</string>
 
-    <string name="title_solve_online">Online Tasks</string>
-    <string name="title_solve_local">Local Tasks</string>
-    <string name="title_solve_solved">Solved by me</string>
-    <string name="title_solve_published">Published by me</string>
-    <string name="tab_published_by_me">Published by me</string>
+    <string name="solve_option_online">Online Tasks</string>
+    <string name="solve_option_local">Local Tasks</string>
+    <string name="solve_option_solved">Solved Tasks</string>
+    <string name="solve_option_published">Published Tasks</string>
 </resources>

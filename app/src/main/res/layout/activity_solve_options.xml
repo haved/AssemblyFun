@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="me.havard.assemblyfun.SolveOptions">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="70sp"
+                android:text="@string/solve_option_online"
+                android:id="@+id/button"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:onClick="onSolveOnlinePressed" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="70sp"
+                android:text="@string/solve_option_local"
+                android:id="@+id/button2"
+                android:onClick="onSolveLocalPressed" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="70sp"
+                android:text="@string/solve_option_solved"
+                android:id="@+id/button3"
+                android:onClick="onSolveSolvedPressed" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="70sp"
+                android:text="@string/solve_option_published"
+                android:id="@+id/button4"
+                android:onClick="onSolvePublishedPressed" />
+
+        </TableLayout>
+    </ScrollView>
+
+    <ImageView
+        android:layout_width="500sp"
+        android:layout_height="wrap_content"
+        android:id="@+id/solve_options_image"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/logo_assemblyfun_576"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/scrollView" />
+
+</RelativeLayout>

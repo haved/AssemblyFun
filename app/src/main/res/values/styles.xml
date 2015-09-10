@@ -4,11 +4,14 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
     </style>
-    <style name="TaskBrowserTheme" parent="Theme.AppCompat.Light">
+    <style name="AppThemeWithBar" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+    </style>
+   <!--<style name="TaskBrowserTheme" parent="Theme.AppCompat.Light">
         <item name="android:actionBarStyle">@style/BlueActionBar</item>
     </style>
     <style name="BlueActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">#16AFF5</item>
-    </style>
+    </style>-->
 
 </resources>
