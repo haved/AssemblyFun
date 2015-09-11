@@ -16,7 +16,7 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/main_menu_solve_tasks_button"
+        android:text="@string/main_menu_button_solve_tasks"
         android:id="@+id/main_menu_solve_tasks"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
@@ -26,7 +26,7 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/main_menu_make_tasks_button"
+        android:text="@string/main_menu_button_make_tasks"
         android:id="@+id/main_menu_make_tasks"
         android:layout_below="@+id/main_menu_solve_tasks"
         android:layout_centerHorizontal="true"
@@ -46,7 +46,7 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/main_menu_settings_button"
+        android:text="@string/main_menu_button_settings"
         android:id="@+id/settingsButton"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
@@ -60,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/not_logged_in_label"
+        android:text="@string/main_menu_label_not_logged_in"
         android:id="@+id/loggedInDisplay"
         android:layout_above="@+id/settingsButton"
         android:layout_centerHorizontal="true" />

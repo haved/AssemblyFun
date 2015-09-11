@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context="me.havard.assemblyfun.TaskList">
+    <item android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/action_search"
+        app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_sortby_rating" android:title="@string/action_sortby_rating"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_sortby_difficulty" android:title="@string/action_sortby_difficulty"
+        android:orderInCategory="200" app:showAsAction="never" />
+    <item android:id="@+id/action_newest_first" android:title="@string/acton_newest_first"
+        android:orderInCategory="300" app:showAsAction="never" />
+    <item android:id="@+id/action_unsolved_first" android:title="@string/acton_unsolved_first"
+        android:orderInCategory="400" app:showAsAction="never" />
+</menu>

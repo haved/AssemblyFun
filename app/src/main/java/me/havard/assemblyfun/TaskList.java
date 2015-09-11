@@ -1,32 +1,36 @@
 package me.havard.assemblyfun;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-public class AssemblyFunMenu extends AppCompatActivity {
+public class TaskList extends AppCompatActivity {
+
+    public static final String HIDE_UNSOLEVED_FIRST_OPTION_ID = "hide_action_unsolved_first";
+    public static final String RES_ACTIVITY_TITLE = "activity_title_res";
+
+    private boolean mHideUnsolvedFirst;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_assembly_fun_menu);
-    }
+        Bundle extras = getIntent().getExtras();
+        if(extras != null)
+            mHideUnsolvedFirst = extras.getBoolean(HIDE_UNSOLEVED_FIRST_OPTION_ID);
 
-    public void solveTasksButton(View v) {
-        Intent intent = new Intent(this, SolveOptions.class);
-        startActivity(intent);
-    }
+        setContentView(R.layout.activity_task_list);
 
-    public void makeTasksButton(View v) {
-
+        if(extras != null & getActionBar()!=null)
+            getActionBar().setTitle(extras.getInt(RES_ACTIVITY_TITLE, R.string.title_unset));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_assembly_fun_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_task_list, menu);
+        if(mHideUnsolvedFirst)
+            menu.removeItem(R.id.action_unsolved_first);
         return true;
     }
 

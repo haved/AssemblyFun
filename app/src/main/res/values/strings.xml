@@ -1,19 +1,27 @@
 <resources>
-    <string name="app_name">AssemblyFun</string>
+    <string name="app_name">Assembly Fun</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
     <string name="main_menu_title">Assembly Fun</string>
-    <string name="main_menu_solve_tasks_button">Solve tasks</string>
-    <string name="main_menu_make_tasks_button">Make tasks</string>
-    <string name="main_menu_settings_button">Settings</string>
+    <string name="main_menu_button_solve_tasks">Solve tasks</string>
+    <string name="main_menu_button_make_tasks">Make tasks</string>
+    <string name="main_menu_button_settings">Settings</string>
     <string name="main_menu_logo_desc">Background image</string>
-    <string name="not_logged_in_label">Not logged in</string>
+    <string name="main_menu_label_not_logged_in">Not logged in</string>
+
     <string name="title_activity_task_browser">Solve Tasks</string>
     <string name="title_activity_solve_options">Solve Options</string>
+    <string name="title_unset">Unset title</string>
+    <string name="title_activity_task_list">Task List</string>
 
     <string name="solve_option_online">Online Tasks</string>
     <string name="solve_option_local">Local Tasks</string>
     <string name="solve_option_solved">Solved Tasks</string>
     <string name="solve_option_published">Published Tasks</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
+    <string name="action_sortby_rating">Sort by rating</string>
+    <string name="action_sortby_difficulty">Sort by difficulty</string>
+    <string name="acton_newest_first">Newest first</string>
+    <string name="acton_unsolved_first">Unsolved first</string>
 </resources>
