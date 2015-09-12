@@ -22,7 +22,7 @@ public class AssemblyFunApplication extends Application {
         return db.getReadableDatabase();
     }
 
-    public SQLiteDatabase getWriteableDatabase()
+    public SQLiteDatabase getWritableDatabase()
     {
         return db.getWritableDatabase();
     }

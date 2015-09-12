@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import me.havard.assemblyfun.me.havard.assemblyfun.data.TaskDatabaseOpenHelper;
+
 public class SolveOptions extends AppCompatActivity {
 
     @Override
@@ -24,6 +26,7 @@ public class SolveOptions extends AppCompatActivity {
     {
         Intent localTaskListActivity = new Intent(this, TaskList.class);
         localTaskListActivity.putExtra(TaskList.RES_ACTIVITY_TITLE, R.string.solve_option_local);
+        localTaskListActivity.putExtra(TaskList.TASK_ID_TABLE_NAME, TaskDatabaseOpenHelper.LOCAL_TASK_TABLE);
         startActivity(localTaskListActivity);
     }
 
@@ -31,7 +34,8 @@ public class SolveOptions extends AppCompatActivity {
     {
         Intent solvedTaskListActivity = new Intent(this, TaskList.class);
         solvedTaskListActivity.putExtra(TaskList.RES_ACTIVITY_TITLE, R.string.solve_option_solved);
-        solvedTaskListActivity.putExtra(TaskList.HIDE_UNSOLEVED_FIRST_OPTION_ID, true);
+        solvedTaskListActivity.putExtra(TaskList.TASK_ID_TABLE_NAME, TaskDatabaseOpenHelper.SOLVED_TASK_TABLE);
+        solvedTaskListActivity.putExtra(TaskList.HIDE_UNSOLVED_FIRST_OPTION_ID, true);
         startActivity(solvedTaskListActivity);
     }
 

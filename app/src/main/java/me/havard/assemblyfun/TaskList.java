@@ -7,8 +7,9 @@ import android.view.MenuItem;
 
 public class TaskList extends AppCompatActivity {
 
-    public static final String HIDE_UNSOLEVED_FIRST_OPTION_ID = "hide_action_unsolved_first";
+    public static final String HIDE_UNSOLVED_FIRST_OPTION_ID = "hide_action_unsolved_first";
     public static final String RES_ACTIVITY_TITLE = "activity_title_res";
+    public static final String TASK_ID_TABLE_NAME = "task_id_table_name";
 
     private boolean mHideUnsolvedFirst;
 
@@ -17,7 +18,7 @@ public class TaskList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
         if(extras != null)
-            mHideUnsolvedFirst = extras.getBoolean(HIDE_UNSOLEVED_FIRST_OPTION_ID);
+            mHideUnsolvedFirst = extras.getBoolean(HIDE_UNSOLVED_FIRST_OPTION_ID);
 
         setContentView(R.layout.activity_task_list);
 
