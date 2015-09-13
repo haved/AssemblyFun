@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import me.havard.assemblyfun.me.havard.assemblyfun.data.TaskDatabaseOpenHelper;
+import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskinfoTable;
 
 public class TaskList extends AppCompatActivity {
 
@@ -18,13 +19,13 @@ public class TaskList extends AppCompatActivity {
     public static final String RES_ACTIVITY_TITLE = "activity_title_res";
     public static final String REF_TASKINFO_TABLE_ID_TABLE_NAME = "task_id_table_name";
 
-    private static final String[] FROM_COLUMNS = new String[] {TaskDatabaseOpenHelper.TASKINFO_TABLE_TASK_NAME, TaskDatabaseOpenHelper.TASKINFO_TABLE_TASK_DESC};
+    private static final String[] FROM_COLUMNS = new String[] {TaskinfoTable.NAME, TaskinfoTable.DESC};
     private static final int[] TO_TEXT_VIEWS = new int[]{R.id.task_list_item_title, R.id.task_list_item_desc};
 
-    private static final String QUERY_START = "SELECT " + TaskDatabaseOpenHelper.TASKINFO_TABLE_TASK_NAME + ", " + TaskDatabaseOpenHelper.TASKINFO_TABLE_TASK_DESC + ", " + TaskDatabaseOpenHelper.TASKINFO_TABLE_ID + " AS _id" +
-            " FROM " + TaskDatabaseOpenHelper.TASKINFO_TABLE + ", ";
-    private static final String QUERY_MID = " WHERE " +TaskDatabaseOpenHelper.TASKINFO_TABLE +"."+TaskDatabaseOpenHelper.TASKINFO_TABLE_ID + " = ";
-    private static final String QUERY_END = "." + TaskDatabaseOpenHelper.REF_TASKINFO_TABLE_ID;
+    private static final String QUERY_START = "SELECT " + TaskinfoTable.NAME + ", "  + TaskinfoTable.DESC + ", " + TaskinfoTable._ID + " AS _id" +
+            " FROM " + TaskinfoTable.TABLE_NAME + ", ";
+    private static final String QUERY_MID = " WHERE " +TaskinfoTable.TABLE_NAME+"."+TaskinfoTable._ID + " = ";
+    private static final String QUERY_END = "." + TaskinfoTable.REF_ID;
 
     private boolean mHideUnsolvedFirst;
 

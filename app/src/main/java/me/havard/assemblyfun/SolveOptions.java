@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import me.havard.assemblyfun.me.havard.assemblyfun.data.TaskDatabaseOpenHelper;
+import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.LocalTaskTable;
+import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.SolvedTasksTable;
 
 public class SolveOptions extends AppCompatActivity {
 
@@ -26,7 +28,7 @@ public class SolveOptions extends AppCompatActivity {
     {
         Intent localTaskListActivity = new Intent(this, TaskList.class);
         localTaskListActivity.putExtra(TaskList.RES_ACTIVITY_TITLE, R.string.solve_option_local);
-        localTaskListActivity.putExtra(TaskList.REF_TASKINFO_TABLE_ID_TABLE_NAME, TaskDatabaseOpenHelper.LOCAL_TASK_TABLE);
+        localTaskListActivity.putExtra(TaskList.REF_TASKINFO_TABLE_ID_TABLE_NAME, LocalTaskTable.TABLE_NAME);
         startActivity(localTaskListActivity);
     }
 
@@ -34,7 +36,7 @@ public class SolveOptions extends AppCompatActivity {
     {
         Intent solvedTaskListActivity = new Intent(this, TaskList.class);
         solvedTaskListActivity.putExtra(TaskList.RES_ACTIVITY_TITLE, R.string.solve_option_solved);
-        solvedTaskListActivity.putExtra(TaskList.REF_TASKINFO_TABLE_ID_TABLE_NAME, TaskDatabaseOpenHelper.SOLVED_TASK_TABLE);
+        solvedTaskListActivity.putExtra(TaskList.REF_TASKINFO_TABLE_ID_TABLE_NAME, SolvedTasksTable.TABLE_NAME);
         solvedTaskListActivity.putExtra(TaskList.HIDE_UNSOLVED_FIRST_OPTION_ID, true);
         startActivity(solvedTaskListActivity);
     }

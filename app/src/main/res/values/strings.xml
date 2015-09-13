@@ -25,11 +25,12 @@
     <string name="acton_newest_first">Newest first</string>
     <string name="acton_unsolved_first">Unsolved first</string>
 
+    <string name="label_difficulty_tutorial">Tutorial</string>
     <string name="label_difficulty_very_easy">Very easy</string>
     <string name="label_difficulty_easy">Easy</string>
     <string name="label_difficulty_medium">Medium</string>
     <string name="label_difficulty_tough">Tough</string>
-    <string name="label_difficulty_challenge">Challenge</string>
+    <string name="label_difficulty_tougher">Tougher</string>
     <string name="label_difficulty_difficult">Difficult</string>
     <string name="label_difficulty_hard">Hard</string>
     <string name="label_difficulty_very_hard">Very hard</string>
