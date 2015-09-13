@@ -26,7 +26,7 @@ public class SolveOptions extends AppCompatActivity {
     {
         Intent localTaskListActivity = new Intent(this, TaskList.class);
         localTaskListActivity.putExtra(TaskList.RES_ACTIVITY_TITLE, R.string.solve_option_local);
-        localTaskListActivity.putExtra(TaskList.TASK_ID_TABLE_NAME, TaskDatabaseOpenHelper.LOCAL_TASK_TABLE);
+        localTaskListActivity.putExtra(TaskList.REF_TASKINFO_TABLE_ID_TABLE_NAME, TaskDatabaseOpenHelper.LOCAL_TASK_TABLE);
         startActivity(localTaskListActivity);
     }
 
@@ -34,7 +34,7 @@ public class SolveOptions extends AppCompatActivity {
     {
         Intent solvedTaskListActivity = new Intent(this, TaskList.class);
         solvedTaskListActivity.putExtra(TaskList.RES_ACTIVITY_TITLE, R.string.solve_option_solved);
-        solvedTaskListActivity.putExtra(TaskList.TASK_ID_TABLE_NAME, TaskDatabaseOpenHelper.SOLVED_TASK_TABLE);
+        solvedTaskListActivity.putExtra(TaskList.REF_TASKINFO_TABLE_ID_TABLE_NAME, TaskDatabaseOpenHelper.SOLVED_TASK_TABLE);
         solvedTaskListActivity.putExtra(TaskList.HIDE_UNSOLVED_FIRST_OPTION_ID, true);
         startActivity(solvedTaskListActivity);
     }
