@@ -11,14 +11,14 @@
         android:layout_centerHorizontal="true"
         android:textColor="@color/main_menu_title_color"
         android:textSize="50sp"
-        android:id="@+id/textView" />
+        android:id="@+id/task_list_item_title" />
 
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/main_menu_button_solve_tasks"
         android:id="@+id/main_menu_solve_tasks"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/task_list_item_title"
         android:layout_centerHorizontal="true"
         android:nestedScrollingEnabled="true"
         android:onClick="solveTasksButton" />

@@ -9,7 +9,7 @@
     <string name="main_menu_label_not_logged_in">Not logged in</string>
 
     <string name="title_activity_task_browser">Solve Tasks</string>
-    <string name="title_activity_solve_options">Solve Options</string>
+    <string name="title_activity_solve_options">Solve Tasks</string>
     <string name="title_unset">Unset title</string>
     <string name="title_activity_task_list">Task List</string>
 
@@ -24,4 +24,14 @@
     <string name="action_sortby_difficulty">Sort by difficulty</string>
     <string name="acton_newest_first">Newest first</string>
     <string name="acton_unsolved_first">Unsolved first</string>
+
+    <string name="label_difficulty_very_easy">Very easy</string>
+    <string name="label_difficulty_easy">Easy</string>
+    <string name="label_difficulty_medium">Medium</string>
+    <string name="label_difficulty_tough">Tough</string>
+    <string name="label_difficulty_challenge">Challenge</string>
+    <string name="label_difficulty_difficult">Difficult</string>
+    <string name="label_difficulty_hard">Hard</string>
+    <string name="label_difficulty_very_hard">Very hard</string>
+    <string name="label_difficulty_insane">Insane</string>
 </resources>

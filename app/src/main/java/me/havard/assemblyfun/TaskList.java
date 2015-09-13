@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class TaskList extends AppCompatActivity {
 
@@ -22,8 +24,12 @@ public class TaskList extends AppCompatActivity {
 
         setContentView(R.layout.activity_task_list);
 
-        if(extras != null & getActionBar()!=null)
-            getActionBar().setTitle(extras.getInt(RES_ACTIVITY_TITLE, R.string.title_unset));
+        ArrayAdapter<String> listItems = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new String[]{extras.getString(TASK_ID_TABLE_NAME), "Pelle", "Parafin", "Bolgeband"});
+        ListView list = (ListView)findViewById(R.id.task_list_view);
+        list.setAdapter(listItems);
+
+        if(extras != null)
+            setTitle(extras.getInt(RES_ACTIVITY_TITLE, R.string.title_unset));
     }
 
     @Override

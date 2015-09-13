@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="main_menu_title_color">#FFFFAE31</color>
+    <color name="label_difficulty_color_very_easy">#FF6DFFAA</color>
+    <color name="label_difficulty_color_very_hard">#FFFF0059</color>
 </resources>
