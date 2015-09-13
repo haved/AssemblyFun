@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-import me.havard.assemblyfun.me.havard.assemblyfun.data.TaskDatabaseOpenHelper;
 import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskinfoTable;
 
 public class TaskList extends AppCompatActivity {
@@ -19,10 +18,10 @@ public class TaskList extends AppCompatActivity {
     public static final String RES_ACTIVITY_TITLE = "activity_title_res";
     public static final String REF_TASKINFO_TABLE_ID_TABLE_NAME = "task_id_table_name";
 
-    private static final String[] FROM_COLUMNS = new String[] {TaskinfoTable.NAME, TaskinfoTable.DESC};
-    private static final int[] TO_TEXT_VIEWS = new int[]{R.id.task_list_item_title, R.id.task_list_item_desc};
+    private static final String[] FROM_COLUMNS = new String[] {TaskinfoTable.NAME, TaskinfoTable.DESC, TaskinfoTable.DIFFICULTY, TaskinfoTable.AUTHOR};
+    private static final int[] TO_TEXT_VIEWS = new int[]{R.id.task_list_item_title, R.id.task_list_item_desc, R.id.task_list_item_difficulty, R.id.task_list_item_author};
 
-    private static final String QUERY_START = "SELECT " + TaskinfoTable.NAME + ", "  + TaskinfoTable.DESC + ", " + TaskinfoTable._ID + " AS _id" +
+    private static final String QUERY_START = "SELECT " + TaskinfoTable.NAME + ", "  + TaskinfoTable.DESC + ", " + TaskinfoTable.DIFFICULTY + ", " + TaskinfoTable.AUTHOR + ", " + TaskinfoTable._ID + " AS _id" +
             " FROM " + TaskinfoTable.TABLE_NAME + ", ";
     private static final String QUERY_MID = " WHERE " +TaskinfoTable.TABLE_NAME+"."+TaskinfoTable._ID + " = ";
     private static final String QUERY_END = "." + TaskinfoTable.REF_ID;
