@@ -21,7 +21,7 @@ public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
     public static final String ROW_ID = "INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL";
 
     public static final String TASKINFO_TABLE = "localTaskInfo";
-    public static final String TASKINFO_TABLE_ID = "_id";
+    public static final String TASKINFO_TABLE_ID = "localID";
     public static final String TASKINFO_TABLE_TASK_NAME = "name";
     public static final String TASKINFO_TABLE_TASK_DESC = "desc";
     public static final String TASKINFO_TABLE_TASK_DATE = "date";

@@ -21,7 +21,7 @@ public class TaskList extends AppCompatActivity {
     private static final String[] FROM_COLUMNS = new String[] {TaskDatabaseOpenHelper.TASKINFO_TABLE_TASK_NAME, TaskDatabaseOpenHelper.TASKINFO_TABLE_TASK_DESC};
     private static final int[] TO_TEXT_VIEWS = new int[]{R.id.task_list_item_title, R.id.task_list_item_desc};
 
-    private static final String QUERY_START = "SELECT " + TaskDatabaseOpenHelper.TASKINFO_TABLE_TASK_NAME + ", " + TaskDatabaseOpenHelper.TASKINFO_TABLE_TASK_DESC + ", " + TaskDatabaseOpenHelper.TASKINFO_TABLE_ID +
+    private static final String QUERY_START = "SELECT " + TaskDatabaseOpenHelper.TASKINFO_TABLE_TASK_NAME + ", " + TaskDatabaseOpenHelper.TASKINFO_TABLE_TASK_DESC + ", " + TaskDatabaseOpenHelper.TASKINFO_TABLE_ID + " AS _id" +
             " FROM " + TaskDatabaseOpenHelper.TASKINFO_TABLE + ", ";
     private static final String QUERY_MID = " WHERE " +TaskDatabaseOpenHelper.TASKINFO_TABLE +"."+TaskDatabaseOpenHelper.TASKINFO_TABLE_ID + " = ";
     private static final String QUERY_END = "." + TaskDatabaseOpenHelper.REF_TASKINFO_TABLE_ID;
