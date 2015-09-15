@@ -5,12 +5,12 @@
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/action_search"
         app:showAsAction="ifRoom" />
-    <item android:id="@+id/action_sortby_rating" android:title="@string/action_sortby_rating"
+    <item android:id="@+id/action_sort_by_rating" android:title="@string/action_sort_by_rating"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_sortby_difficulty" android:title="@string/action_sortby_difficulty"
+    <item android:id="@+id/action_sort_by_difficulty" android:title="@string/action_sort_by_difficulty"
         android:orderInCategory="200" app:showAsAction="never" />
-    <item android:id="@+id/action_newest_first" android:title="@string/acton_newest_first"
+    <item android:id="@+id/action_newest_first" android:title="@string/action_unsolved_first"
         android:orderInCategory="300" app:showAsAction="never" />
-    <item android:id="@+id/action_unsolved_first" android:title="@string/acton_unsolved_first"
+    <item android:id="@+id/action_unsolved_first" android:title="@string/action_newest_first"
         android:orderInCategory="400" app:showAsAction="never" />
 </menu>

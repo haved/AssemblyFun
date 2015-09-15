@@ -19,11 +19,12 @@
     <string name="solve_option_published">Published Tasks</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_help">Help</string>
     <string name="action_search">Search</string>
-    <string name="action_sortby_rating">Sort by rating</string>
-    <string name="action_sortby_difficulty">Sort by difficulty</string>
-    <string name="acton_newest_first">Newest first</string>
-    <string name="acton_unsolved_first">Unsolved first</string>
+    <string name="action_sort_by_rating">Sort by rating</string>
+    <string name="action_sort_by_difficulty">Sort by difficulty</string>
+    <string name="action_unsolved_first">Unsolved first</string>
+    <string name="action_newest_first">Newest first</string>
 
     <string name="label_difficulty_tutorial">Tutorial</string>
     <string name="label_difficulty_very_easy">Very easy</string>
@@ -35,4 +36,15 @@
     <string name="label_difficulty_hard">Hard</string>
     <string name="label_difficulty_very_hard">Very hard</string>
     <string name="label_difficulty_insane">Insane</string>
+
+    <string name="dialog_button_OK">OK</string>
+    <string name="dialog_button_Cancel">Cancel</string>
+    <string name="dialog_title_search_task_list">Enter search query:</string>
+
+    <string name="help_solve_options_title">Help for solving options</string>
+    <string name="help_solve_options_body">Choose what set of tasks to browse.\n
+    Online Tasks is under construction.\n
+    Local Tasks is where you should start. There you\'ll find all tasks saved locally. Some tutorial tasks are saved there\n
+    Solved Tasks is a list of tasks you\'ve solved. Even tasks you don\'t have downloaded will be shown here.\n
+    Published Tasks is a place were you can see all tasks you\'ve made yourself and published.</string>
 </resources>

@@ -1,11 +1,15 @@
 package me.havard.assemblyfun;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import me.havard.assemblyfun.me.havard.assemblyfun.data.TaskDatabaseOpenHelper;
 import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.LocalTaskTable;
@@ -61,7 +65,15 @@ public class SolveOptions extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_help) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setTitle(R.string.help_solve_options_title);
+            TextView body = new TextView(this);
+            body.setText(R.string.help_solve_options_body);
+            dialog.setView(body);
+            dialog.create();
+            dialog.setPositiveButton(R.string.dialog_button_OK, null);
+            dialog.show();
             return true;
         }
 

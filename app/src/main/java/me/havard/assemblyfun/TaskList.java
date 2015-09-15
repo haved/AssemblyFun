@@ -26,12 +26,12 @@ public class TaskList extends AppCompatActivity {
     private static final int[] TO_TEXT_VIEWS = new int[]{R.id.task_list_item_title, R.id.task_list_item_desc, R.id.task_list_item_difficulty, R.id.task_list_item_author};
 
     private boolean mHideUnsolvedFirst;
-    private String fkDatabaseName;
-    private int title;
-    private ListView list;
-    private SimpleCursorAdapter listItems;
+    protected String fkDatabaseName;
+    protected int title;
+    protected ListView list;
+    protected SimpleCursorAdapter listItems;
 
-    private String currentSearch;
+    protected String currentSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,28 +45,26 @@ public class TaskList extends AppCompatActivity {
         }
 
         mHideUnsolvedFirst = extras.getBoolean(HIDE_UNSOLVED_FIRST_OPTION_ID);
+        fkDatabaseName = extras.getString(REF_TASKINFO_TABLE_ID_TABLE_NAME);
+        list = (ListView)findViewById(R.id.task_list_view);
         title = extras.getInt(RES_ACTIVITY_TITLE, R.string.title_unset);
 
-        fkDatabaseName = extras.getString(REF_TASKINFO_TABLE_ID_TABLE_NAME);
-
-        list = (ListView)findViewById(R.id.task_list_view);
-        makeNewListAdapter(null);
+        updateList(null);
     }
 
-    private void makeNewListAdapter(String search) {
+    private void updateList(String search) {
+        currentSearch = search;
         SQLiteDatabase db = ((AssemblyFunApplication) getApplication()).getReadableDatabase();
-        String query = getQueryText(fkDatabaseName, search == null ? null : ("(" + TaskinfoTable.NAME + " LIKE '%" + search + "%' OR " + TaskinfoTable.DESC + " LIKE '%" + search + "%')"));
+        String query = getQueryText(fkDatabaseName, currentSearch == null ? null : ("(" + TaskinfoTable.NAME + " LIKE '%" + currentSearch + "%' OR " + TaskinfoTable.DESC + " LIKE '%" + currentSearch + "%')"));
         Log.d("Assembly Fun", query);
         Cursor cursor = db.rawQuery(query, null);
         listItems = new SimpleCursorAdapter(this, R.layout.task_list_item, cursor, FROM_COLUMNS, TO_TEXT_VIEWS, 0);
         list.setAdapter(listItems);
 
-        currentSearch = search;
-
-        if(currentSearch != null)
-            setTitle("Search for: '"+currentSearch+"'");
-        else
+        if(currentSearch == null)
             setTitle(title);
+        else
+            setTitle("Searching for: '"+currentSearch+"'");
     }
 
     @Override
@@ -86,23 +84,23 @@ public class TaskList extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.action_search) {
-            if (currentSearch != null) {
-                makeNewListAdapter(null);
+            if(currentSearch!=null) {
+                updateList(null);
                 return true;
             }
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setTitle("Enter search query:");
+            dialog.setTitle(R.string.dialog_title_search_task_list);
             final EditText text = new EditText(this);
             text.setInputType(InputType.TYPE_CLASS_TEXT);
             dialog.setView(text);
 
-            dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            dialog.setPositiveButton(R.string.dialog_button_OK, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    makeNewListAdapter(text.getText().toString());
+                    updateList(text.getText().toString().split("'")[0]);
                 }
             });
-            dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            dialog.setNegativeButton(R.string.dialog_button_Cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
@@ -126,7 +124,7 @@ public class TaskList extends AppCompatActivity {
     private static final String QUERY_MID = " WHERE " +TaskinfoTable.TABLE_NAME+"."+TaskinfoTable._ID + " = ";
     private static final String QUERY_END = "." + TaskinfoTable.REF_ID;
 
-    private static String getQueryText(String databaseName, String extraWhere)
+    protected static String getQueryText(String databaseName, String extraWhere)
     {
         return QUERY_START + databaseName + QUERY_MID + databaseName + QUERY_END + (extraWhere==null ? "" : (" AND " + extraWhere));
     }
