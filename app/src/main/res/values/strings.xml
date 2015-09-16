@@ -47,4 +47,6 @@
     Local Tasks is where you should start. There you\'ll find all tasks saved locally. Some tutorial tasks are saved there\n
     Solved Tasks is a list of tasks you\'ve solved. Even tasks you don\'t have downloaded will be shown here.\n
     Published Tasks is a place were you can see all tasks you\'ve made yourself and published.</string>
+    <string name="label_task_list_no_filter">No Filter</string>
+    <string name="button_task_list_no_filter_desc">a cut icon for removing the filter</string>
 </resources>

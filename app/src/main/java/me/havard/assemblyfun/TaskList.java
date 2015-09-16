@@ -10,9 +10,12 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskinfoTable;
 
@@ -29,6 +32,8 @@ public class TaskList extends AppCompatActivity {
     protected String fkDatabaseName;
     protected int title;
     protected ListView list;
+    protected TextView search_status;
+    protected ImageButton reset_filter;
     protected SimpleCursorAdapter listItems;
 
     protected String currentSearch;
@@ -47,7 +52,10 @@ public class TaskList extends AppCompatActivity {
         mHideUnsolvedFirst = extras.getBoolean(HIDE_UNSOLVED_FIRST_OPTION_ID);
         fkDatabaseName = extras.getString(REF_TASKINFO_TABLE_ID_TABLE_NAME);
         list = (ListView)findViewById(R.id.task_list_view);
+        search_status = (TextView)findViewById(R.id.task_list_label_serach_status);
+        reset_filter = (ImageButton)findViewById(R.id.task_list_reset_filter);
         title = extras.getInt(RES_ACTIVITY_TITLE, R.string.title_unset);
+        setTitle(title);
 
         updateList(null);
     }
@@ -61,10 +69,18 @@ public class TaskList extends AppCompatActivity {
         listItems = new SimpleCursorAdapter(this, R.layout.task_list_item, cursor, FROM_COLUMNS, TO_TEXT_VIEWS, 0);
         list.setAdapter(listItems);
 
-        if(currentSearch == null)
-            setTitle(title);
-        else
-            setTitle("Searching for: '"+currentSearch+"'");
+        if(currentSearch == null) {
+            search_status.setText(R.string.label_task_list_no_filter);
+            reset_filter.setVisibility(View.GONE);
+        } else {
+            search_status.setText("Searching for: '" + currentSearch + "'");
+            reset_filter.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void onResetFilterButtonPressed(View view)
+    {
+        updateList(null);
     }
 
     @Override
@@ -84,10 +100,6 @@ public class TaskList extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.action_search) {
-            if(currentSearch!=null) {
-                updateList(null);
-                return true;
-            }
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
             dialog.setTitle(R.string.dialog_title_search_task_list);
             final EditText text = new EditText(this);

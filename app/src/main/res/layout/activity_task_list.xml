@@ -8,8 +8,44 @@
 
     <ListView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/task_list_view"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/task_list_filter_bar" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/task_list_filter_bar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:text="@string/label_task_list_no_filter"
+            android:id="@+id/task_list_label_serach_status"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignBottom="@+id/task_list_reset_filter"
+            android:gravity="center"
+            android:layout_toLeftOf="@+id/task_list_reset_filter"
+            android:layout_alignParentRight="false" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/task_list_reset_filter"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/abc_ic_menu_cut_mtrl_alpha"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@string/button_task_list_no_filter_desc"
+            android:onClick="onResetFilterButtonPressed"
+            android:visibility="visible"
+            android:clickable="true" />
+    </RelativeLayout>
+
 </RelativeLayout>
