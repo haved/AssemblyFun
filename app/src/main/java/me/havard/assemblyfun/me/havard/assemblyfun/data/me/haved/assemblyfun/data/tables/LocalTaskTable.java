@@ -8,12 +8,14 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class LocalTaskTable extends Table {
     public static final String TABLE_NAME = "localTasks";
-    public static final String TASK_FILE = "TaskFile";
+    public static final String TASK_TEXT = "TaskText";
+    public static final String TASK_TESTS = "TaskTests";
     @Override
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
                 TaskinfoTable.REF_ID, INT,
-                TASK_FILE, BLOB,
+                TASK_TEXT, TEXT,
+                TASK_TESTS, TEXT,
                 TaskinfoTable.FOREIGN_KEY_REF_ID);
     }
 
@@ -23,14 +25,44 @@ public class LocalTaskTable extends Table {
         return TABLE_NAME;
     }
 
-    public static void populateContentValues(ContentValues values, long ref_id)
+    public static void populateContentValues(ContentValues values, long ref_id, String taskText, String taskTests)
     {
         values.put(TaskinfoTable.REF_ID, ref_id);
+        values.put(TASK_TEXT, taskText);
+        values.put(TASK_TESTS, taskTests);
     }
 
-    public static void addTaskIdToDB(SQLiteDatabase db, ContentValues values, long ref_id)
+    public static void addLocalTaskToDB(SQLiteDatabase db, ContentValues values, long ref_id, String taskText, String taskTests)
     {
-        populateContentValues(values, ref_id);
+        populateContentValues(values, ref_id, taskText, taskTests);
         db.insert(TABLE_NAME, null, values);
+    }
+
+    public static String makeTaskTestString(int[][] inputs, int[][]outputs)
+    {
+        StringBuilder out = new StringBuilder();
+        if(inputs.length != outputs.length)
+        {
+            throw new RuntimeException("Trying to make a task test string from two sets of inputs and outputs of different sizes");
+        }
+
+        for(int i = 0; i < inputs.length & i < outputs.length; i++)
+        {
+            if(i!=0)
+                out.append(";");
+            for(int j = 0; j < inputs[i].length; j++) {
+                if(j != 0)
+                    out.append(",");
+                out.append(inputs[i][j]);
+            }
+            out.append("=");
+            for(int j = 0; j < outputs[i].length; j++) {
+                if(j != 0)
+                    out.append(",");
+                out.append(outputs[i][j]);
+            }
+        }
+
+        return out.toString();
     }
 }

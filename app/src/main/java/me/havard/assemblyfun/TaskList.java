@@ -69,13 +69,16 @@ public class TaskList extends AppCompatActivity {
         listItems = new SimpleCursorAdapter(this, R.layout.task_list_item, cursor, FROM_COLUMNS, TO_TEXT_VIEWS, 0);
         list.setAdapter(listItems);
 
+        String baseLabel;
         if(currentSearch == null) {
-            search_status.setText(R.string.label_task_list_no_filter);
+            baseLabel = getResources().getString(R.string.label_task_list_no_filter);
             reset_filter.setVisibility(View.GONE);
         } else {
-            search_status.setText("Searching for: '" + currentSearch + "'");
+            baseLabel = "Searching for: '" + currentSearch + "'";
             reset_filter.setVisibility(View.VISIBLE);
         }
+        int count = listItems.getCount();
+        search_status.setText(baseLabel + " - " + count + " " + getResources().getString(count == 1 ? R.string.label_task_list_item_shown : R.string.label_task_list_items_shown));
     }
 
     public void onResetFilterButtonPressed(View view)
