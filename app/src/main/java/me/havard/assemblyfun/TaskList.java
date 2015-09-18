@@ -14,9 +14,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import me.havard.assemblyfun.me.havard.assemblyfun.data.TaskCursorAdapter;
 import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskinfoTable;
 
 public class TaskList extends AppCompatActivity {
@@ -25,16 +25,13 @@ public class TaskList extends AppCompatActivity {
     public static final String RES_ACTIVITY_TITLE = "activity_title_res";
     public static final String REF_TASKINFO_TABLE_ID_TABLE_NAME = "task_id_table_name";
 
-    private static final String[] FROM_COLUMNS = new String[] {TaskinfoTable.NAME, TaskinfoTable.DESC, TaskinfoTable.DIFFICULTY, TaskinfoTable.AUTHOR};
-    private static final int[] TO_TEXT_VIEWS = new int[]{R.id.task_list_item_title, R.id.task_list_item_desc, R.id.task_list_item_difficulty, R.id.task_list_item_author};
-
     private boolean mHideUnsolvedFirst;
     protected String fkDatabaseName;
     protected int title;
     protected ListView list;
     protected TextView search_status;
     protected ImageButton reset_filter;
-    protected SimpleCursorAdapter listItems;
+    protected TaskCursorAdapter listItems;
 
     protected String currentSearch;
 
@@ -61,12 +58,14 @@ public class TaskList extends AppCompatActivity {
     }
 
     private void updateList(String search) {
+        if(search.equals(""))
+            search=null;
         currentSearch = search;
         SQLiteDatabase db = ((AssemblyFunApplication) getApplication()).getReadableDatabase();
         String query = getQueryText(fkDatabaseName, currentSearch == null ? null : ("(" + TaskinfoTable.NAME + " LIKE '%" + currentSearch + "%' OR " + TaskinfoTable.DESC + " LIKE '%" + currentSearch + "%')"));
         Log.d("Assembly Fun", query);
         Cursor cursor = db.rawQuery(query, null);
-        listItems = new SimpleCursorAdapter(this, R.layout.task_list_item, cursor, FROM_COLUMNS, TO_TEXT_VIEWS, 0);
+        listItems = new TaskCursorAdapter(this, cursor);
         list.setAdapter(listItems);
 
         String baseLabel;
@@ -107,6 +106,7 @@ public class TaskList extends AppCompatActivity {
             dialog.setTitle(R.string.dialog_title_search_task_list);
             final EditText text = new EditText(this);
             text.setInputType(InputType.TYPE_CLASS_TEXT);
+            text.setText(currentSearch);
             dialog.setView(text);
 
             dialog.setPositiveButton(R.string.dialog_button_OK, new DialogInterface.OnClickListener() {
