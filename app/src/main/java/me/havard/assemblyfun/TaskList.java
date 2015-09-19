@@ -2,6 +2,7 @@ package me.havard.assemblyfun;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -18,9 +20,10 @@ import android.widget.TextView;
 
 import me.havard.assemblyfun.me.havard.assemblyfun.data.TaskCursorAdapter;
 import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskIDTable;
+import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskScreen;
 import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskinfoTable;
 
-public class TaskList extends AppCompatActivity {
+public class TaskList extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     public static final String HIDE_UNSOLVED_FIRST_OPTION_ID = "hide_action_unsolved_first";
     public static final String RES_ACTIVITY_TITLE = "activity_title_res";
@@ -41,7 +44,10 @@ public class TaskList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_list);
 
-        Bundle extras = getIntent().getExtras();
+        Log.e("Assembly Fun", "getIntent().getExtras()!=null: " + (getIntent().getExtras() != null));
+        Log.e("Assembly Fun", "savedInstanceState!=null: " + (savedInstanceState!=null));
+
+        Bundle extras = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
         if(extras == null) {
             Log.e("Assembly Fun", "No extra bundle was supplied to the task list!!!");
             return;
@@ -50,6 +56,7 @@ public class TaskList extends AppCompatActivity {
         mHideUnsolvedFirst = extras.getBoolean(HIDE_UNSOLVED_FIRST_OPTION_ID);
         fkDatabaseName = extras.getString(REF_TASKINFO_TABLE_ID_TABLE_NAME);
         list = (ListView)findViewById(R.id.task_list_view);
+        list.setOnItemClickListener(this);
         search_status = (TextView)findViewById(R.id.task_list_label_serach_status);
         reset_filter = (ImageButton)findViewById(R.id.task_list_reset_filter);
         title = extras.getInt(RES_ACTIVITY_TITLE, R.string.title_unset);
@@ -66,8 +73,11 @@ public class TaskList extends AppCompatActivity {
         String query = getQueryText(fkDatabaseName, getSearchStatement(currentSearch));
         Log.d("Assembly Fun", query);
         Cursor cursor = db.rawQuery(query, null);
-        listItems = new TaskCursorAdapter(this, cursor);
-        list.setAdapter(listItems);
+        if(listItems==null) {
+            listItems = new TaskCursorAdapter(this, cursor);
+            list.setAdapter(listItems);
+        } else
+            listItems.changeCursor(cursor);
 
         String baseLabel;
         if(currentSearch == null) {
@@ -84,6 +94,22 @@ public class TaskList extends AppCompatActivity {
     public void onResetFilterButtonPressed(View view)
     {
         updateList(null);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putBoolean(HIDE_UNSOLVED_FIRST_OPTION_ID, mHideUnsolvedFirst);
+        savedInstanceState.putString(REF_TASKINFO_TABLE_ID_TABLE_NAME, fkDatabaseName);
+        savedInstanceState.putInt(RES_ACTIVITY_TITLE, title);
+    }
+
+    @Override
+    public void onItemClick (AdapterView<?> parent, View view, int position, long id)
+    {
+        Intent task = new Intent(this, TaskScreen.class);
+        task.putExtra(TaskScreen.EXTRAS_TASK_ID, id);
+        startActivity(task);
     }
 
     @Override

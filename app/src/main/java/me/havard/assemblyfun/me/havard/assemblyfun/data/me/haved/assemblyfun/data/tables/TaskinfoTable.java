@@ -11,6 +11,7 @@ import me.havard.assemblyfun.me.havard.assemblyfun.data.Difficulty;
 public class TaskinfoTable extends Table
 {
     public static final String TABLE_NAME = "localTaskInfo";
+    public static final String _ID_TaskIDs = TaskIDTable._ID_TaskIDs;
     public static final String NAME = "name";
     public static final String DESC = "desc";
     public static final String DATE = "date";
@@ -20,7 +21,7 @@ public class TaskinfoTable extends Table
     @Override
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
-                TaskIDTable._ID_TaskIDs, INT,
+                _ID_TaskIDs, INT,
                 NAME, TEXT,
                 DESC, TEXT,
                 DATE, INT,
@@ -38,7 +39,7 @@ public class TaskinfoTable extends Table
 
     public static void populateContentValues(ContentValues values, long ref_id, String name, String desc, long date, Difficulty diff, float rating, String author)
     {
-        values.put(TaskIDTable._ID_TaskIDs, ref_id);
+        values.put(_ID_TaskIDs, ref_id);
         values.put(NAME, name);
         values.put(DESC, desc);
         values.put(DATE, date);

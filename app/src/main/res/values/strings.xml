@@ -51,4 +51,7 @@
     <string name="label_task_list_item_shown">Task Shown</string>
     <string name="label_task_list_items_shown">Tasks Shown</string>
     <string name="button_task_list_no_filter_desc">a cut icon for removing the filter</string>
+    <string name="title_activity_task_screen">TaskScreen</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>
