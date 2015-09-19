@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.SelfPublishedTable;
 import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskIDTable;
 import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.LocalTaskTable;
 import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.SolvedTasksTable;
@@ -17,14 +18,14 @@ import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.dat
  */
 public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 6;
     public static final String DATABASE_NAME = "assemblyFunDB";
 
     Table[] tables;
 
     public TaskDatabaseOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        tables = new Table[]{new TaskinfoTable(), new LocalTaskTable(), new SolvedTasksTable(), new TaskIDTable()};
+        tables = new Table[]{new TaskinfoTable(), new LocalTaskTable(), new SolvedTasksTable(), new TaskIDTable(), new SelfPublishedTable()};
     }
 
     @Override
@@ -59,17 +60,21 @@ public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
 
     public void addDefaultValues(SQLiteDatabase db) {
         ContentValues values = new ContentValues();
-        long task1 = addTaskInfoToTables(db, values, "Tutorial task 1: Running", "Running your application", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.4f, "Haved", true, 11111111);
-        addTaskInfoToTables(db, values, "Tutorial task 2: Returning", "Returning the number 10", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.7f, "Haved", true, 22002222);
-        addTaskInfoToTables(db, values, "Tutorial task 3: Adding", "Adding two numbers", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.1f, "Haved", true, 30000003);
-        addTaskInfoToTables(db, values, "Tutorial task 4: Breaking", "How to exit instantly", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.8f, "Haved", false, 10004444);
-        addTaskInfoToTables(db, values, "Tutorial task 5: Comparing", "Comparing numbers", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.7f, "Haved", true, 55550055);
-        addTaskInfoToTables(db, values, "Tutorial task 6: Comparing#2", "Using comparisons", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.2f, "Haved", false, 100666);
-        addTaskInfoToTables(db, values, "Tutorial task 7: Test", "r0 = max(r1,r0)", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.4f, "Haved", false, 77744777);
-        addTaskInfoToTables(db, values, "Tutorial task 8: Test2", "r0=r0>r1?r0-r1:r0", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.6f, "Haved", false, 8888988);
+        long task1 = addTaskInfoToTables(db, values, "Tutorial task 1: Running", "Running your application", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.4f, "Assembly Fun", true, false, 11111111);
+        addTaskInfoToTables(db, values, "Tutorial task 2: Returning", "Returning the number 10", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.7f, "Assembly Fun", true, false, 22002222);
+        addTaskInfoToTables(db, values, "Tutorial task 3: Adding", "Adding two numbers", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.1f, "Assembly Fun", true, false, 30000003);
+        addTaskInfoToTables(db, values, "Tutorial task 4: Breaking", "How to exit instantly", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.8f, "Assembly Fun", true, false, 10004444);
+        addTaskInfoToTables(db, values, "Tutorial task 5: Comparing", "Comparing numbers", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.7f, "Assembly Fun", true, false, 55550055);
+        addTaskInfoToTables(db, values, "Tutorial task 6: Comparing#2", "Using comparisons", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.2f, "Assembly Fun", true, false, 100666);
+        addTaskInfoToTables(db, values, "Tutorial task 7: Test", "r0 = max(r1,r0)", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.4f, "Assembly Fun", true, false, 77744777);
+        addTaskInfoToTables(db, values, "Tutorial task 8: Test2", "r0=r0>r1?r0-r1:r0", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.6f, "Assembly Fun", true, false, 8888988);
+
+        long myTask = addTaskInfoToTables(db, values, "MyTask", "r0=r0+min(r0,r1)", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.6f, "You", false, true, 0);
 
         addTaskToLocalTasks(db, values, task1, "Hit the green button to run your program. A series of tests are run to check if your program performs to specification.",
                 LocalTaskTable.makeTaskTestString(new int[][]{{0}, {4}, {-4}, {7}}, new int[][]{{0}, {4}, {-4}, {7}}));
+        addTaskToLocalTasks(db, values, myTask, "Make r0=r0+min(r0,r1)",
+                LocalTaskTable.makeTaskTestString(new int[][]{{0, 2}, {4,5}, {4,2}, {7,3}}, new int[][]{{0}, {8}, {6}, {10}}));
     }
 
     private void addTaskToLocalTasks(SQLiteDatabase db, ContentValues values, long taskInfoId, String taskText, String taskTests)
@@ -78,7 +83,7 @@ public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
         LocalTaskTable.addLocalTaskToDB(db, values, taskInfoId, taskText, taskTests);
     }
 
-    private long addTaskInfoToTables(SQLiteDatabase db, ContentValues values, String name, String desc, long date, Difficulty diff, float rating, String author, boolean solved, long globalID)
+    private long addTaskInfoToTables(SQLiteDatabase db, ContentValues values, String name, String desc, long date, Difficulty diff, float rating, String author, boolean solved, boolean selfPublished, long globalID)
     {
         values.clear();
         long taskID;
@@ -91,6 +96,10 @@ public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
         if(solved) {
             values.clear();
             SolvedTasksTable.addSolvedTaskIdToDB(db, values, taskID);
+        }
+        if(selfPublished) {
+            values.clear();
+            SelfPublishedTable.registerTaskAsSelfPublished(db, values, taskID);
         }
         return taskID;
     }

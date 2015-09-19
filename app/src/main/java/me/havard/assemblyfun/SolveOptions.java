@@ -9,10 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import me.havard.assemblyfun.me.havard.assemblyfun.data.TaskDatabaseOpenHelper;
 import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.LocalTaskTable;
+import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.SelfPublishedTable;
 import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.SolvedTasksTable;
 
 public class SolveOptions extends AppCompatActivity {
@@ -47,7 +45,10 @@ public class SolveOptions extends AppCompatActivity {
 
     public void onSolvePublishedPressed(View source)
     {
-
+        Intent solvedTaskListActivity = new Intent(this, TaskList.class);
+        solvedTaskListActivity.putExtra(TaskList.RES_ACTIVITY_TITLE, R.string.solve_option_published);
+        solvedTaskListActivity.putExtra(TaskList.REF_TASKINFO_TABLE_ID_TABLE_NAME, SelfPublishedTable.TABLE_NAME);
+        startActivity(solvedTaskListActivity);
     }
 
     @Override
