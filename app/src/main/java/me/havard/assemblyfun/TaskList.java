@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import me.havard.assemblyfun.me.havard.assemblyfun.data.TaskCursorAdapter;
+import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskIDTable;
 import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskinfoTable;
 
 public class TaskList extends AppCompatActivity {
@@ -58,11 +59,11 @@ public class TaskList extends AppCompatActivity {
     }
 
     private void updateList(String search) {
-        if(search.equals(""))
+        if(search != null && search.equals(""))
             search=null;
         currentSearch = search;
         SQLiteDatabase db = ((AssemblyFunApplication) getApplication()).getReadableDatabase();
-        String query = getQueryText(fkDatabaseName, currentSearch == null ? null : ("(" + TaskinfoTable.NAME + " LIKE '%" + currentSearch + "%' OR " + TaskinfoTable.DESC + " LIKE '%" + currentSearch + "%')"));
+        String query = getQueryText(fkDatabaseName, getSearchStatement(currentSearch));
         Log.d("Assembly Fun", query);
         Cursor cursor = db.rawQuery(query, null);
         listItems = new TaskCursorAdapter(this, cursor);
@@ -134,13 +135,19 @@ public class TaskList extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private static final String QUERY_START = "SELECT " + TaskinfoTable.NAME + ", "  + TaskinfoTable.DESC + ", " + TaskinfoTable.DIFFICULTY + ", " + TaskinfoTable.AUTHOR + ", " + TaskinfoTable._ID + " AS _id" +
+    private static final String QUERY_START = "SELECT " + TaskinfoTable.NAME + ", "  + TaskinfoTable.DESC + ", " + TaskinfoTable.DIFFICULTY + ", " +
+            TaskinfoTable.AUTHOR + ", " + TaskinfoTable.TABLE_NAME + "." + TaskIDTable._ID_TaskIDs + " AS _id" +
             " FROM " + TaskinfoTable.TABLE_NAME + ", ";
-    private static final String QUERY_MID = " WHERE " +TaskinfoTable.TABLE_NAME+"."+TaskinfoTable._ID + " = ";
-    private static final String QUERY_END = "." + TaskinfoTable.REF_ID;
+    private static final String QUERY_MID = " WHERE " + TaskinfoTable.TABLE_NAME + "."+TaskIDTable._ID_TaskIDs + " = ";
+    private static final String QUERY_END = "." + TaskIDTable._ID_TaskIDs;
 
     protected static String getQueryText(String databaseName, String extraWhere)
     {
         return QUERY_START + databaseName + QUERY_MID + databaseName + QUERY_END + (extraWhere==null ? "" : (" AND " + extraWhere));
+    }
+
+    private static String getSearchStatement(String search)
+    {
+        return search == null ? null : ("(" + TaskinfoTable.NAME + " LIKE '%" + search + "%' OR " + TaskinfoTable.DESC + " LIKE '%" + search + "%')");
     }
 }

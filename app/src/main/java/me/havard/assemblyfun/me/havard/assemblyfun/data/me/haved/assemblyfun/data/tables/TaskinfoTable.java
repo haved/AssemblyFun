@@ -11,7 +11,6 @@ import me.havard.assemblyfun.me.havard.assemblyfun.data.Difficulty;
 public class TaskinfoTable extends Table
 {
     public static final String TABLE_NAME = "localTaskInfo";
-    public static final String _ID = "_id";
     public static final String NAME = "name";
     public static final String DESC = "desc";
     public static final String DATE = "date";
@@ -21,13 +20,14 @@ public class TaskinfoTable extends Table
     @Override
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
-                _ID, ROW_ID,
+                TaskIDTable._ID_TaskIDs, INT,
                 NAME, TEXT,
                 DESC, TEXT,
                 DATE, INT,
                 DIFFICULTY, INT,
                 RATING, REEL,
-                AUTHOR, TEXT);
+                AUTHOR, TEXT,
+                TaskIDTable.FOREIGN_KEY_ID_TaskIDs);
     }
 
     @Override
@@ -36,8 +36,9 @@ public class TaskinfoTable extends Table
         return TABLE_NAME;
     }
 
-    public static void populateContentValues(ContentValues values, String name, String desc, long date, Difficulty diff, float rating, String author)
+    public static void populateContentValues(ContentValues values, long ref_id, String name, String desc, long date, Difficulty diff, float rating, String author)
     {
+        values.put(TaskIDTable._ID_TaskIDs, ref_id);
         values.put(NAME, name);
         values.put(DESC, desc);
         values.put(DATE, date);
@@ -46,12 +47,9 @@ public class TaskinfoTable extends Table
         values.put(AUTHOR, author);
     }
 
-    public static long addTaskToDB(SQLiteDatabase db, ContentValues values, String name, String desc, long date, Difficulty diff, float rating, String author)
+    public static long addTaskToDB(SQLiteDatabase db, ContentValues values, long ref_id, String name, String desc, long date, Difficulty diff, float rating, String author)
     {
-        populateContentValues(values, name, desc, date, diff, rating, author);
+        populateContentValues(values, ref_id, name, desc, date, diff, rating, author);
         return db.insert(TABLE_NAME, null, values);
     }
-
-    public static final String REF_ID = _ID+"_"+TABLE_NAME;
-    public static final String FOREIGN_KEY_REF_ID = "FOREIGN KEY("+ REF_ID +") REFERENCES "+ TABLE_NAME +"("+ _ID +")";
 }

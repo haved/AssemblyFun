@@ -12,8 +12,8 @@ public class SolvedTasksTable extends Table {
     @Override
     public String getCreateString(){
         return getSQLCreate(TABLE_NAME,
-                TaskinfoTable.REF_ID, INT,
-                TaskinfoTable.FOREIGN_KEY_REF_ID);
+                TaskIDTable._ID_TaskIDs, INT,
+                TaskIDTable.FOREIGN_KEY_ID_TaskIDs);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class SolvedTasksTable extends Table {
 
     public static void populateContentValues(ContentValues values, long ref_id)
     {
-        values.put(TaskinfoTable.REF_ID, ref_id);
+        values.put(TaskIDTable._ID_TaskIDs, ref_id);
     }
 
     public static void addSolvedTaskIdToDB(SQLiteDatabase db, ContentValues values, long ref_id)

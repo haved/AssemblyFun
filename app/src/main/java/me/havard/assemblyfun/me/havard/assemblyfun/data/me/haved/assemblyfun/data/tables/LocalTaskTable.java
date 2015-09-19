@@ -13,10 +13,10 @@ public class LocalTaskTable extends Table {
     @Override
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
-                TaskinfoTable.REF_ID, INT,
+                TaskIDTable._ID_TaskIDs, INT,
                 TASK_TEXT, TEXT,
                 TASK_TESTS, TEXT,
-                TaskinfoTable.FOREIGN_KEY_REF_ID);
+                TaskIDTable.FOREIGN_KEY_ID_TaskIDs);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class LocalTaskTable extends Table {
 
     public static void populateContentValues(ContentValues values, long ref_id, String taskText, String taskTests)
     {
-        values.put(TaskinfoTable.REF_ID, ref_id);
+        values.put(TaskIDTable._ID_TaskIDs, ref_id);
         values.put(TASK_TEXT, taskText);
         values.put(TASK_TESTS, taskTests);
     }
