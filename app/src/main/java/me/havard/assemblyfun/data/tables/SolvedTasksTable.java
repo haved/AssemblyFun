@@ -1,13 +1,13 @@
-package me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables;
+package me.havard.assemblyfun.data.tables;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
-/** A helper class for the selfPublishedTasks table
- * Created by Havard on 19.09.2015.
+/** A class for the name and column names of the SolvedTasks table.
+ * Created by Havard on 13/09/2015.
  */
-public class SelfPublishedTable extends Table {
-    public static final String TABLE_NAME = "selfPublishedTasks";
+public class SolvedTasksTable extends Table {
+    public static final String TABLE_NAME = "solvedTasks";
 
     @Override
     public String getCreateString(){
@@ -27,7 +27,7 @@ public class SelfPublishedTable extends Table {
         values.put(TaskIDTable._ID_TaskIDs, ref_id);
     }
 
-    public static void registerTaskAsSelfPublished(SQLiteDatabase db, ContentValues values, long ref_id)
+    public static void addSolvedTaskIdToDB(SQLiteDatabase db, ContentValues values, long ref_id)
     {
         populateContentValues(values, ref_id);
         db.insert(TABLE_NAME, null, values);

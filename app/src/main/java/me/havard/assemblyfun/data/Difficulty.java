@@ -1,4 +1,4 @@
-package me.havard.assemblyfun.me.havard.assemblyfun.data;
+package me.havard.assemblyfun.data;
 
 import me.havard.assemblyfun.R;
 

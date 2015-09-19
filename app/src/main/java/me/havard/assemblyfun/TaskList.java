@@ -18,10 +18,10 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import me.havard.assemblyfun.me.havard.assemblyfun.data.TaskCursorAdapter;
-import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskIDTable;
-import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskScreen;
-import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskinfoTable;
+import me.havard.assemblyfun.data.TaskCursorAdapter;
+import me.havard.assemblyfun.data.tables.TaskIDTable;
+import me.havard.assemblyfun.data.tables.TaskScreen;
+import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
 public class TaskList extends AppCompatActivity implements AdapterView.OnItemClickListener {
 

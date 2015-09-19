@@ -1,4 +1,4 @@
-package me.havard.assemblyfun.me.havard.assemblyfun.data;
+package me.havard.assemblyfun.data;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,7 +8,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import me.havard.assemblyfun.R;
-import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskinfoTable;
+import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
 /** A custom adapter for filling in many task_list_item
  * Created by Havard on 18.09.2015.

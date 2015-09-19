@@ -1,4 +1,4 @@
-package me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables;
+package me.havard.assemblyfun.data.tables;
 
 /** A class my database tables inherit
  * Created by Havard on 13/09/2015.

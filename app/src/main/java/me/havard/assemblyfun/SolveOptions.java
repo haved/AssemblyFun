@@ -9,9 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.LocalTaskTable;
-import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.SelfPublishedTable;
-import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.SolvedTasksTable;
+import me.havard.assemblyfun.data.tables.LocalTaskTable;
+import me.havard.assemblyfun.data.tables.SelfPublishedTable;
+import me.havard.assemblyfun.data.tables.SolvedTasksTable;
 
 public class SolveOptions extends AppCompatActivity {
 

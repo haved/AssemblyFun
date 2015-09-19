@@ -1,4 +1,4 @@
-package me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables;
+package me.havard.assemblyfun.data.tables;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;

@@ -1,4 +1,4 @@
-package me.havard.assemblyfun.me.havard.assemblyfun.data;
+package me.havard.assemblyfun.data;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,12 +6,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.SelfPublishedTable;
-import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskIDTable;
-import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.LocalTaskTable;
-import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.SolvedTasksTable;
-import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.Table;
-import me.havard.assemblyfun.me.havard.assemblyfun.data.me.haved.assemblyfun.data.tables.TaskinfoTable;
+import me.havard.assemblyfun.data.tables.SelfPublishedTable;
+import me.havard.assemblyfun.data.tables.TaskIDTable;
+import me.havard.assemblyfun.data.tables.LocalTaskTable;
+import me.havard.assemblyfun.data.tables.SolvedTasksTable;
+import me.havard.assemblyfun.data.tables.Table;
+import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
 /** No longer a default file template ;)
  * Created by Havard on 11/09/2015.

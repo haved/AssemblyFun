@@ -2,11 +2,9 @@ package me.havard.assemblyfun;
 
 import android.app.Application;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import me.havard.assemblyfun.me.havard.assemblyfun.data.TaskDatabaseOpenHelper;
+import me.havard.assemblyfun.data.TaskDatabaseOpenHelper;
 
 public class AssemblyFunApplication extends Application {
 
