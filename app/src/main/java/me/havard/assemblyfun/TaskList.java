@@ -1,6 +1,7 @@
 package me.havard.assemblyfun;
 
 import android.app.AlertDialog;
+import android.app.TaskStackBuilder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -47,6 +48,11 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         Log.e("Assembly Fun", "getIntent().getExtras()!=null: " + (getIntent().getExtras() != null));
         Log.e("Assembly Fun", "savedInstanceState!=null: " + (savedInstanceState!=null));
 
+        list = (ListView)findViewById(R.id.task_list_view);
+        list.setOnItemClickListener(this);
+        search_status = (TextView)findViewById(R.id.task_list_label_serach_status);
+        reset_filter = (ImageButton)findViewById(R.id.task_list_reset_filter);
+
         Bundle extras = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
         if(extras == null) {
             Log.e("Assembly Fun", "No extra bundle was supplied to the task list!!!");
@@ -55,14 +61,17 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
 
         mHideUnsolvedFirst = extras.getBoolean(HIDE_UNSOLVED_FIRST_OPTION_ID);
         fkDatabaseName = extras.getString(REF_TASKINFO_TABLE_ID_TABLE_NAME);
-        list = (ListView)findViewById(R.id.task_list_view);
-        list.setOnItemClickListener(this);
-        search_status = (TextView)findViewById(R.id.task_list_label_serach_status);
-        reset_filter = (ImageButton)findViewById(R.id.task_list_reset_filter);
         title = extras.getInt(RES_ACTIVITY_TITLE, R.string.title_unset);
         setTitle(title);
 
         updateList(null);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Log.d("Assembly Fun", "OnResume() was called!!!!!!  title: " + title);
     }
 
     private void updateList(String search) {
@@ -99,17 +108,36 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
+        Log.d("Assembly Fun", "TaskListActivity Instance saved!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         savedInstanceState.putBoolean(HIDE_UNSOLVED_FIRST_OPTION_ID, mHideUnsolvedFirst);
         savedInstanceState.putString(REF_TASKINFO_TABLE_ID_TABLE_NAME, fkDatabaseName);
         savedInstanceState.putInt(RES_ACTIVITY_TITLE, title);
     }
+
+    /* Doesn't do what it's supposed to. Calls updateList a
+    *second time when updating the screen rotation.
+    * Isn't called when going back to the activity.
+    @Override
+    public void onRestoreInstanceState(Bundle extras) {
+        super.onRestoreInstanceState(extras);
+        Log.d("Assembly Fun", "TaskListActivity Instance restored!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        mHideUnsolvedFirst = extras.getBoolean(HIDE_UNSOLVED_FIRST_OPTION_ID);
+        fkDatabaseName = extras.getString(REF_TASKINFO_TABLE_ID_TABLE_NAME);
+        title = extras.getInt(RES_ACTIVITY_TITLE, R.string.title_unset);
+        setTitle(title);
+        updateList(null);
+    }*/
 
     @Override
     public void onItemClick (AdapterView<?> parent, View view, int position, long id)
     {
         Intent task = new Intent(this, TaskScreen.class);
         task.putExtra(TaskScreen.EXTRAS_TASK_ID, id);
-        startActivity(task);
+        //startActivity(task);
+        TaskStackBuilder builder = new TaskStackBuilder.create(this);
+        builder.addNextIntent(getIntent());
+        builder.addNextIntent(task);
+        builder.startActivities();
     }
 
     @Override
