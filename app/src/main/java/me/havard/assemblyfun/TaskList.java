@@ -1,7 +1,7 @@
 package me.havard.assemblyfun;
 
 import android.app.AlertDialog;
-import android.app.TaskStackBuilder;
+import android.support.v4.app.TaskStackBuilder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -133,11 +133,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     {
         Intent task = new Intent(this, TaskScreen.class);
         task.putExtra(TaskScreen.EXTRAS_TASK_ID, id);
-        //startActivity(task);
-        TaskStackBuilder builder = new TaskStackBuilder.create(this);
-        builder.addNextIntent(getIntent());
-        builder.addNextIntent(task);
-        builder.startActivities();
+        startActivity(task);
     }
 
     @Override
