@@ -1,7 +1,6 @@
 package me.havard.assemblyfun;
 
 import android.app.AlertDialog;
-import android.support.v4.app.TaskStackBuilder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -40,6 +39,9 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
 
     protected String currentSearch;
 
+    /**True if no bundle was passed to the TaskList, either getIntent().getExtras() or savedInstanceState*/
+    protected boolean noBundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +58,8 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         Bundle extras = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
         if(extras == null) {
             Log.e("Assembly Fun", "No extra bundle was supplied to the task list!!!");
+            search_status.setText("No bundle was passed to the TaskList. Expect some crashes");
+            noBundle = true;
             return;
         }
 
@@ -75,21 +79,23 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     }
 
     private void updateList(String search) {
-        if(search != null && search.equals(""))
-            search=null;
+        if(noBundle)
+            return;
+        if (search != null && search.equals(""))
+            search = null;
         currentSearch = search;
         SQLiteDatabase db = ((AssemblyFunApplication) getApplication()).getReadableDatabase();
         String query = getQueryText(fkDatabaseName, getSearchStatement(currentSearch));
         Log.d("Assembly Fun", query);
         Cursor cursor = db.rawQuery(query, null);
-        if(listItems==null) {
+        if (listItems == null) {
             listItems = new TaskCursorAdapter(this, cursor);
             list.setAdapter(listItems);
         } else
             listItems.changeCursor(cursor);
 
         String baseLabel;
-        if(currentSearch == null) {
+        if (currentSearch == null) {
             baseLabel = getResources().getString(R.string.label_task_list_no_filter);
             reset_filter.setVisibility(View.GONE);
         } else {
