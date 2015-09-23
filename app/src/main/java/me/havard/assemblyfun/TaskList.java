@@ -1,8 +1,10 @@
 package me.havard.assemblyfun;
 
 import android.app.AlertDialog;
+import android.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -23,11 +25,12 @@ import me.havard.assemblyfun.data.tables.TaskIDTable;
 import me.havard.assemblyfun.data.tables.TaskScreen;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
-public class TaskList extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class TaskList extends AppCompatActivity implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String HIDE_UNSOLVED_FIRST_OPTION_ID = "hide_action_unsolved_first";
     public static final String RES_ACTIVITY_TITLE = "activity_title_res";
     public static final String REF_TASKINFO_TABLE_ID_TABLE_NAME = "task_id_table_name";
+    private static final int TASK_CURSOR_LOADER_ID = 0;
 
     private boolean mHideUnsolvedFirst;
     protected String fkDatabaseName;
@@ -48,10 +51,12 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         setContentView(R.layout.activity_task_list);
 
         Log.e("Assembly Fun", "getIntent().getExtras()!=null: " + (getIntent().getExtras() != null));
-        Log.e("Assembly Fun", "savedInstanceState!=null: " + (savedInstanceState!=null));
+        Log.e("Assembly Fun", "savedInstanceState!=null: " + (savedInstanceState != null));
 
         list = (ListView)findViewById(R.id.task_list_view);
         list.setOnItemClickListener(this);
+        listItems = new TaskCursorAdapter(this, null);
+        list.setAdapter(listItems);
         search_status = (TextView)findViewById(R.id.task_list_label_serach_status);
         reset_filter = (ImageButton)findViewById(R.id.task_list_reset_filter);
 
@@ -71,39 +76,38 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         updateList(null);
     }
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        Log.d("Assembly Fun", "OnResume() was called!!!!!!  title: " + title);
-    }
-
     private void updateList(String search) {
         if(noBundle)
             return;
         if (search != null && search.equals(""))
             search = null;
         currentSearch = search;
-        SQLiteDatabase db = ((AssemblyFunApplication) getApplication()).getReadableDatabase();
-        String query = getQueryText(fkDatabaseName, getSearchStatement(currentSearch));
-        Log.d("Assembly Fun", query);
-        Cursor cursor = db.rawQuery(query, null);
-        if (listItems == null) {
-            listItems = new TaskCursorAdapter(this, cursor);
-            list.setAdapter(listItems);
-        } else
-            listItems.changeCursor(cursor);
+        search_status.setText(getResources().getString(R.string.label_task_list_loading_items));
+        reset_filter.setVisibility(View.GONE);
+        getLoaderManager().initLoader(TASK_CURSOR_LOADER_ID, null, this);
+    }
+
+    private void useCursor(Cursor cursor)
+    {
+        listItems.changeCursor(cursor);
 
         String baseLabel;
         if (currentSearch == null) {
             baseLabel = getResources().getString(R.string.label_task_list_no_filter);
             reset_filter.setVisibility(View.GONE);
         } else {
-            baseLabel = "Searching for: '" + currentSearch + "'";
+            baseLabel = getResources().getString(R.string.label_task_list_searching_for)+"'" + currentSearch + "'";
             reset_filter.setVisibility(View.VISIBLE);
         }
         int count = listItems.getCount();
         search_status.setText(baseLabel + " - " + count + " " + getResources().getString(count == 1 ? R.string.label_task_list_item_shown : R.string.label_task_list_items_shown));
+    }
+
+    private void useNoCursor()
+    {
+        listItems.changeCursor(null);
+        reset_filter.setVisibility(View.GONE);
+        search_status.setText(getResources().getString(R.string.label_task_list_loading_items));
     }
 
     public void onResetFilterButtonPressed(View view)
@@ -120,19 +124,22 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         savedInstanceState.putInt(RES_ACTIVITY_TITLE, title);
     }
 
-    /* Doesn't do what it's supposed to. Calls updateList a
-    *second time when updating the screen rotation.
-    * Isn't called when going back to the activity.
     @Override
-    public void onRestoreInstanceState(Bundle extras) {
-        super.onRestoreInstanceState(extras);
-        Log.d("Assembly Fun", "TaskListActivity Instance restored!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        mHideUnsolvedFirst = extras.getBoolean(HIDE_UNSOLVED_FIRST_OPTION_ID);
-        fkDatabaseName = extras.getString(REF_TASKINFO_TABLE_ID_TABLE_NAME);
-        title = extras.getInt(RES_ACTIVITY_TITLE, R.string.title_unset);
-        setTitle(title);
-        updateList(null);
-    }*/
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        //Too bad.
+
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader loader, Cursor data) {
+        useCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader loader) {
+        useNoCursor();
+    }
 
     @Override
     public void onItemClick (AdapterView<?> parent, View view, int position, long id)
