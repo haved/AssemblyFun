@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import me.havard.assemblyfun.data.SQLiteCursorLoader;
 import me.havard.assemblyfun.data.TaskCursorAdapter;
 import me.havard.assemblyfun.data.tables.TaskIDTable;
 import me.havard.assemblyfun.data.tables.TaskScreen;
@@ -72,7 +73,12 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         fkDatabaseName = extras.getString(REF_TASKINFO_TABLE_ID_TABLE_NAME);
         title = extras.getInt(RES_ACTIVITY_TITLE, R.string.title_unset);
         setTitle(title);
+    }
 
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
         updateList(null);
     }
 
@@ -84,11 +90,10 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         currentSearch = search;
         search_status.setText(getResources().getString(R.string.label_task_list_loading_items));
         reset_filter.setVisibility(View.GONE);
-        getLoaderManager().initLoader(TASK_CURSOR_LOADER_ID, null, this);
+        getLoaderManager().restartLoader(TASK_CURSOR_LOADER_ID, null, this);
     }
 
-    private void useCursor(Cursor cursor)
-    {
+    private void useCursor(Cursor cursor) {
         listItems.changeCursor(cursor);
 
         String baseLabel;
@@ -103,20 +108,16 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         search_status.setText(baseLabel + " - " + count + " " + getResources().getString(count == 1 ? R.string.label_task_list_item_shown : R.string.label_task_list_items_shown));
     }
 
-    private void useNoCursor()
-    {
+    private void useNoCursor() {
         listItems.changeCursor(null);
-        reset_filter.setVisibility(View.GONE);
-        search_status.setText(getResources().getString(R.string.label_task_list_loading_items));
     }
 
-    public void onResetFilterButtonPressed(View view)
-    {
+    public void onResetFilterButtonPressed(View view) {
         updateList(null);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         Log.d("Assembly Fun", "TaskListActivity Instance saved!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         savedInstanceState.putBoolean(HIDE_UNSOLVED_FIRST_OPTION_ID, mHideUnsolvedFirst);
@@ -125,10 +126,15 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        //Too bad.
+    protected void onStop()
+    {
+        super.onStop();
+        getLoaderManager().destroyLoader(TASK_CURSOR_LOADER_ID);
+    }
 
-        return null;
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), getQueryText(fkDatabaseName, getSearchStatement(currentSearch)));
     }
 
     @Override
@@ -188,10 +194,6 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
 
             dialog.show();
 
-            return true;
-        }
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
             return true;
         }
 
