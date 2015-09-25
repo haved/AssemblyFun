@@ -36,6 +36,7 @@ public class TaskIDTable extends Table {
 
     public static long registerIDs(SQLiteDatabase db, ContentValues values)
     {
+        values.put(GLOBAL_TASK_ID, (String)null);
         return db.insert(TABLE_NAME, null, values);
     }
 

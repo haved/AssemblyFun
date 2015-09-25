@@ -9,9 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import me.havard.assemblyfun.data.tables.LocalTaskTable;
-import me.havard.assemblyfun.data.tables.SelfPublishedTable;
-import me.havard.assemblyfun.data.tables.SolvedTasksTable;
+import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
 public class SolveOptions extends AppCompatActivity {
 
@@ -30,7 +28,8 @@ public class SolveOptions extends AppCompatActivity {
     {
         Intent localTaskListActivity = new Intent(this, TaskList.class);
         localTaskListActivity.putExtra(TaskList.RES_ACTIVITY_TITLE, R.string.solve_option_local);
-        localTaskListActivity.putExtra(TaskList.REF_TASKINFO_TABLE_ID_TABLE_NAME, LocalTaskTable.TABLE_NAME);
+        localTaskListActivity.putExtra(TaskList.CHECK_COLUMN_NAME, TaskinfoTable.LOCAL);
+        localTaskListActivity.putExtra(TaskList.HIDE_LOCAL_FILTER_OPTION_ID, true);
         startActivity(localTaskListActivity);
     }
 
@@ -38,16 +37,8 @@ public class SolveOptions extends AppCompatActivity {
     {
         Intent solvedTaskListActivity = new Intent(this, TaskList.class);
         solvedTaskListActivity.putExtra(TaskList.RES_ACTIVITY_TITLE, R.string.solve_option_solved);
-        solvedTaskListActivity.putExtra(TaskList.REF_TASKINFO_TABLE_ID_TABLE_NAME, SolvedTasksTable.TABLE_NAME);
-        solvedTaskListActivity.putExtra(TaskList.HIDE_UNSOLVED_FIRST_OPTION_ID, true);
-        startActivity(solvedTaskListActivity);
-    }
-
-    public void onSolvePublishedPressed(View source)
-    {
-        Intent solvedTaskListActivity = new Intent(this, TaskList.class);
-        solvedTaskListActivity.putExtra(TaskList.RES_ACTIVITY_TITLE, R.string.solve_option_published);
-        solvedTaskListActivity.putExtra(TaskList.REF_TASKINFO_TABLE_ID_TABLE_NAME, SelfPublishedTable.TABLE_NAME);
+        solvedTaskListActivity.putExtra(TaskList.CHECK_COLUMN_NAME, TaskinfoTable.SOLVED);
+        solvedTaskListActivity.putExtra(TaskList.HIDE_UNSOLVED_FILTER_OPTION_ID, true);
         startActivity(solvedTaskListActivity);
     }
 

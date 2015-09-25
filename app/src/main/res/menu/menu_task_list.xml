@@ -5,12 +5,22 @@
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/action_search"
         app:showAsAction="ifRoom" />
-    <item android:id="@+id/action_sort_by_rating" android:title="@string/action_sort_by_rating"
+    <item android:id="@+id/action_disabled_task_list_sort_by" android:title="@string/action_disabled_sort_by" android:enabled="false"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_sort_by_difficulty" android:title="@string/action_sort_by_difficulty"
+    <item android:id="@+id/action_task_list_sort_by_name" android:title="@string/action_sort_by_name" android:enabled="true"
         android:orderInCategory="200" app:showAsAction="never" />
-    <item android:id="@+id/action_newest_first" android:title="@string/action_unsolved_first"
+    <item android:id="@+id/action_task_list_sort_by_date" android:title="@string/action_sort_by_date" android:enabled="true"
         android:orderInCategory="300" app:showAsAction="never" />
-    <item android:id="@+id/action_unsolved_first" android:title="@string/action_newest_first"
+    <item android:id="@+id/action_task_list_sort_by_author" android:title="@string/action_sort_by_author" android:enabled="true"
         android:orderInCategory="400" app:showAsAction="never" />
+    <item android:id="@+id/action_task_list_sort_by_difficulty" android:title="@string/action_sort_by_difficulty" android:enabled="true"
+        android:orderInCategory="500" app:showAsAction="never" />
+    <item android:id="@+id/action_disabled_task_list_filter" android:title="@string/action_disabled_filter" android:enabled="false"
+        android:orderInCategory="600" app:showAsAction="never" />
+    <item android:id="@+id/action_task_list_filter_unsolved" android:title="@string/action_filter_unsolved" android:enabled="true"
+        android:orderInCategory="700" app:showAsAction="never" />
+    <item android:id="@+id/action_task_list_filter_local" android:title="@string/action_filter_local" android:enabled="true"
+        android:orderInCategory="700" app:showAsAction="never" />
+    <item android:id="@+id/action_task_list_filter_self_published" android:title="@string/action_filter_self_published" android:enabled="true"
+        android:orderInCategory="800" app:showAsAction="never" />
 </menu>

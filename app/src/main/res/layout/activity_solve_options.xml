@@ -41,13 +41,6 @@
                 android:id="@+id/button3"
                 android:onClick="onSolveSolvedPressed" />
 
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_height="70sp"
-                android:text="@string/solve_option_published"
-                android:id="@+id/button4"
-                android:onClick="onSolvePublishedPressed" />
-
         </TableLayout>
     </ScrollView>
 

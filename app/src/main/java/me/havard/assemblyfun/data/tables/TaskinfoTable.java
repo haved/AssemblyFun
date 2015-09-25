@@ -2,6 +2,7 @@ package me.havard.assemblyfun.data.tables;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import me.havard.assemblyfun.data.Difficulty;
 
@@ -18,6 +19,9 @@ public class TaskinfoTable extends Table
     public static final String DIFFICULTY = "diff";
     public static final String RATING = "rating";
     public static final String AUTHOR = "author";
+    public static final String LOCAL = "local";
+    public static final String SOLVED = "solved";
+    public static final String SELF_PUBLISHED = "self_published";
     @Override
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
@@ -28,6 +32,9 @@ public class TaskinfoTable extends Table
                 DIFFICULTY, INT,
                 RATING, REEL,
                 AUTHOR, TEXT,
+                LOCAL, INT,
+                SOLVED, INT,
+                SELF_PUBLISHED, INT,
                 TaskIDTable.FOREIGN_KEY_ID_TaskIDs);
     }
 
@@ -37,7 +44,8 @@ public class TaskinfoTable extends Table
         return TABLE_NAME;
     }
 
-    public static void populateContentValues(ContentValues values, long ref_id, String name, String desc, long date, Difficulty diff, float rating, String author)
+    public static void populateContentValues(ContentValues values, long ref_id, String name, String desc, long date, Difficulty diff,
+                                             float rating, String author, boolean local, boolean solved, boolean self_published)
     {
         values.put(_ID_TaskIDs, ref_id);
         values.put(NAME, name);
@@ -46,11 +54,15 @@ public class TaskinfoTable extends Table
         values.put(DIFFICULTY, diff.ordinal());
         values.put(RATING, rating);
         values.put(AUTHOR, author);
+        values.put(LOCAL, local?1:0);
+        values.put(SOLVED, solved?1:0);
+        values.put(SELF_PUBLISHED, self_published?1:0);
     }
 
-    public static long addTaskToDB(SQLiteDatabase db, ContentValues values, long ref_id, String name, String desc, long date, Difficulty diff, float rating, String author)
+    public static long addTaskToDB(SQLiteDatabase db, ContentValues values, long ref_id, String name, String desc, long date, Difficulty diff,
+                                   float rating, String author, boolean local, boolean solved, boolean self_published)
     {
-        populateContentValues(values, ref_id, name, desc, date, diff, rating, author);
+        populateContentValues(values, ref_id, name, desc, date, diff, rating, author, local, solved, self_published);
         return db.insert(TABLE_NAME, null, values);
     }
 }

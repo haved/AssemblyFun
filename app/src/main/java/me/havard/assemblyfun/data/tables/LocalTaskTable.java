@@ -32,10 +32,13 @@ public class LocalTaskTable extends Table {
         values.put(TASK_TESTS, taskTests);
     }
 
-    public static void addLocalTaskToDB(SQLiteDatabase db, ContentValues values, long ref_id, String taskText, String taskTests)
+    public static void registerLocalTaskToDB(SQLiteDatabase db, ContentValues values, long ref_id, String taskText, String taskTests)
     {
         populateContentValues(values, ref_id, taskText, taskTests);
         db.insert(TABLE_NAME, null, values);
+        values.clear();
+        values.put(TaskinfoTable.LOCAL, 1);
+        db.update(TaskinfoTable.TABLE_NAME, values, TaskinfoTable._ID_TaskIDs + "=?", new String[]{Long.toString(ref_id)});
     }
 
     public static String makeTaskTestString(int[][] inputs, int[][]outputs)

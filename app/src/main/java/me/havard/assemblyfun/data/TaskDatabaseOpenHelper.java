@@ -6,10 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import me.havard.assemblyfun.data.tables.SelfPublishedTable;
 import me.havard.assemblyfun.data.tables.TaskIDTable;
 import me.havard.assemblyfun.data.tables.LocalTaskTable;
-import me.havard.assemblyfun.data.tables.SolvedTasksTable;
 import me.havard.assemblyfun.data.tables.Table;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
@@ -18,21 +16,20 @@ import me.havard.assemblyfun.data.tables.TaskinfoTable;
  */
 public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "assemblyFunDB";
 
     Table[] tables;
 
     public TaskDatabaseOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        tables = new Table[]{new TaskinfoTable(), new LocalTaskTable(), new SolvedTasksTable(), new TaskIDTable(), new SelfPublishedTable()};
+        tables = new Table[]{new TaskinfoTable(), new LocalTaskTable(), new TaskIDTable()};
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         for(Table t:tables){
             String create = t.getCreateString();
-            Log.d("Assembly Fun", "execSQL();   "+create);
             db.execSQL(create);
         }
         addDefaultValues(db);
@@ -80,7 +77,7 @@ public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
     private void addTaskToLocalTasks(SQLiteDatabase db, ContentValues values, long taskInfoId, String taskText, String taskTests)
     {
         values.clear();
-        LocalTaskTable.addLocalTaskToDB(db, values, taskInfoId, taskText, taskTests);
+        LocalTaskTable.registerLocalTaskToDB(db, values, taskInfoId, taskText, taskTests);
     }
 
     private long addTaskInfoToTables(SQLiteDatabase db, ContentValues values, String name, String desc, long date, Difficulty diff, float rating, String author, boolean solved, boolean selfPublished, long globalID)
@@ -92,15 +89,7 @@ public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
         else
             taskID = TaskIDTable.registerIDs(db, values, globalID);
         values.clear();
-        TaskinfoTable.addTaskToDB(db, values, taskID, name, desc, date, diff, rating, author);
-        if(solved) {
-            values.clear();
-            SolvedTasksTable.addSolvedTaskIdToDB(db, values, taskID);
-        }
-        if(selfPublished) {
-            values.clear();
-            SelfPublishedTable.registerTaskAsSelfPublished(db, values, taskID);
-        }
+        TaskinfoTable.addTaskToDB(db, values, taskID, name, desc, date, diff, rating, author, false, solved, selfPublished);
         return taskID;
     }
 }
