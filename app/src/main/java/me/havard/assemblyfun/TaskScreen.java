@@ -1,4 +1,4 @@
-package me.havard.assemblyfun.data.tables;
+package me.havard.assemblyfun;
 
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import me.havard.assemblyfun.AssemblyFunApplication;
 import me.havard.assemblyfun.R;
+import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
 public class TaskScreen extends AppCompatActivity {
 

@@ -25,9 +25,9 @@ public class TaskCursorAdapter extends SimpleCursorAdapter {
     @Override
     public void bindView(@NonNull View view, @NonNull Context context, @NonNull Cursor cursor) {
         super.bindView(view, context, cursor);
-        TextView diffText = (TextView) view.findViewById(R.id.task_list_item_difficulty);
-        Difficulty diff = Difficulty.values()[cursor.getInt(cursor.getColumnIndex(TaskinfoTable.DIFFICULTY))];
-        diffText.setText(diff.getLabelId());
-        diffText.setTextColor(context.getResources().getColor(diff.getColorId(), context.getTheme()));
+        //TextView diffText = (TextView) view.findViewById(R.id.task_list_item_difficulty);
+        //Difficulty diff = Difficulty.values()[cursor.getInt(cursor.getColumnIndex(TaskinfoTable.DIFFICULTY))];
+        //diffText.setText(diff.getLabelId());
+        //diffText.setTextColor(context.getResources().getColor(diff.getColorId(), context.getTheme()));
     }
 }

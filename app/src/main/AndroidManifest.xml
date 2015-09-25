@@ -35,12 +35,12 @@
                 android:value="me.havard.assemblyfun.SolveOptions" />
         </activity>
         <activity
-            android:name=".data.tables.TaskScreen"
+            android:name=".TaskScreen"
             android:label="@string/title_activity_task_screen"
-            android:parentActivityName=".TaskList" >
+            android:parentActivityName=".SolveOptions" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="me.havard.assemblyfun.TaskList" />
+                android:value="me.havard.assemblyfun.SolveOptions" />
         </activity>
     </application>
 

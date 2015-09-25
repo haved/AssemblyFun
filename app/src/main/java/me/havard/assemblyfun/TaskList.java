@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -23,7 +22,6 @@ import android.widget.TextView;
 import me.havard.assemblyfun.data.SQLiteCursorLoader;
 import me.havard.assemblyfun.data.TaskCursorAdapter;
 import me.havard.assemblyfun.data.tables.TaskIDTable;
-import me.havard.assemblyfun.data.tables.TaskScreen;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
 public class TaskList extends AppCompatActivity implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
@@ -43,9 +41,6 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
 
     protected String currentSearch;
 
-    /**True if no bundle was passed to the TaskList, either getIntent().getExtras() or savedInstanceState*/
-    protected boolean noBundle;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,11 +56,9 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         search_status = (TextView)findViewById(R.id.task_list_label_serach_status);
         reset_filter = (ImageButton)findViewById(R.id.task_list_reset_filter);
 
-        Bundle extras = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
-        if(extras == null) {
-            Log.e("Assembly Fun", "No extra bundle was supplied to the task list!!!");
-            search_status.setText("No bundle was passed to the TaskList. Expect some crashes");
-            noBundle = true;
+        Bundle extras = getIntent().getExtras();
+        if(extras==null) {
+            search_status.setText("No bundle was passed to the TaskList. Expect some crashes!");
             return;
         }
 
@@ -83,8 +76,6 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     }
 
     private void updateList(String search) {
-        if(noBundle)
-            return;
         if (search != null && search.equals(""))
             search = null;
         currentSearch = search;
@@ -114,15 +105,6 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
 
     public void onResetFilterButtonPressed(View view) {
         updateList(null);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        Log.d("Assembly Fun", "TaskListActivity Instance saved!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        savedInstanceState.putBoolean(HIDE_UNSOLVED_FIRST_OPTION_ID, mHideUnsolvedFirst);
-        savedInstanceState.putString(REF_TASKINFO_TABLE_ID_TABLE_NAME, fkDatabaseName);
-        savedInstanceState.putInt(RES_ACTIVITY_TITLE, title);
     }
 
     @Override
@@ -215,4 +197,13 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     {
         return search == null ? null : ("(" + TaskinfoTable.NAME + " LIKE '%" + search + "%' OR " + TaskinfoTable.DESC + " LIKE '%" + search + "%')");
     }
+
+    /*@Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.d("Assembly Fun", "TaskListActivity Instance saved!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        savedInstanceState.putBoolean(HIDE_UNSOLVED_FIRST_OPTION_ID, mHideUnsolvedFirst);
+        savedInstanceState.putString(REF_TASKINFO_TABLE_ID_TABLE_NAME, fkDatabaseName);
+        savedInstanceState.putInt(RES_ACTIVITY_TITLE, title);
+    }*/
 }

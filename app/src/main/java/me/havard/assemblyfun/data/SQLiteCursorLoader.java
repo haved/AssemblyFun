@@ -24,7 +24,6 @@ public class SQLiteCursorLoader extends AsyncTaskLoader<Cursor> {
     @Override
     public Cursor loadInBackground()
     {
-        Log.d("Assembly Fun", "Stated loading a cursor! " + mQueryText);
         Cursor cursor = mDBHelper.getReadableDatabase().rawQuery(mQueryText, null);
 
         if(cursor!=null)
@@ -56,7 +55,6 @@ public class SQLiteCursorLoader extends AsyncTaskLoader<Cursor> {
     @Override
     protected void onStartLoading() {
         if (mCursor != null) {
-            Log.d("Assembly Fun", "We already have data in the onStartLoading()");
             deliverResult(mCursor); //We already have data!
         }
         if (takeContentChanged() || mCursor == null /*||configChange*/) {
@@ -66,29 +64,23 @@ public class SQLiteCursorLoader extends AsyncTaskLoader<Cursor> {
 
     @Override
     protected void onStopLoading() {
-        Log.d("Assembly Fun", "onStopLoading()");
         cancelLoad();
     }
 
     @Override
     public void onCanceled(Cursor cursor) {
         super.onCanceled(cursor);
-        Log.d("Assembly Fun", "onCanceled() mCursor = " + mCursor +
-                ((mCursor != null && !mCursor.isClosed()) ? "Not closed" : "Closed"));
         if (cursor != null && !cursor.isClosed())
             onReleaseResources(cursor);
     }
 
     @Override
     protected void onReset() {
-        Log.d("Assembly Fun", "onReset()");
         super.onReset();
 
         //Quote: "Ensure the loader is stopped"
         onStopLoading();
 
-        Log.d("Assembly Fun", "onReset() mCursor = " + mCursor +
-                ((mCursor!=null&&!mCursor.isClosed())?"Not closed":"Closed"));
         if (mCursor != null && !mCursor.isClosed()) {
             onReleaseResources(mCursor);
         }
@@ -96,7 +88,6 @@ public class SQLiteCursorLoader extends AsyncTaskLoader<Cursor> {
     }
 
     protected void onReleaseResources(Cursor cursor) {
-        Log.d("Assembly Fun", "Cursor released!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         cursor.close();
     }
 }

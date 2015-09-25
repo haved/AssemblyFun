@@ -45,8 +45,7 @@
     <string name="help_solve_options_body">Choose what set of tasks to browse.\n
     Online Tasks is under construction.\n
     Local Tasks is where you should start. There you\'ll find all tasks saved locally. Some tutorial tasks are saved there\n
-    Solved Tasks is a list of tasks you\'ve solved. Even tasks you don\'t have downloaded will be shown here.\n
-    Published Tasks is a place were you can see all tasks you\'ve made yourself and published.</string>
+    Solved Tasks is a list of tasks you\'ve solved. Even tasks you don\'t have downloaded will be shown here.</string>
     <string name="label_task_list_no_filter">No Filter</string>
     <string name="label_task_list_item_shown">Task Shown</string>
     <string name="label_task_list_items_shown">Tasks Shown</string>
