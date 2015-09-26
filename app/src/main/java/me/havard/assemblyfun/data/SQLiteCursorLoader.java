@@ -12,19 +12,24 @@ import android.util.Log;
  */
 public class SQLiteCursorLoader extends AsyncTaskLoader<Cursor> {
     private SQLiteOpenHelper mDBHelper;
-    private String mQueryText;
     private Cursor mCursor;
 
-    public SQLiteCursorLoader(Context context, SQLiteOpenHelper dbHelper, String queryText) {
+    private String mQuery;
+    private String[] mWhereArgs;
+
+    public SQLiteCursorLoader(Context context, SQLiteOpenHelper dbHelper, String query, String[] whereArgs) {
         super(context);
         mDBHelper = dbHelper;
-        mQueryText = queryText;
+
+        mQuery = query;
+        mWhereArgs = whereArgs;
     }
 
     @Override
     public Cursor loadInBackground()
     {
-        Cursor cursor = mDBHelper.getReadableDatabase().rawQuery(mQueryText, null);
+        //Cursor cursor = mDBHelper.getReadableDatabase().rawQuery(mQueryText, null);
+        Cursor cursor = mDBHelper.getReadableDatabase().rawQuery(mQuery, mWhereArgs);
 
         if(cursor!=null)
             cursor.getCount(); /*Don't ask me why.

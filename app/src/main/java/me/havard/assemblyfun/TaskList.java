@@ -19,17 +19,24 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import me.havard.assemblyfun.data.SQLiteCursorLoader;
 import me.havard.assemblyfun.data.TaskCursorAdapter;
 import me.havard.assemblyfun.data.tables.TaskIDTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
 public class TaskList extends AppCompatActivity implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
-    public static final String HIDE_UNSOLVED_FILTER_OPTION_ID = "hide_action_unsolved_filter";
-    public static final String HIDE_LOCAL_FILTER_OPTION_ID = "hide_action_local_filter";
-    public static final String CHECK_COLUMN_NAME = "check_column_name";
-    public static final String RES_ACTIVITY_TITLE = "activity_title_res";
+    public static final String KEY_HIDE_UNSOLVED_FILTER_OPTION_ID = "hide_action_unsolved_filter";
+    public static final String KEY_HIDE_LOCAL_FILTER_OPTION_ID = "hide_action_local_filter";
+    public static final String KEY_CHECK_COLUMN_NAME = "check_column_name";
+    public static final String KEY_RES_ACTIVITY_TITLE = "activity_title_res";
     private static final int TASK_CURSOR_LOADER_ID = 0;
+
+    private static final String KEY_SAVE_LIST_SEARCH = "key_list_search";
+    private static final String KEY_SAVE_LIST_LOCAL_ONLY = "key_list_local_only";
+    private static final String KEY_SAVE_LIST_UNSOLVED_ONLY = "key_list_unsolved_only";
+    private static final String KEY_SAVE_LIST_SELF_PUBLISHED_ONLY = "key_list_self_published_only";
 
     private ListView list;
     private TaskCursorAdapter listAdapter;
@@ -41,7 +48,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     private String mCheckColumnName;
     private int mTitle;
 
-    private boolean mListPublishedOnly;
+    private boolean mListSelfPublishedOnly;
     private boolean mListUnsolvedOnly;
     private boolean mListLocalOnly;
     private String mListCurrentSearch;
@@ -65,13 +72,19 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
             return;
         }
 
-        mHideUnsolvedOnly = extras.getBoolean(HIDE_UNSOLVED_FILTER_OPTION_ID);
-        mHideLocalOnly = extras.getBoolean(HIDE_LOCAL_FILTER_OPTION_ID);
-        mCheckColumnName = extras.getString(CHECK_COLUMN_NAME);
-        mTitle = extras.getInt(RES_ACTIVITY_TITLE, R.string.title_unset);
+        mHideUnsolvedOnly = extras.getBoolean(KEY_HIDE_UNSOLVED_FILTER_OPTION_ID);
+        mHideLocalOnly = extras.getBoolean(KEY_HIDE_LOCAL_FILTER_OPTION_ID);
+        mCheckColumnName = extras.getString(KEY_CHECK_COLUMN_NAME);
+        mTitle = extras.getInt(KEY_RES_ACTIVITY_TITLE, R.string.title_unset);
         setTitle(mTitle);
 
-        updateTaskList(mListCurrentSearch, mListLocalOnly, mListUnsolvedOnly, mListPublishedOnly);
+        if(savedInstanceBundle != null)
+        {
+            updateTaskList(savedInstanceBundle.getString(KEY_SAVE_LIST_SEARCH), savedInstanceBundle.getBoolean(KEY_SAVE_LIST_LOCAL_ONLY),
+                    savedInstanceBundle.getBoolean(KEY_SAVE_LIST_UNSOLVED_ONLY), savedInstanceBundle.getBoolean(KEY_SAVE_LIST_SELF_PUBLISHED_ONLY));
+        }
+        else
+            updateTaskList(null, false, false, false);
     }
 
     protected void updateTaskList(String search, boolean localOnly, boolean solvedOnly, boolean selfPublishedOnly)
@@ -81,14 +94,12 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         else
             mListCurrentSearch = search;
         mListLocalOnly = localOnly;
-        mListPublishedOnly = selfPublishedOnly;
+        mListSelfPublishedOnly = selfPublishedOnly;
         mListUnsolvedOnly = solvedOnly;
 
         filterStatusText.setText(R.string.label_task_list_loading_items);
         clearSearchButton.setVisibility(View.GONE);
 
-        mCurrentQuery = getQueryText(mCheckColumnName, mListCurrentSearch, mListLocalOnly, mListUnsolvedOnly, mListPublishedOnly);
-        Log.d("Assembly Fun", "Made a new query: " + mCurrentQuery);
         getLoaderManager().restartLoader(TASK_CURSOR_LOADER_ID, null, this);
     }
 
@@ -103,7 +114,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
             filterText.append(", ").append(getResources().getString(R.string.label_task_list_local_only));
         if(mListUnsolvedOnly)
             filterText.append(", ").append(getResources().getString(R.string.label_task_list_unsolved_only));
-        if(mListPublishedOnly)
+        if(mListSelfPublishedOnly)
             filterText.append(", ").append(getResources().getString(R.string.label_task_list_self_published_only));
 
         filterStatusText.setText(getResources().getString(filterText.length() == 0 ? R.string.label_task_list_no_filter : R.string.label_task_list_filtering_by) + filterText.toString());
@@ -121,7 +132,24 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), mCurrentQuery);
+        ArrayList<String> whereArgs = new ArrayList<>();
+
+        mCurrentQuery = makeQueryText(whereArgs, mCheckColumnName, mListCurrentSearch, mListLocalOnly, mListUnsolvedOnly, mListSelfPublishedOnly);
+
+        String text = mCurrentQuery;
+        int argsIndex = 0;
+        for(int i = 0; i < text.length(); i++)
+        {
+            if(text.charAt(i)=='?')
+            {
+                text = text.substring(0, i) + whereArgs.get(argsIndex) + text.substring(i+1);
+                argsIndex++;
+            }
+        }
+
+        Log.d("Assembly Fun", "Using query (I think): " + text);
+
+        return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), mCurrentQuery, whereArgs.toArray(new String[whereArgs.size()]));
     }
 
     @Override
@@ -170,7 +198,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
             dialog.setPositiveButton(R.string.dialog_button_OK, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    updateTaskList(text.getText().toString().split("'")[0], mListLocalOnly, mListUnsolvedOnly, mListPublishedOnly);
+                    updateTaskList(text.getText().toString().split("'")[0], mListLocalOnly, mListUnsolvedOnly, mListSelfPublishedOnly);
                 }
             });
             dialog.setNegativeButton(R.string.dialog_button_Cancel, new DialogInterface.OnClickListener() {
@@ -190,7 +218,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
 
     public void onResetSearchButtonPressed(View view)
     {
-        updateTaskList(null, mListLocalOnly, mListUnsolvedOnly, mListPublishedOnly);
+        updateTaskList(null, mListLocalOnly, mListUnsolvedOnly, mListSelfPublishedOnly);
     }
 
     @Override
@@ -200,30 +228,46 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         getLoaderManager().destroyLoader(TASK_CURSOR_LOADER_ID);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle saveInstanceState)
+    {
+        super.onSaveInstanceState(saveInstanceState);
+        saveInstanceState.putString(KEY_SAVE_LIST_SEARCH, mListCurrentSearch);
+        saveInstanceState.putBoolean(KEY_SAVE_LIST_LOCAL_ONLY, mListLocalOnly);
+        saveInstanceState.putBoolean(KEY_SAVE_LIST_UNSOLVED_ONLY, mListUnsolvedOnly);
+        saveInstanceState.putBoolean(KEY_SAVE_LIST_SELF_PUBLISHED_ONLY, mListSelfPublishedOnly);
+    }
+
     private static final String QUERY_START = "SELECT " + TaskinfoTable.NAME + ", "  + TaskinfoTable.DESC + ", " + TaskinfoTable.DIFFICULTY + ", " +
             TaskinfoTable.AUTHOR + ", " + TaskinfoTable.LOCAL + ", " + TaskinfoTable.SOLVED + ", " + TaskinfoTable.SELF_PUBLISHED + ", " +  TaskinfoTable.TABLE_NAME + "." + TaskIDTable._ID_TaskIDs + " AS _id" +
             " FROM " + TaskinfoTable.TABLE_NAME + " WHERE ";
 
-    protected static String getQueryText(String checkColumnName, String search, boolean localOnly, boolean unsolvedOnly, boolean self_publishedOnly)
+    private static final String SEARCH_STATEMENT = "(" + TaskinfoTable.NAME + " LIKE ? OR " + TaskinfoTable.DESC + " LIKE ? OR " + TaskinfoTable.AUTHOR + " LIKE ?)";
+    private static final int SEARCH_STATEMENT_WHEREARG_COUNT = 3;
+
+    protected static String makeQueryText(ArrayList<String> whereArgs, String checkColumnName, String search, boolean localOnly, boolean unsolvedOnly, boolean self_publishedOnly)
     {
+        whereArgs.add("1"); //For the checkColumn='1'
+
         StringBuilder ands = new StringBuilder();
         if(search!=null) {
-            ands.append(" AND ").append(getSearchStatement(search));
+            ands.append(" AND ").append(SEARCH_STATEMENT);
+            for(int i = 0; i < SEARCH_STATEMENT_WHEREARG_COUNT; i++)
+                whereArgs.add("%"+search+"%");
         }
         if(localOnly) {
-            ands.append(" AND ").append(TaskinfoTable.LOCAL).append(" = '1'");
+            ands.append(" AND ").append(TaskinfoTable.LOCAL).append(" = ?");
+            whereArgs.add("1");
         }
         if(unsolvedOnly) {
-            ands.append(" AND ").append(TaskinfoTable.SOLVED).append(" = '0'");
+            ands.append(" AND ").append(TaskinfoTable.SOLVED).append(" = ?");
+            whereArgs.add("0");
         }
         if(self_publishedOnly) {
-            ands.append(" AND ").append(TaskinfoTable.SELF_PUBLISHED).append(" = '1'");
+            ands.append(" AND ").append(TaskinfoTable.SELF_PUBLISHED).append(" = ?");
+            whereArgs.add("1");
         }
-        return QUERY_START + checkColumnName + " = '1' " + ands.toString();
-    }
 
-    public static String getSearchStatement(String search)
-    {
-        return "(" + TaskinfoTable.NAME + " LIKE '%" + search + "%' OR " + TaskinfoTable.DESC + " LIKE '%" + search + "%' OR " + TaskinfoTable.AUTHOR + " LIKE '%" + search + "%')";
+        return QUERY_START + checkColumnName + " = ?" + ands.toString();
     }
 }

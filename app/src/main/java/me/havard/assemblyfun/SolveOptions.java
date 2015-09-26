@@ -27,18 +27,18 @@ public class SolveOptions extends AppCompatActivity {
     public void onSolveLocalPressed(View source)
     {
         Intent localTaskListActivity = new Intent(this, TaskList.class);
-        localTaskListActivity.putExtra(TaskList.RES_ACTIVITY_TITLE, R.string.solve_option_local);
-        localTaskListActivity.putExtra(TaskList.CHECK_COLUMN_NAME, TaskinfoTable.LOCAL);
-        localTaskListActivity.putExtra(TaskList.HIDE_LOCAL_FILTER_OPTION_ID, true);
+        localTaskListActivity.putExtra(TaskList.KEY_RES_ACTIVITY_TITLE, R.string.solve_option_local);
+        localTaskListActivity.putExtra(TaskList.KEY_CHECK_COLUMN_NAME, TaskinfoTable.LOCAL);
+        localTaskListActivity.putExtra(TaskList.KEY_HIDE_LOCAL_FILTER_OPTION_ID, true);
         startActivity(localTaskListActivity);
     }
 
     public void onSolveSolvedPressed(View source)
     {
         Intent solvedTaskListActivity = new Intent(this, TaskList.class);
-        solvedTaskListActivity.putExtra(TaskList.RES_ACTIVITY_TITLE, R.string.solve_option_solved);
-        solvedTaskListActivity.putExtra(TaskList.CHECK_COLUMN_NAME, TaskinfoTable.SOLVED);
-        solvedTaskListActivity.putExtra(TaskList.HIDE_UNSOLVED_FILTER_OPTION_ID, true);
+        solvedTaskListActivity.putExtra(TaskList.KEY_RES_ACTIVITY_TITLE, R.string.solve_option_solved);
+        solvedTaskListActivity.putExtra(TaskList.KEY_CHECK_COLUMN_NAME, TaskinfoTable.SOLVED);
+        solvedTaskListActivity.putExtra(TaskList.KEY_HIDE_UNSOLVED_FILTER_OPTION_ID, true);
         startActivity(solvedTaskListActivity);
     }
 
