@@ -25,20 +25,17 @@ public class LocalTaskTable extends Table {
         return TABLE_NAME;
     }
 
-    public static void populateContentValues(ContentValues values, long ref_id, String taskText, String taskTests)
+    public static void addRow(SQLiteDatabase db, ContentValues values, long ref_id, String taskText, String taskTests)
     {
         values.put(TaskIDTable._ID_TaskIDs, ref_id);
         values.put(TASK_TEXT, taskText);
         values.put(TASK_TESTS, taskTests);
+        db.insert(TABLE_NAME, null, values);
     }
 
-    public static void registerLocalTaskToDB(SQLiteDatabase db, ContentValues values, long ref_id, String taskText, String taskTests)
+    public static void deleteRow(SQLiteDatabase db, long ref_id)
     {
-        populateContentValues(values, ref_id, taskText, taskTests);
-        db.insert(TABLE_NAME, null, values);
-        values.clear();
-        values.put(TaskinfoTable.LOCAL, 1);
-        db.update(TaskinfoTable.TABLE_NAME, values, TaskinfoTable._ID_TaskIDs + "=?", new String[]{Long.toString(ref_id)});
+        db.delete(TABLE_NAME, TaskIDTable._ID_TaskIDs+"=?", new String[]{Long.toString(ref_id)});
     }
 
     public static String makeTaskTestString(int[][] inputs, int[][]outputs)

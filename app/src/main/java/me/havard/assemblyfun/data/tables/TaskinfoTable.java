@@ -59,7 +59,7 @@ public class TaskinfoTable extends Table
         values.put(SELF_PUBLISHED, self_published?1:0);
     }
 
-    public static long addTaskToDB(SQLiteDatabase db, ContentValues values, long ref_id, String name, String desc, long date, Difficulty diff,
+    public static long addRow(SQLiteDatabase db, ContentValues values, long ref_id, String name, String desc, long date, Difficulty diff,
                                    float rating, String author, boolean local, boolean solved, boolean self_published)
     {
         populateContentValues(values, ref_id, name, desc, date, diff, rating, author, local, solved, self_published);

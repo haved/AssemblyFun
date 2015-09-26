@@ -28,15 +28,15 @@ public class TaskIDTable extends Table {
         values.put(GLOBAL_TASK_ID, globalTaskID);
     }
 
-    public static long registerIDs(SQLiteDatabase db, ContentValues values, long globalTaskID)
+    public static long addRow(SQLiteDatabase db, ContentValues values, long globalTaskID)
     {
         populateContentValues(values, globalTaskID);
         return db.insert(TABLE_NAME, null, values);
     }
 
-    public static long registerIDs(SQLiteDatabase db, ContentValues values)
+    public static long addRow(SQLiteDatabase db, ContentValues values)
     {
-        values.put(GLOBAL_TASK_ID, (String)null);
+        values.put(GLOBAL_TASK_ID, (String) null);
         return db.insert(TABLE_NAME, null, values);
     }
 
