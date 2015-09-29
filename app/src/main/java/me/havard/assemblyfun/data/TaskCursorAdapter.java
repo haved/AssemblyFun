@@ -30,5 +30,11 @@ public class TaskCursorAdapter extends SimpleCursorAdapter {
         Difficulty diff = Difficulty.values()[cursor.getInt(cursor.getColumnIndex(TaskinfoTable.DIFFICULTY))];
         diffText.setText(diff.getLabelId());
         diffText.setTextColor(ContextCompat.getColor(context, diff.getColorId()));
+        if(cursor.getInt(cursor.getColumnIndex(TaskinfoTable.LOCAL))==1)
+            view.findViewById(R.id.task_list_item_local).setVisibility(View.VISIBLE);
+        if(cursor.getInt(cursor.getColumnIndex(TaskinfoTable.SOLVED))==1)
+            view.findViewById(R.id.task_list_item_solved).setVisibility(View.VISIBLE);
+        if(cursor.getInt(cursor.getColumnIndex(TaskinfoTable.SELF_PUBLISHED))==1)
+            view.findViewById(R.id.task_list_item_published).setVisibility(View.VISIBLE);
     }
 }
