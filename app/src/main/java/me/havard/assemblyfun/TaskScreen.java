@@ -13,7 +13,7 @@ import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
 public class TaskScreen extends AppCompatActivity {
 
-    public static final String EXTRAS_TASK_ID = "ExtrasTaskID";
+    public static final String EXTRAS_TASK_ID = "extrasTaskID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

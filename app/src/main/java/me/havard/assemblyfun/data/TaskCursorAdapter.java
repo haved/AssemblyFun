@@ -36,5 +36,7 @@ public class TaskCursorAdapter extends SimpleCursorAdapter {
             view.findViewById(R.id.task_list_item_solved).setVisibility(View.VISIBLE);
         if(cursor.getInt(cursor.getColumnIndex(TaskinfoTable.SELF_PUBLISHED))==1)
             view.findViewById(R.id.task_list_item_published).setVisibility(View.VISIBLE);
+        if(cursor.getInt(cursor.getColumnIndex(TaskinfoTable.FAVOURITE))==1)
+            view.findViewById(R.id.task_list_item_favourite).setVisibility(View.VISIBLE);
     }
 }

@@ -239,11 +239,12 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     }
 
     private static final String QUERY_START = "SELECT " + TaskinfoTable.NAME + ", "  + TaskinfoTable.DESC + ", " + TaskinfoTable.DIFFICULTY + ", " +
-            TaskinfoTable.AUTHOR + ", " + TaskinfoTable.LOCAL + ", " + TaskinfoTable.SOLVED + ", " + TaskinfoTable.SELF_PUBLISHED + ", " +  TaskinfoTable.TABLE_NAME + "." + TaskIDTable._ID_TaskIDs + " AS _id" +
+            TaskinfoTable.AUTHOR + ", " + TaskinfoTable.LOCAL + ", " + TaskinfoTable.SOLVED + ", " + TaskinfoTable.SELF_PUBLISHED + ", " + TaskinfoTable.FAVOURITE + ", "
+            +  TaskinfoTable.TABLE_NAME + "." + TaskIDTable._ID_TaskIDs + " AS _id" +
             " FROM " + TaskinfoTable.TABLE_NAME + " WHERE ";
 
     private static final String SEARCH_STATEMENT = "(" + TaskinfoTable.NAME + " LIKE ? OR " + TaskinfoTable.DESC + " LIKE ? OR " + TaskinfoTable.AUTHOR + " LIKE ?)";
-    private static final int SEARCH_STATEMENT_WHEREARG_COUNT = 3;
+    private static final int SEARCH_STATEMENT_WHERE_ARG_COUNT = 3;
 
     protected static String makeQueryText(ArrayList<String> whereArgs, String checkColumnName, String search, boolean localOnly, boolean unsolvedOnly, boolean self_publishedOnly)
     {
@@ -252,7 +253,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         StringBuilder ands = new StringBuilder();
         if(search!=null) {
             ands.append(" AND ").append(SEARCH_STATEMENT);
-            for(int i = 0; i < SEARCH_STATEMENT_WHEREARG_COUNT; i++)
+            for(int i = 0; i < SEARCH_STATEMENT_WHERE_ARG_COUNT; i++)
                 whereArgs.add("%"+search+"%");
         }
         if(localOnly) {

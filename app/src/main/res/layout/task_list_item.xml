@@ -5,19 +5,20 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceListItem"
         android:id="@+id/task_list_item_title"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="false"
         android:layout_toLeftOf="@+id/task_list_item_icon_bar"
-        android:text="Task Title" />
+        android:text="Task Title"
+        android:textSize="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:text="Task description"
         android:id="@+id/task_list_item_desc"
         android:layout_alignParentLeft="true"
@@ -55,11 +56,12 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/task_list_item_title"
-        android:id="@+id/task_list_item_icon_bar">
+        android:id="@+id/task_list_item_icon_bar"
+        android:gravity="center">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
             android:id="@+id/task_list_item_published"
             android:src="@mipmap/ic_published"
             android:layout_alignParentTop="true"
@@ -69,8 +71,8 @@
             android:visibility="gone" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
             android:id="@+id/task_list_item_solved"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/task_list_item_published"
@@ -81,10 +83,22 @@
             android:layout_alignParentRight="false" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
             android:id="@+id/task_list_item_local"
             android:src="@mipmap/ic_local"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/task_list_item_solved"
+            android:layout_toStartOf="@+id/task_list_item_solved"
+            android:layout_alignBottom="@+id/task_list_item_title"
+            android:visibility="gone"
+            android:layout_alignParentRight="false" />
+
+        <ImageView
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:id="@+id/task_list_item_favourite"
+            android:src="@mipmap/ic_favourite"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/task_list_item_solved"
             android:layout_toStartOf="@+id/task_list_item_solved"

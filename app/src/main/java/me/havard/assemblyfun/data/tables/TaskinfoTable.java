@@ -22,6 +22,7 @@ public class TaskinfoTable extends Table
     public static final String LOCAL = "local";
     public static final String SOLVED = "solved";
     public static final String SELF_PUBLISHED = "self_published";
+    public static final String FAVOURITE = "favourite";
     @Override
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
@@ -35,6 +36,7 @@ public class TaskinfoTable extends Table
                 LOCAL, INT,
                 SOLVED, INT,
                 SELF_PUBLISHED, INT,
+                FAVOURITE, INT,
                 TaskIDTable.FOREIGN_KEY_ID_TaskIDs);
     }
 
@@ -45,7 +47,7 @@ public class TaskinfoTable extends Table
     }
 
     public static void populateContentValues(ContentValues values, long ref_id, String name, String desc, long date, Difficulty diff,
-                                             float rating, String author, boolean local, boolean solved, boolean self_published)
+                                             float rating, String author, boolean local, boolean solved, boolean self_published, boolean favourite)
     {
         values.put(_ID_TaskIDs, ref_id);
         values.put(NAME, name);
@@ -57,12 +59,13 @@ public class TaskinfoTable extends Table
         values.put(LOCAL, local?1:0);
         values.put(SOLVED, solved?1:0);
         values.put(SELF_PUBLISHED, self_published?1:0);
+        values.put(FAVOURITE, favourite?1:0);
     }
 
     public static long addRow(SQLiteDatabase db, ContentValues values, long ref_id, String name, String desc, long date, Difficulty diff,
-                                   float rating, String author, boolean local, boolean solved, boolean self_published)
+                                   float rating, String author, boolean local, boolean solved, boolean self_published, boolean favourite)
     {
-        populateContentValues(values, ref_id, name, desc, date, diff, rating, author, local, solved, self_published);
+        populateContentValues(values, ref_id, name, desc, date, diff, rating, author, local, solved, self_published, favourite);
         return db.insert(TABLE_NAME, null, values);
     }
 }

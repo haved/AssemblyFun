@@ -38,6 +38,9 @@ public class LocalTaskTable extends Table {
         db.delete(TABLE_NAME, TaskIDTable._ID_TaskIDs+"=?", new String[]{Long.toString(ref_id)});
     }
 
+    //Format: r0,r1=r0,r1,r2;r0=r0,r1;r0,r1=r0;
+    //A test: 5,4,6=2,5,6
+    //Example 4,5=3,5,4;3=5,10;1,2=3;
     public static String makeTaskTestString(int[][] inputs, int[][]outputs)
     {
         StringBuilder out = new StringBuilder();
