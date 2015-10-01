@@ -32,13 +32,13 @@ public final class AFDatabaseInteractionHelper
         }
     }
 
-    public static long addTaskInfoToTables(SQLiteDatabase db, ContentValues values, String name, String desc, long date, Difficulty diff, float rating, String author, boolean solved, boolean selfPublished, long globalID)
+    public static long addTaskInfoToTables(SQLiteDatabase db, ContentValues values, String name, String desc, long date, Difficulty diff, float rating, String author,
+                                           boolean solved, boolean selfPublished, boolean favourite, long globalID)
     {
         long localID=getLocalIDFromGlobalID(db, values, globalID);
-        //Log.d("Assembly Fun", "Added a taskID! GlobalID: " + globalID + " LocalID (_id) given: " + localID);
         values.clear();
 
-        TaskinfoTable.addRow(db, values, localID, name, desc, date, diff, rating, author, false, solved, selfPublished);
+        TaskinfoTable.addRow(db, values, localID, name, desc, date, diff, rating, author, false, solved, selfPublished, favourite);
         return localID;
     }
 
