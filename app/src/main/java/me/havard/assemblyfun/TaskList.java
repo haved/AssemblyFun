@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -92,8 +93,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
             reloadTaskList();
     }
 
-    protected void updateTaskList(String search, boolean localOnly, boolean solvedOnly, boolean selfPublishedOnly, boolean favouritesOnly, OrderBy orderBy)
-    {
+    protected void updateTaskList(String search, boolean localOnly, boolean solvedOnly, boolean selfPublishedOnly, boolean favouritesOnly, OrderBy orderBy) {
         if(search==null || search.equals(""))
             mListFilterText = null;
         else
@@ -110,13 +110,12 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         reloadTaskList();
     }
 
-    protected void reloadTaskList()
-    {
+    protected void reloadTaskList() {
         getLoaderManager().restartLoader(TASK_CURSOR_LOADER_ID, null, this);
+        invalidateOptionsMenu();
     }
 
-    protected void useCursor(Cursor cursor)
-    {
+    protected void useCursor(Cursor cursor) {
         mListAdapter.changeCursor(cursor);
         StringBuilder filterText = new StringBuilder();
         String orderedText = "";
@@ -153,8 +152,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
             mClearLawAndOrderButton.setVisibility(View.GONE);
     }
 
-    protected void useNoCursor()
-    {
+    protected void useNoCursor() {
         mListAdapter.changeCursor(null);
         mListAdapterStatusText.setText("The cursor was removed!");
     }
@@ -205,6 +203,8 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         if(mHideLocalOnly)
             menu.removeItem(R.id.action_task_list_filter_local);
 
+        Log.d("Assembly Fun", "Menu inflated");
+
         if(mListFilterLocal)
             menu.findItem(R.id.action_task_list_filter_local).setChecked(true);
         if(mListFilterUnsolved)
@@ -214,8 +214,11 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         if(mListFilterFavourites)
             menu.findItem(R.id.action_task_list_filter_favourites).setChecked(true);
 
-        if(mListOrderBy!=null)
-            menu.findItem(mListOrderBy.getActionId()).setChecked(true);
+        if(mListOrderBy!=null) {
+            MenuItem item = menu.findItem(mListOrderBy.getActionId());
+            item.setCheckable(true);
+            item.setChecked(true);
+        }
 
         return true;
     }

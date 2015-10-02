@@ -19,12 +19,12 @@
         android:orderInCategory="500" app:showAsAction="never" />
     <item android:id="@+id/action_disabled_task_list_filter" android:title="@string/action_disabled_filter" android:enabled="false"
         android:orderInCategory="600" app:showAsAction="never" />
-    <item android:id="@+id/action_task_list_filter_local" android:title="@string/action_filter_local" android:enabled="true"
+    <item android:id="@+id/action_task_list_filter_local" android:title="@string/action_filter_local" android:enabled="true" android:checkable="true"
         android:orderInCategory="700" app:showAsAction="never" />
-    <item android:id="@+id/action_task_list_filter_unsolved" android:title="@string/action_filter_unsolved" android:enabled="true"
+    <item android:id="@+id/action_task_list_filter_unsolved" android:title="@string/action_filter_unsolved" android:enabled="true" android:checkable="true"
         android:orderInCategory="800" app:showAsAction="never" />
-    <item android:id="@+id/action_task_list_filter_self_published" android:title="@string/action_filter_self_published" android:enabled="true"
+    <item android:id="@+id/action_task_list_filter_self_published" android:title="@string/action_filter_self_published" android:enabled="true" android:checkable="true"
         android:orderInCategory="900" app:showAsAction="never" />
-    <item android:id="@+id/action_task_list_filter_favourites" android:title="@string/action_filter_favourites" android:enabled="true"
+    <item android:id="@+id/action_task_list_filter_favourites" android:title="@string/action_filter_favourites" android:enabled="true" android:checkable="true"
         android:orderInCategory="1000" app:showAsAction="never" />
 </menu>
