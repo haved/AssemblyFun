@@ -119,9 +119,8 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         mListAdapter.changeCursor(cursor);
         StringBuilder filterText = new StringBuilder();
         String orderedText = "";
-        if(mListFilterText !=null) {
+        if(mListFilterText != null)
             filterText.append("'").append(mListFilterText).append("'");
-        }
         if(mListFilterLocal)
             filterText.append(", ").append(getResources().getString(R.string.label_task_list_filter_local));
         if(mListFilterUnsolved)
@@ -163,7 +162,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
 
         mCurrentQuery = makeQueryText(whereArgs, mCheckColumnName, mListFilterText, mListFilterLocal, mListFilterUnsolved, mListFilterSelfPublished, mListFilterFavourites, mListOrderBy);
 
-        String text = mCurrentQuery;
+        /*String text = mCurrentQuery;
         int argsIndex = 0;
         for(int i = 0; i < text.length(); i++)
         {
@@ -172,7 +171,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
                 text = text.substring(0, i) + whereArgs.get(argsIndex) + text.substring(i+1);
                 argsIndex++;
             }
-        }
+        }*/
 
         return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), mCurrentQuery, whereArgs.toArray(new String[whereArgs.size()]));
     }
@@ -202,8 +201,6 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
             menu.removeItem(R.id.action_task_list_filter_unsolved);
         if(mHideLocalOnly)
             menu.removeItem(R.id.action_task_list_filter_local);
-
-        Log.d("Assembly Fun", "Menu inflated");
 
         if(mListFilterLocal)
             menu.findItem(R.id.action_task_list_filter_local).setChecked(true);
