@@ -54,16 +54,17 @@
     <string name="action_filter_favourites">Favourites only</string>
 
     <string name="label_task_list_no_filter">No Filter</string>
-    <string name="label_task_list_filtering_by">Filtering by:\u0020</string>
+    <string name="label_task_list_filtering_by">Filtering by\u0020</string>
     <string name="label_task_list_filter_local">Local</string>
     <string name="label_task_list_filter_unsolved">Unsolved</string>
     <string name="label_task_list_filter_self_published">Self published</string>
     <string name="label_task_list_filter_favourites">Favourites</string>
-    <string name="label_task_list_sorted_by">Sorted by:\u0020</string>
+    <string name="label_task_list_sorted_by">Sorted by\u0020</string>
     <string name="label_task_list_item_shown">Task Shown</string>
     <string name="label_task_list_items_shown">Tasks Shown</string>
     <string name="label_task_list_loading_items">Loading Items...</string>
     <string name="button_task_list_no_filter_desc">a cut icon for removing the filter</string>
+
     <string name="title_activity_task_screen">TaskScreen</string>
 
     <string name="hello_world">Hello world!</string>

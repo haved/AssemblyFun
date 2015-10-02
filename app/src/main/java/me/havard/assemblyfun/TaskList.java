@@ -39,22 +39,22 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     private static final String KEY_SAVE_LIST_FAVOURITES_ONLY = "key_list_favourites_only";
     private static final String KEY_SAVE_LIST_ORDER_BY_ID = "key_list_order_by_id";
 
-    private ListView list;
-    private TaskCursorAdapter listAdapter;
-    private TextView filterStatusText;
-    private ImageButton clearSearchButton;
+    private ListView mListView;
+    private TaskCursorAdapter mListAdapter;
+    private TextView mListAdapterStatusText;
+    private ImageButton mClearLawAndOrderButton;
 
     private boolean mHideUnsolvedOnly;
     private boolean mHideLocalOnly;
     private String mCheckColumnName;
     private int mTitle;
 
-    private boolean mListLocalOnly;
-    private boolean mListUnsolvedOnly;
-    private boolean mListSelfPublishedOnly;
-    private boolean mListFavouritesOnly;
+    private boolean mListFilterLocal;
+    private boolean mListFilterUnsolved;
+    private boolean mListFilterSelfPublished;
+    private boolean mListFilterFavourites;
+    private String mListFilterText;
     private OrderBy mListOrderBy;
-    private String mListCurrentSearch;
     private String mCurrentQuery;
 
     @Override
@@ -62,16 +62,16 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         super.onCreate(savedInstanceBundle);
         setContentView(R.layout.activity_task_list);
 
-        list = (ListView)findViewById(R.id.task_list_view);
-        list.setOnItemClickListener(this);
-        listAdapter = new TaskCursorAdapter(this, null);
-        list.setAdapter(listAdapter);
-        filterStatusText = (TextView)findViewById(R.id.task_list_label_serach_status);
-        clearSearchButton = (ImageButton)findViewById(R.id.task_list_reset_filter);
+        mListView = (ListView)findViewById(R.id.task_list_view);
+        mListView.setOnItemClickListener(this);
+        mListAdapter = new TaskCursorAdapter(this, null);
+        mListView.setAdapter(mListAdapter);
+        mListAdapterStatusText = (TextView)findViewById(R.id.task_list_label_serach_status);
+        mClearLawAndOrderButton = (ImageButton)findViewById(R.id.task_list_reset_filter);
 
         Bundle extras = getIntent().getExtras();
         if(extras==null) {
-            filterStatusText.setText("No bundle was passed to the TaskList. Expect some crashes!");
+            mListAdapterStatusText.setText("No bundle was passed to the TaskList. Expect some crashes!");
             return;
         }
 
@@ -95,17 +95,17 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     protected void updateTaskList(String search, boolean localOnly, boolean solvedOnly, boolean selfPublishedOnly, boolean favouritesOnly, OrderBy orderBy)
     {
         if(search==null || search.equals(""))
-            mListCurrentSearch = null;
+            mListFilterText = null;
         else
-            mListCurrentSearch = search;
-        mListLocalOnly = localOnly;
-        mListSelfPublishedOnly = selfPublishedOnly;
-        mListUnsolvedOnly = solvedOnly;
-        mListFavouritesOnly = favouritesOnly;
+            mListFilterText = search;
+        mListFilterLocal = localOnly;
+        mListFilterSelfPublished = selfPublishedOnly;
+        mListFilterUnsolved = solvedOnly;
+        mListFilterFavourites = favouritesOnly;
         mListOrderBy = orderBy;
 
-        filterStatusText.setText(R.string.label_task_list_loading_items);
-        clearSearchButton.setVisibility(View.GONE);
+        mListAdapterStatusText.setText(R.string.label_task_list_loading_items);
+        mClearLawAndOrderButton.setVisibility(View.GONE);
 
         reloadTaskList();
     }
@@ -117,49 +117,53 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
 
     protected void useCursor(Cursor cursor)
     {
-        listAdapter.changeCursor(cursor);
+        mListAdapter.changeCursor(cursor);
         StringBuilder filterText = new StringBuilder();
-        StringBuilder orderedText = new StringBuilder();
-        if(mListCurrentSearch!=null) {
-            filterText.append("'").append(mListCurrentSearch).append("'");
+        String orderedText = "";
+        if(mListFilterText !=null) {
+            filterText.append("'").append(mListFilterText).append("'");
         }
-        if(mListLocalOnly)
+        if(mListFilterLocal)
             filterText.append(", ").append(getResources().getString(R.string.label_task_list_filter_local));
-        if(mListUnsolvedOnly)
+        if(mListFilterUnsolved)
             filterText.append(", ").append(getResources().getString(R.string.label_task_list_filter_unsolved));
-        if(mListSelfPublishedOnly)
+        if(mListFilterSelfPublished)
             filterText.append(", ").append(getResources().getString(R.string.label_task_list_filter_self_published));
-        if(mListFavouritesOnly)
+        if(mListFilterFavourites)
             filterText.append(", ").append(getResources().getString(R.string.label_task_list_filter_favourites));
 
         if(mListOrderBy!=null)
-            orderedText.append(". ").append(getResources().getString(R.string.label_task_list_sorted_by)).append(getResources().getString(mListOrderBy.getLabelId()));
+            orderedText = ". " + getResources().getString(R.string.label_task_list_sorted_by) + getResources().getString(mListOrderBy.getLabelId());
+
+        int count = mListAdapter.getCount();
+
+        String countText = " - " + count + " " + getResources().getString(count == 1 ? R.string.label_task_list_item_shown : R.string.label_task_list_items_shown);
 
         if(filterText.length()>1/*For a reason*/){
-            if(filterText.substring(0, 2).equals(" ,"))
+            if(filterText.substring(0, 2).equals(", "))
                 filterText.replace(0, 2, "");
-            filterStatusText.setText(getResources().getString(R.string.label_task_list_filtering_by) + filterText.toString() + orderedText.toString());
+            mListAdapterStatusText.setText(getResources().getString(R.string.label_task_list_filtering_by) + filterText.toString() + orderedText + countText);
         }
         else
-            filterStatusText.setText(getResources().getString(R.string.label_task_list_no_filter) + filterText.toString() + orderedText.toString());
+            mListAdapterStatusText.setText(getResources().getString(R.string.label_task_list_no_filter) + filterText.toString() + orderedText + countText);
 
         if(filterText.length()+orderedText.length()>0)
-            clearSearchButton.setVisibility(View.VISIBLE);
+            mClearLawAndOrderButton.setVisibility(View.VISIBLE);
         else
-            clearSearchButton.setVisibility(View.GONE);
+            mClearLawAndOrderButton.setVisibility(View.GONE);
     }
 
     protected void useNoCursor()
     {
-        listAdapter.changeCursor(null);
-        filterStatusText.setText("The cursor was removed!");
+        mListAdapter.changeCursor(null);
+        mListAdapterStatusText.setText("The cursor was removed!");
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         ArrayList<String> whereArgs = new ArrayList<>();
 
-        mCurrentQuery = makeQueryText(whereArgs, mCheckColumnName, mListCurrentSearch, mListLocalOnly, mListUnsolvedOnly, mListSelfPublishedOnly, mListFavouritesOnly, mListOrderBy);
+        mCurrentQuery = makeQueryText(whereArgs, mCheckColumnName, mListFilterText, mListFilterLocal, mListFilterUnsolved, mListFilterSelfPublished, mListFilterFavourites, mListOrderBy);
 
         String text = mCurrentQuery;
         int argsIndex = 0;
@@ -201,13 +205,13 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         if(mHideLocalOnly)
             menu.removeItem(R.id.action_task_list_filter_local);
 
-        if(mListLocalOnly)
+        if(mListFilterLocal)
             menu.findItem(R.id.action_task_list_filter_local).setChecked(true);
-        if(mListUnsolvedOnly)
+        if(mListFilterUnsolved)
             menu.findItem(R.id.action_task_list_filter_unsolved).setChecked(true);
-        if(mListSelfPublishedOnly)
+        if(mListFilterSelfPublished)
             menu.findItem(R.id.action_task_list_filter_self_published).setChecked(true);
-        if(mListFavouritesOnly)
+        if(mListFilterFavourites)
             menu.findItem(R.id.action_task_list_filter_favourites).setChecked(true);
 
         if(mListOrderBy!=null)
@@ -233,19 +237,19 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
             }
 
         if(id==R.id.action_task_list_filter_local) {
-            mListLocalOnly = !mListLocalOnly;
+            mListFilterLocal = !mListFilterLocal;
             change = true;
         }
         else if(id==R.id.action_task_list_filter_unsolved) {
-            mListUnsolvedOnly = !mListUnsolvedOnly;
+            mListFilterUnsolved = !mListFilterUnsolved;
             change = true;
         }
         else if(id==R.id.action_task_list_filter_self_published) {
-            mListSelfPublishedOnly = !mListSelfPublishedOnly;
+            mListFilterSelfPublished = !mListFilterSelfPublished;
             change = true;
         }
         else if(id==R.id.action_task_list_filter_favourites) {
-            mListFavouritesOnly = !mListFavouritesOnly;
+            mListFilterFavourites = !mListFilterFavourites;
             change = true;
         }
 
@@ -268,13 +272,13 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
             dialog.setTitle(R.string.dialog_title_search_task_list);
             final EditText text = new EditText(this);
             text.setInputType(InputType.TYPE_CLASS_TEXT);
-            text.setText(mListCurrentSearch);
+            text.setText(mListFilterText);
             dialog.setView(text);
 
             dialog.setPositiveButton(R.string.dialog_button_OK, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    updateTaskList(text.getText().toString().split("'")[0], mListLocalOnly, mListUnsolvedOnly, mListSelfPublishedOnly, mListFavouritesOnly, mListOrderBy);
+                    updateTaskList(text.getText().toString().split("'")[0], mListFilterLocal, mListFilterUnsolved, mListFilterSelfPublished, mListFilterFavourites, mListOrderBy);
                 }
             });
             dialog.setNegativeButton(R.string.dialog_button_Cancel, new DialogInterface.OnClickListener() {
@@ -305,11 +309,11 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     @Override
     protected void onSaveInstanceState(Bundle saveInstanceState) {
         super.onSaveInstanceState(saveInstanceState);
-        saveInstanceState.putString(KEY_SAVE_LIST_SEARCH, mListCurrentSearch);
-        saveInstanceState.putBoolean(KEY_SAVE_LIST_LOCAL_ONLY, mListLocalOnly);
-        saveInstanceState.putBoolean(KEY_SAVE_LIST_UNSOLVED_ONLY, mListUnsolvedOnly);
-        saveInstanceState.putBoolean(KEY_SAVE_LIST_SELF_PUBLISHED_ONLY, mListSelfPublishedOnly);
-        saveInstanceState.putBoolean(KEY_SAVE_LIST_FAVOURITES_ONLY, mListFavouritesOnly);
+        saveInstanceState.putString(KEY_SAVE_LIST_SEARCH, mListFilterText);
+        saveInstanceState.putBoolean(KEY_SAVE_LIST_LOCAL_ONLY, mListFilterLocal);
+        saveInstanceState.putBoolean(KEY_SAVE_LIST_UNSOLVED_ONLY, mListFilterUnsolved);
+        saveInstanceState.putBoolean(KEY_SAVE_LIST_SELF_PUBLISHED_ONLY, mListFilterSelfPublished);
+        saveInstanceState.putBoolean(KEY_SAVE_LIST_FAVOURITES_ONLY, mListFilterFavourites);
         if(mListOrderBy!=null)
             saveInstanceState.putInt(KEY_SAVE_LIST_ORDER_BY_ID, mListOrderBy.ordinal());
     }
