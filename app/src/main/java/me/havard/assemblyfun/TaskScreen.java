@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -43,7 +42,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mTaskAuthor = (TextView) findViewById(R.id.task_screen_task_author);
 
         mLocalIcon = (ImageView) findViewById(R.id.task_screen_local_icon);
-        mSolveIcon = (ImageView) findViewById(R.id.task_screen_solve_icon);
+        mSolveIcon = (ImageView) findViewById(R.id.task_screen_online_icon);
         mPublishIcon = (ImageView) findViewById(R.id.task_screen_publish_icon);
         mFavouriteIcon = (ImageView) findViewById(R.id.task_screen_favourite_icon);
 

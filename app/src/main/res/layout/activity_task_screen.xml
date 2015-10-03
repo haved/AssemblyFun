@@ -91,7 +91,7 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="LocalButton"
+                        android:text="STORE / REMOVE LOCALLY"
                         android:id="@+id/task_screen_local_button"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
@@ -106,7 +106,7 @@
                         android:src="@mipmap/ic_local"
                         android:layout_alignBottom="@+id/task_screen_local_button"
                         android:layout_alignTop="@+id/task_screen_local_button"
-                        android:visibility="invisible" />
+                        android:visibility="visible" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -116,23 +116,23 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Solvebutton"
-                        android:id="@+id/task_screen_solve_button"
+                        android:text="PUT / SEE ONLINE"
+                        android:id="@+id/task_screen_online_button"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        android:layout_toLeftOf="@+id/task_screen_solve_icon" />
+                        android:layout_toLeftOf="@+id/task_screen_online_icon" />
 
                     <ImageView
                         android:layout_width="40sp"
                         android:layout_height="40sp"
-                        android:id="@+id/task_screen_solve_icon"
-                        android:src="@mipmap/ic_solved"
+                        android:id="@+id/task_screen_online_icon"
+                        android:src="@mipmap/ic_global"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignTop="@+id/task_screen_solve_button"
-                        android:layout_alignBottom="@+id/task_screen_solve_button"
-                        android:visibility="invisible" />
+                        android:layout_alignTop="@+id/task_screen_online_button"
+                        android:layout_alignBottom="@+id/task_screen_online_button"
+                        android:visibility="visible" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -142,7 +142,7 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="publishbutton"
+                        android:text="ADD TO ONLINE CHANNELS"
                         android:id="@+id/task_screen_publish_button"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
@@ -158,7 +158,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignTop="@+id/task_screen_publish_button"
                         android:layout_alignBottom="@+id/task_screen_publish_button"
-                        android:visibility="invisible" />
+                        android:visibility="visible" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -168,7 +168,7 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Favouritebutton"
+                        android:text="UNFAVOURITE"
                         android:id="@+id/task_screen_favourite_button"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
@@ -184,7 +184,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignTop="@+id/task_screen_favourite_button"
                         android:layout_alignBottom="@+id/task_screen_favourite_button"
-                        android:visibility="invisible" />
+                        android:visibility="visible" />
                 </RelativeLayout>
             </LinearLayout>
         </RelativeLayout>
