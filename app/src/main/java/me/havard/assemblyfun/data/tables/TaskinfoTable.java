@@ -68,7 +68,6 @@ public class TaskinfoTable extends Table
 
     public static boolean hasFlag(int flags, int FLAG)
     {
-        Log.d("Assembly Fun", "Checking for the occurrence of flag: " + FLAG + " in integer: " + flags + ". Occurrance: " + ((flags&FLAG)!=0));
         return (flags&FLAG)!=0;
     }
 
@@ -79,8 +78,6 @@ public class TaskinfoTable extends Table
 
     public static int getFlags(boolean local, boolean solved, boolean self_published, boolean favourite, boolean global)
     {
-        int answer = (local?FLAG_LOCAL:0)|(solved?FLAG_SOLVED:0)|(self_published?FLAG_SELF_PUBLISHED:0)|(favourite?FLAG_FAVOURITE:0)|(global?FLAG_GLOBAL:0);
-        Log.d("Assembly Fun", "local: " + local + " solved: " + solved + " self_published: " + self_published +  " favourite: " + favourite + " global: " + global + " answer: " + answer);
-        return answer;
+        return (local?FLAG_LOCAL:0)|(solved?FLAG_SOLVED:0)|(self_published?FLAG_SELF_PUBLISHED:0)|(favourite?FLAG_FAVOURITE:0)|(global?FLAG_GLOBAL:0);
     }
 }

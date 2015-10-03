@@ -321,16 +321,17 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     private static final String QUERY_START = "SELECT " + TaskinfoTable.NAME + ", "  + TaskinfoTable.DESC + ", " + TaskinfoTable.DIFFICULTY + ", " +
             TaskinfoTable.AUTHOR + ", " + TaskinfoTable.FLAGS + ", "
             +  TaskinfoTable.TABLE_NAME + "." + TaskIDTable._ID_TaskIDs + " AS _id" +
-            " FROM " + TaskinfoTable.TABLE_NAME + " WHERE (" +TaskinfoTable.FLAGS+"&?)!='0' ";
+            " FROM " + TaskinfoTable.TABLE_NAME + " WHERE (" + TaskinfoTable.FLAGS + "&?)!=0 ";
 
     private static final String SEARCH_STATEMENT = "(" + TaskinfoTable.NAME + " LIKE ? OR " + TaskinfoTable.DESC + " LIKE ? OR " + TaskinfoTable.AUTHOR + " LIKE ?)";
     private static final int SEARCH_STATEMENT_WHERE_ARG_COUNT = 3;
 
-    private static final String AND_FLAGS_ND = " AND (" + TaskinfoTable.FLAGS + "&";
+    private static final String AND_FLAGS_ND = " AND (" + TaskinfoTable.FLAGS + " & ";
 
     protected static String makeQueryText(ArrayList<String> whereArgs, int mCheckFlagBit, String search,
                                           boolean localOnly, boolean unsolvedOnly, boolean self_publishedOnly, boolean favouritesOnly, OrderBy orderBy) {
-        whereArgs.add(Integer.toString(mCheckFlagBit)); //For the checkColumn='1'
+        whereArgs.add(Integer.toString(mCheckFlagBit));
+
 
         StringBuilder lawAndOrderStatement = new StringBuilder();
         if(search!=null) {
