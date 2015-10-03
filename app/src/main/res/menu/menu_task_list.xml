@@ -5,7 +5,7 @@
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/action_search"
         app:showAsAction="ifRoom" />
-    <item android:id="@+id/action_disabled_task_list_sort_by" android:title="@string/action_disabled_sort_by" android:enabled="false"
+    <item android:id="@+id/action_disabled_task_list_sort_by" android:title="@string/action_sort_by_disabled" android:enabled="false"
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_task_list_sort_by_name" android:title="@string/action_sort_by_name" android:enabled="true"
         android:orderInCategory="200" app:showAsAction="never" />
@@ -17,7 +17,7 @@
         android:orderInCategory="450" app:showAsAction="never" />
     <item android:id="@+id/action_task_list_sort_by_difficulty" android:title="@string/action_sort_by_difficulty" android:enabled="true"
         android:orderInCategory="500" app:showAsAction="never" />
-    <item android:id="@+id/action_disabled_task_list_filter" android:title="@string/action_disabled_filter" android:enabled="false"
+    <item android:id="@+id/action_disabled_task_list_filter" android:title="@string/action_filter_disabled" android:enabled="false"
         android:orderInCategory="600" app:showAsAction="never" />
     <item android:id="@+id/action_task_list_filter_local" android:title="@string/action_filter_local" android:enabled="true" android:checkable="true"
         android:orderInCategory="700" app:showAsAction="never" />

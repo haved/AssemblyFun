@@ -12,7 +12,7 @@ public enum Difficulty {
     EASY(R.string.label_difficulty_easy, R.color.label_difficulty_color_very_easy),
     MEDIUM(R.string.label_difficulty_medium, R.color.label_difficulty_color_very_easy),
     TOUGH(R.string.label_difficulty_tough, R.color.label_difficulty_color_very_easy),
-    CHALLENGE(R.string.label_difficulty_tougher, R.color.label_difficulty_color_very_hard),
+    TOUGHER(R.string.label_difficulty_tougher, R.color.label_difficulty_color_very_hard),
     DIFFICULT(R.string.label_difficulty_difficult, R.color.label_difficulty_color_very_hard),
     HARD(R.string.label_difficulty_very_hard, R.color.label_difficulty_color_very_hard),
     VERY_HARD(R.string.label_difficulty_very_hard, R.color.label_difficulty_color_very_hard),
