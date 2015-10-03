@@ -29,7 +29,7 @@ import me.havard.assemblyfun.data.tables.TaskinfoTable;
 public class TaskList extends AppCompatActivity implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     public static final String KEY_HIDE_UNSOLVED_FILTER_OPTION_ID = "hide_action_unsolved_filter";
     public static final String KEY_HIDE_LOCAL_FILTER_OPTION_ID = "hide_action_local_filter";
-    public static final String KEY_CHECK_COLUMN_NAME = "check_column_name";
+    public static final String KEY_CHECK_FLAG_BIT = "check_flag_bit";
     public static final String KEY_RES_ACTIVITY_TITLE = "activity_title_res";
     private static final int TASK_CURSOR_LOADER_ID = 0;
 
@@ -47,7 +47,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
 
     private boolean mHideUnsolvedOnly;
     private boolean mHideLocalOnly;
-    private String mCheckColumnName;
+    private int mCheckFlagBit;
     private int mTitle;
 
     private boolean mListFilterLocal;
@@ -78,7 +78,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
 
         mHideUnsolvedOnly = extras.getBoolean(KEY_HIDE_UNSOLVED_FILTER_OPTION_ID);
         mHideLocalOnly = extras.getBoolean(KEY_HIDE_LOCAL_FILTER_OPTION_ID);
-        mCheckColumnName = extras.getString(KEY_CHECK_COLUMN_NAME);
+        mCheckFlagBit = extras.getInt(KEY_CHECK_FLAG_BIT);
         mTitle = extras.getInt(KEY_RES_ACTIVITY_TITLE, R.string.title_unset);
         setTitle(mTitle);
 
@@ -160,7 +160,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         ArrayList<String> whereArgs = new ArrayList<>();
 
-        mCurrentQuery = makeQueryText(whereArgs, mCheckColumnName, mListFilterText, mListFilterLocal, mListFilterUnsolved, mListFilterSelfPublished, mListFilterFavourites, mListOrderBy);
+        mCurrentQuery = makeQueryText(whereArgs, mCheckFlagBit, mListFilterText, mListFilterLocal, mListFilterUnsolved, mListFilterSelfPublished, mListFilterFavourites, mListOrderBy);
 
         /*String text = mCurrentQuery;
         int argsIndex = 0;
@@ -319,16 +319,18 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     }
 
     private static final String QUERY_START = "SELECT " + TaskinfoTable.NAME + ", "  + TaskinfoTable.DESC + ", " + TaskinfoTable.DIFFICULTY + ", " +
-            TaskinfoTable.AUTHOR + ", " + TaskinfoTable.LOCAL + ", " + TaskinfoTable.SOLVED + ", " + TaskinfoTable.SELF_PUBLISHED + ", " + TaskinfoTable.FAVOURITE + ", "
+            TaskinfoTable.AUTHOR + ", " + TaskinfoTable.FLAGS + ", "
             +  TaskinfoTable.TABLE_NAME + "." + TaskIDTable._ID_TaskIDs + " AS _id" +
-            " FROM " + TaskinfoTable.TABLE_NAME + " WHERE ";
+            " FROM " + TaskinfoTable.TABLE_NAME + " WHERE (" +TaskinfoTable.FLAGS+"&?)!='0' ";
 
     private static final String SEARCH_STATEMENT = "(" + TaskinfoTable.NAME + " LIKE ? OR " + TaskinfoTable.DESC + " LIKE ? OR " + TaskinfoTable.AUTHOR + " LIKE ?)";
     private static final int SEARCH_STATEMENT_WHERE_ARG_COUNT = 3;
 
-    protected static String makeQueryText(ArrayList<String> whereArgs, String checkColumnName, String search,
+    private static final String AND_FLAGS_ND = " AND (" + TaskinfoTable.FLAGS + "&";
+
+    protected static String makeQueryText(ArrayList<String> whereArgs, int mCheckFlagBit, String search,
                                           boolean localOnly, boolean unsolvedOnly, boolean self_publishedOnly, boolean favouritesOnly, OrderBy orderBy) {
-        whereArgs.add("1"); //For the checkColumn='1'
+        whereArgs.add(Integer.toString(mCheckFlagBit)); //For the checkColumn='1'
 
         StringBuilder lawAndOrderStatement = new StringBuilder();
         if(search!=null) {
@@ -336,26 +338,18 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
             for(int i = 0; i < SEARCH_STATEMENT_WHERE_ARG_COUNT; i++)
                 whereArgs.add("%"+search+"%");
         }
-        if(localOnly) {
-            lawAndOrderStatement.append(" AND ").append(TaskinfoTable.LOCAL).append(" = ?");
-            whereArgs.add("1");
-        }
-        if(unsolvedOnly) {
-            lawAndOrderStatement.append(" AND ").append(TaskinfoTable.SOLVED).append(" = ?");
-            whereArgs.add("0");
-        }
-        if(self_publishedOnly) {
-            lawAndOrderStatement.append(" AND ").append(TaskinfoTable.SELF_PUBLISHED).append(" = ?");
-            whereArgs.add("1");
-        }
-        if(favouritesOnly) {
-            lawAndOrderStatement.append(" AND ").append(TaskinfoTable.FAVOURITE).append(" = ?");
-            whereArgs.add("1");
-        }
+        if(localOnly)
+            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_LOCAL).append(")='1'");
+        if(unsolvedOnly)
+            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_SOLVED).append(")='0'");
+        if(self_publishedOnly)
+            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_SELF_PUBLISHED).append(")='1'");
+        if(favouritesOnly)
+            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_FAVOURITE).append(")='1'");
         if(orderBy!=null)
             lawAndOrderStatement.append(" ORDER BY ").append(orderBy.getOrderByStatement());
 
-        return QUERY_START + checkColumnName + " = ?" + lawAndOrderStatement.toString();
+        return QUERY_START + lawAndOrderStatement.toString();
     }
 
     public enum OrderBy {

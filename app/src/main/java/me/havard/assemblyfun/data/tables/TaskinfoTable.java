@@ -19,10 +19,14 @@ public class TaskinfoTable extends Table
     public static final String DIFFICULTY = "diff";
     public static final String RATING = "rating";
     public static final String AUTHOR = "author";
-    public static final String LOCAL = "local";
-    public static final String SOLVED = "solved";
-    public static final String SELF_PUBLISHED = "self_published";
-    public static final String FAVOURITE = "favourite";
+    public static final String FLAGS = "flags";
+
+    public static final int FLAG_LOCAL = 0b1;
+    public static final int FLAG_SOLVED = 0b10;
+    public static final int FLAG_SELF_PUBLISHED = 0b100;
+    public static final int FLAG_FAVOURITE = 0b1000;
+    public static final int FLAG_GLOBAL = 0b10000;
+
     @Override
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
@@ -33,10 +37,7 @@ public class TaskinfoTable extends Table
                 DIFFICULTY, INT,
                 RATING, REEL,
                 AUTHOR, TEXT,
-                LOCAL, INT,
-                SOLVED, INT,
-                SELF_PUBLISHED, INT,
-                FAVOURITE, INT,
+                FLAGS, INT,
                 TaskIDTable.FOREIGN_KEY_ID_TaskIDs);
     }
 
@@ -47,7 +48,7 @@ public class TaskinfoTable extends Table
     }
 
     public static void populateContentValues(ContentValues values, long ref_id, String name, String desc, long date, Difficulty diff,
-                                             float rating, String author, boolean local, boolean solved, boolean self_published, boolean favourite)
+                                             float rating, String author, int flags)
     {
         values.put(_ID_TaskIDs, ref_id);
         values.put(NAME, name);
@@ -56,16 +57,30 @@ public class TaskinfoTable extends Table
         values.put(DIFFICULTY, diff.ordinal());
         values.put(RATING, rating);
         values.put(AUTHOR, author);
-        values.put(LOCAL, local?1:0);
-        values.put(SOLVED, solved?1:0);
-        values.put(SELF_PUBLISHED, self_published?1:0);
-        values.put(FAVOURITE, favourite?1:0);
+        values.put(FLAGS, flags);
     }
 
     public static long addRow(SQLiteDatabase db, ContentValues values, long ref_id, String name, String desc, long date, Difficulty diff,
-                                   float rating, String author, boolean local, boolean solved, boolean self_published, boolean favourite)
-    {
-        populateContentValues(values, ref_id, name, desc, date, diff, rating, author, local, solved, self_published, favourite);
+                                   float rating, String author, int flags) {
+        populateContentValues(values, ref_id, name, desc, date, diff, rating, author, flags);
         return db.insert(TABLE_NAME, null, values);
+    }
+
+    public static boolean hasFlag(int flags, int FLAG)
+    {
+        Log.d("Assembly Fun", "Checking for the occurrence of flag: " + FLAG + " in integer: " + flags + ". Occurrance: " + ((flags&FLAG)!=0));
+        return (flags&FLAG)!=0;
+    }
+
+    public static int addFlag(int flags, int FLAG)
+    {
+        return flags|FLAG;
+    }
+
+    public static int getFlags(boolean local, boolean solved, boolean self_published, boolean favourite, boolean global)
+    {
+        int answer = (local?FLAG_LOCAL:0)|(solved?FLAG_SOLVED:0)|(self_published?FLAG_SELF_PUBLISHED:0)|(favourite?FLAG_FAVOURITE:0)|(global?FLAG_GLOBAL:0);
+        Log.d("Assembly Fun", "local: " + local + " solved: " + solved + " self_published: " + self_published +  " favourite: " + favourite + " global: " + global + " answer: " + answer);
+        return answer;
     }
 }

@@ -105,6 +105,18 @@
             android:layout_alignBottom="@+id/task_list_item_title"
             android:visibility="gone"
             android:layout_alignParentRight="false" />
+
+        <ImageView
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:id="@+id/task_list_item_global"
+            android:src="@mipmap/ic_global"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/task_list_item_solved"
+            android:layout_toStartOf="@+id/task_list_item_solved"
+            android:layout_alignBottom="@+id/task_list_item_title"
+            android:visibility="gone"
+            android:layout_alignParentRight="false" />
     </LinearLayout>
 
 </RelativeLayout>

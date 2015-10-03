@@ -28,15 +28,15 @@ public class TaskCursorAdapter extends SimpleCursorAdapter {
         super.bindView(view, context, cursor);
         TextView diffText = (TextView) view.findViewById(R.id.task_list_item_difficulty);
         Difficulty diff = Difficulty.values()[cursor.getInt(cursor.getColumnIndex(TaskinfoTable.DIFFICULTY))];
-        diffText.setText(diff.getLabelId());
+        int flags = cursor.getInt(cursor.getColumnIndex(TaskinfoTable.FLAGS));
+        diffText.setText(""+flags/*diff.getLabelId()*/);
         diffText.setTextColor(ContextCompat.getColor(context, diff.getColorId()));
-        if(cursor.getInt(cursor.getColumnIndex(TaskinfoTable.LOCAL))==1)
-            view.findViewById(R.id.task_list_item_local).setVisibility(View.VISIBLE);
-        if(cursor.getInt(cursor.getColumnIndex(TaskinfoTable.SOLVED))==1)
-            view.findViewById(R.id.task_list_item_solved).setVisibility(View.VISIBLE);
-        if(cursor.getInt(cursor.getColumnIndex(TaskinfoTable.SELF_PUBLISHED))==1)
-            view.findViewById(R.id.task_list_item_published).setVisibility(View.VISIBLE);
-        if(cursor.getInt(cursor.getColumnIndex(TaskinfoTable.FAVOURITE))==1)
-            view.findViewById(R.id.task_list_item_favourite).setVisibility(View.VISIBLE);
+
+        view.findViewById(R.id.task_list_item_local).setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_LOCAL) ? View.VISIBLE : View.GONE);
+        view.findViewById(R.id.task_list_item_solved).setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SOLVED)?View.VISIBLE:View.GONE);
+        view.findViewById(R.id.task_list_item_published).setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SELF_PUBLISHED)?View.VISIBLE:View.GONE);
+        view.findViewById(R.id.task_list_item_favourite).setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_FAVOURITE)?View.VISIBLE:View.GONE);
+        view.findViewById(R.id.task_list_item_global).setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_GLOBAL)?View.VISIBLE:View.GONE);
+
     }
 }

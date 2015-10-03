@@ -19,15 +19,22 @@ public final class AFDatabaseInteractionHelper
         LocalTaskTable.addRow(db, values, ref_id, taskText, taskTests);
         values.clear();
 
-        values.put(TaskinfoTable.LOCAL, 1);
-        db.update(TaskinfoTable.TABLE_NAME, values, TaskinfoTable._ID_TaskIDs + "=?", new String[]{Long.toString(ref_id)});
+        int flags = getFlagsFromTaskWithID(db, ref_id);
+        if(flags>=0) {
+            values.put(TaskinfoTable.FLAGS, flags | TaskinfoTable.FLAG_LOCAL); //kinda funky!;
+            Log.d("Assembly Fun", "A task with the id " + ref_id + " is now registered as local!   OldFlags: " + flags + " NewFlags: " + (flags|TaskinfoTable.FLAG_LOCAL));
+            db.update(TaskinfoTable.TABLE_NAME, values, TaskinfoTable._ID_TaskIDs + "=?", new String[]{Long.toString(ref_id)});
+        }
     }
 
     public static void removeLocalTaskFromDB(SQLiteDatabase db, ContentValues values, long ref_id)
     {
         LocalTaskTable.deleteRow(db, ref_id);
-        if(containsRowWithWhereStatement(db, TaskinfoTable.TABLE_NAME, TaskinfoTable._ID_TaskIDs, Long.toString(ref_id))) {
-            values.put(TaskinfoTable.LOCAL, 0);
+
+        int flags = getFlagsFromTaskWithID(db, ref_id);
+        if(flags>=0) {
+            values.put(TaskinfoTable.FLAGS, flags & ~TaskinfoTable.FLAG_LOCAL); //super funky!;
+            Log.d("Assembly Fun", "A task with the id " + ref_id + " is no longer registered as local!   OldFlags: " + flags + " NewFlags: " + (flags & ~TaskinfoTable.FLAG_LOCAL));
             db.update(TaskinfoTable.TABLE_NAME, values, TaskinfoTable._ID_TaskIDs + "=?", new String[]{Long.toString(ref_id)});
         }
     }
@@ -38,7 +45,7 @@ public final class AFDatabaseInteractionHelper
         long localID=getLocalIDFromGlobalID(db, values, globalID);
         values.clear();
 
-        TaskinfoTable.addRow(db, values, localID, name, desc, date, diff, rating, author, false, solved, selfPublished, favourite);
+        TaskinfoTable.addRow(db, values, localID, name, desc, date, diff, rating, author, TaskinfoTable.getFlags(false, solved, selfPublished, favourite, globalID != 0));
         return localID;
     }
 
@@ -67,6 +74,24 @@ public final class AFDatabaseInteractionHelper
         Cursor c = db.query(tableName, new String[]{columnName}, columnName+"=?", new String[]{columnValueWanted}, null, null, null, "1");
         boolean output = c.getCount() > 0;
         c.close();
+        return output;
+    }
+
+    private static final String TASK_INFO_TABLE_FLAGS_QUERY = "SELECT " + TaskinfoTable.FLAGS + " FROM " + TaskinfoTable.TABLE_NAME + " WHERE " + TaskinfoTable._ID_TaskIDs + "=?";
+    public static int getFlagsFromTaskWithID(SQLiteDatabase db, long ref_id)
+    {
+        int output=-1;
+        Cursor cursor = db.rawQuery(TASK_INFO_TABLE_FLAGS_QUERY, new String[]{Long.toString(ref_id)});
+        //noinspection TryFinallyCanBeTryWithResources
+        try {
+            if (cursor.getCount() > 0) {
+                cursor.moveToNext();
+                output = cursor.getInt(cursor.getColumnIndex(TaskinfoTable.FLAGS));
+            }
+        }
+        finally {
+            cursor.close();
+        }
         return output;
     }
 }

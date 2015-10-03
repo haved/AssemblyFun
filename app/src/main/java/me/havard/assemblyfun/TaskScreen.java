@@ -70,15 +70,6 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         Difficulty diff = Difficulty.values()[cursor.getInt(cursor.getColumnIndex(TaskinfoTable.DIFFICULTY))];
         mTaskDiff.setText(diff.getLabelId());
         mTaskDiff.setTextColor(ContextCompat.getColor(this, diff.getColorId()));
-
-        if(cursor.getInt(cursor.getColumnIndex(TaskinfoTable.LOCAL))!=0)
-            mLocalIcon.setVisibility(View.VISIBLE);
-        if(cursor.getInt(cursor.getColumnIndex(TaskinfoTable.SOLVED))!=0)
-            mSolveIcon.setVisibility(View.VISIBLE);
-        if(cursor.getInt(cursor.getColumnIndex(TaskinfoTable.SELF_PUBLISHED))!=0)
-            mPublishIcon.setVisibility(View.VISIBLE);
-        if(cursor.getInt(cursor.getColumnIndex(TaskinfoTable.FAVOURITE))!=0)
-            mFavouriteIcon.setVisibility(View.VISIBLE);
     }
 
     @Override

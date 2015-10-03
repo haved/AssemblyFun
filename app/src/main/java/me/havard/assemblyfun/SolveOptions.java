@@ -28,7 +28,7 @@ public class SolveOptions extends AppCompatActivity {
     {
         Intent localTaskListActivity = new Intent(this, TaskList.class);
         localTaskListActivity.putExtra(TaskList.KEY_RES_ACTIVITY_TITLE, R.string.solve_option_local);
-        localTaskListActivity.putExtra(TaskList.KEY_CHECK_COLUMN_NAME, TaskinfoTable.LOCAL);
+        localTaskListActivity.putExtra(TaskList.KEY_CHECK_FLAG_BIT, TaskinfoTable.FLAG_LOCAL);
         localTaskListActivity.putExtra(TaskList.KEY_HIDE_LOCAL_FILTER_OPTION_ID, true);
         startActivity(localTaskListActivity);
     }
@@ -37,7 +37,7 @@ public class SolveOptions extends AppCompatActivity {
     {
         Intent solvedTaskListActivity = new Intent(this, TaskList.class);
         solvedTaskListActivity.putExtra(TaskList.KEY_RES_ACTIVITY_TITLE, R.string.solve_option_solved);
-        solvedTaskListActivity.putExtra(TaskList.KEY_CHECK_COLUMN_NAME, TaskinfoTable.SOLVED);
+        solvedTaskListActivity.putExtra(TaskList.KEY_CHECK_FLAG_BIT, TaskinfoTable.FLAG_SOLVED);
         solvedTaskListActivity.putExtra(TaskList.KEY_HIDE_UNSOLVED_FILTER_OPTION_ID, true);
         startActivity(solvedTaskListActivity);
     }

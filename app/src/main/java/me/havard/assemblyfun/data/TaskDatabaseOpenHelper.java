@@ -19,7 +19,7 @@ import static me.havard.assemblyfun.data.AFDatabaseInteractionHelper.*;
  */
 public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "assemblyFunDB";
 
     public TaskDatabaseOpenHelper(Context context) {
@@ -66,20 +66,25 @@ public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
         values.clear();
         addTaskInfoToTables(db, values, "Tutorial task 4: Breaking", "How to exit instantly", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.8f, "Assembly Fun", true, false, true, 10004444);
         values.clear();
-        addTaskInfoToTables(db, values, "Tutorial task 5: Comparing", "Comparing numbers", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.7f, "Assembly Fun", true, false, false, 55550055);
+        addTaskInfoToTables(db, values, "Tutorial task 5: Comparing", "Comparing numbers", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.7f, "Assembly Fun", true, false, false, 55555005);
         values.clear();
         addTaskInfoToTables(db, values, "Tutorial task 6: Comparing#2", "Using comparisons", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.2f, "Assembly Fun", true, false, true, 100666);
         values.clear();
-        addTaskInfoToTables(db, values, "Tutorial task 7: Test", "r0 = max(r1,r0)", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.4f, "Assembly Fun", true, false, true, 77744777);
+        addTaskInfoToTables(db, values, "Tutorial task 7: Test", "r0 = max(r1,r0)", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.4f, "Assembly Fun", true, false, true, 0);
         values.clear();
-        addTaskInfoToTables(db, values, "Tutorial task 8: Test2", "r0=r0>r1?r0-r1:r0", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.6f, "Assembly Fun", true, false, false, 8888988);
-        values.clear();
-
-        long myTask = addTaskInfoToTables(db, values, "MyTask", "r0=r0+min(r0,r1)", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.6f, "You", false, true, true, 0);
+        addTaskInfoToTables(db, values, "Tutorial task 8: Test2", "r0=r0>r1?r0-r1:r0", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.6f, "Assembly Fun", true, false, false, 88887888);
         values.clear();
 
         registerLocalTaskToDB(db, values, task1, "Hit the green button to run your program. A series of tests are run to check if your program performs to specification.",
                 LocalTaskTable.makeTaskTestString(new int[][]{{0}, {4}, {-4}, {7}}, new int[][]{{0}, {4}, {-4}, {7}}));
+        values.clear();
+
+        long someTask = addTaskInfoToTables(db, values, "SomeTask", "r0=max(r0,r1)*max(r1,r2)", System.currentTimeMillis()-100000000, Difficulty.VERY_EASY, 4.6f, "SomeGuy", false, false, true, 90184527);
+        values.clear();
+        registerLocalTaskToDB(db, values, someTask, "Make a program that returns max(r0,r1)*max(r1,r2)", "3,2,5=15;7,4,2=28;1,2,3=6");
+        values.clear();
+
+        long myTask = addTaskInfoToTables(db, values, "MyTask", "r0=r0+min(r0,r1)", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.6f, "You", false, true, true, 0);
         values.clear();
         registerLocalTaskToDB(db, values, myTask, "Make r0=r0+min(r0,r1)",
                 LocalTaskTable.makeTaskTestString(new int[][]{{0, 2}, {4, 5}, {4, 2}, {7, 3}}, new int[][]{{0}, {8}, {6}, {10}}));
