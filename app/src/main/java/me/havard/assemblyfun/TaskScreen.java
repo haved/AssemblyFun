@@ -20,6 +20,7 @@ import java.util.Calendar;
 import me.havard.assemblyfun.data.Difficulty;
 import me.havard.assemblyfun.data.SQLiteCursorLoader;
 import me.havard.assemblyfun.data.TaskInfoAndRecordsCursorLoader;
+import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
 import me.havard.assemblyfun.util.MonthLabels;
 
@@ -100,6 +101,28 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mFavouriteButton.setText(favourite ? R.string.label_task_screen_un_favourite : R.string.label_task_screen_favourite);
         mFavouriteIcon.setVisibility(favourite ? View.VISIBLE : View.INVISIBLE);
         mSolveIcon.setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SOLVED)?View.VISIBLE:View.INVISIBLE);
+
+        String recordText;
+        if(cursor.getColumnIndex(TaskRecordsTable.SPEED_REC)>=0)
+            recordText = String.format("%s\n" +
+                            "%s - '%s': %.2f, %s: %.2f\n" +
+                            "%s - '%s': %.2f, %s: %.2f\n" +
+                            "%s - '%s': %.2f, %s: %.2f", getResources().getString(R.string.label_task_screen_records__),
+                    getResources().getString(R.string.label_task_screen_speed),
+                    cursor.getString(cursor.getColumnIndex(TaskRecordsTable.SPEED_REC_NAME)), cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.SPEED_REC)),
+                    getResources().getString(R.string.label_task_screen_records_you), cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.YOUR_SPEED_REC)),
+
+                    getResources().getString(R.string.label_task_screen_size),
+                    cursor.getString(cursor.getColumnIndex(TaskRecordsTable.SIZE_REC_NAME)), cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.SIZE_REC)),
+                    getResources().getString(R.string.label_task_screen_records_you), cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.YOUR_SIZE_REC)),
+
+                    getResources().getString(R.string.label_task_screen_memuse),
+                    cursor.getString(cursor.getColumnIndex(TaskRecordsTable.MEMUSE_REC_NAME)), cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.MEMUSE_REC)),
+                    getResources().getString(R.string.label_task_screen_records_you), cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.YOUR_MEMUSE_REC)));
+        else
+            recordText = getResources().getString(R.string.label_task_screen_no_records);
+
+        mTaskRecordsText.setText(recordText);
     }
 
     @Override

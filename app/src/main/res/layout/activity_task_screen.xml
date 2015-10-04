@@ -228,7 +228,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/task_screen_task_records"
                 android:layout_below="@+id/task_screen_button_list"
-                android:layout_centerHorizontal="true" />
+                android:layout_alignParentLeft="true" />
 
         </RelativeLayout>
     </ScrollView>

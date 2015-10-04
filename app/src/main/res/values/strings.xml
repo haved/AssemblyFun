@@ -76,6 +76,14 @@
     <string name="label_task_screen_favourite">Favourite</string>
     <string name="label_task_screen_un_favourite">Un-favourite</string>
     <string name="label_task_screen_add_solution">Add solution</string>
+    <string name="label_task_screen_only_local_tasks_can_be_solved">Only local tasks can be solved</string>
+
+    <string name="label_task_screen_no_records">No records stored</string>
+    <string name="label_task_screen_records__">Records:</string>
+    <string name="label_task_screen_records_you">You</string>
+    <string name="label_task_screen_speed">Speed</string>
+    <string name="label_task_screen_size">Size</string>
+    <string name="label_task_screen_memuse">Memory usage</string>
 
     <string name="label_month_0">Jan</string>
     <string name="label_month_1">Feb</string>
