@@ -8,12 +8,13 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class LocalTaskTable extends Table {
     public static final String TABLE_NAME = "localTasks";
+    public static final String _ID_TaskIDs = TaskIDTable._ID_TaskIDs;
     public static final String TASK_TEXT = "TaskText";
     public static final String TASK_TESTS = "TaskTests";
     @Override
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
-                TaskIDTable._ID_TaskIDs, INT,
+                _ID_TaskIDs, INT,
                 TASK_TEXT, TEXT,
                 TASK_TESTS, TEXT,
                 TaskIDTable.FOREIGN_KEY_ID_TaskIDs);
@@ -27,7 +28,7 @@ public class LocalTaskTable extends Table {
 
     public static void addRow(SQLiteDatabase db, ContentValues values, long ref_id, String taskText, String taskTests)
     {
-        values.put(TaskIDTable._ID_TaskIDs, ref_id);
+        values.put(_ID_TaskIDs, ref_id);
         values.put(TASK_TEXT, taskText);
         values.put(TASK_TESTS, taskTests);
         db.insert(TABLE_NAME, null, values);
@@ -35,7 +36,7 @@ public class LocalTaskTable extends Table {
 
     public static void deleteRow(SQLiteDatabase db, long ref_id)
     {
-        db.delete(TABLE_NAME, TaskIDTable._ID_TaskIDs+"=?", new String[]{Long.toString(ref_id)});
+        db.delete(TABLE_NAME, _ID_TaskIDs+"=?", new String[]{Long.toString(ref_id)});
     }
 
     //Format: r0,r1=r0,r1,r2;r0=r0,r1;r0,r1=r0;

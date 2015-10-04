@@ -4,4 +4,6 @@
     tools:context="me.havard.assemblyfun.TaskScreen">
     <item android:id="@+id/action_help" android:title="@string/action_help"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_delete_all_task_data" android:title="@string/action_delete_all_task_data"
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>

@@ -40,6 +40,17 @@ public final class AFDatabaseInteractionHelper
         }
     }
 
+    private static final String[] TASK_TABLES_TO_BE_DELETED_FROM = {TaskinfoTable.TABLE_NAME, LocalTaskTable.TABLE_NAME, TaskRecordsTable.TABLE_NAME};
+    private static final String TASK_TABLES_WHERE_STATEMENT = TaskIDTable._ID_TaskIDs+"=?";
+    private static final String TASK_ID_TABLE_WHERE_STATEMENT = TaskIDTable._ID+"=?";
+    public static void deleteAllTaskData(SQLiteDatabase db, long ref_id)
+    {
+        String[] whereArgs = {Long.toString(ref_id)};
+        for(String table:TASK_TABLES_TO_BE_DELETED_FROM)
+            db.delete(table, TASK_TABLES_WHERE_STATEMENT, whereArgs);
+        db.delete(TaskIDTable.TABLE_NAME, TASK_ID_TABLE_WHERE_STATEMENT, whereArgs);
+    }
+
     public static void addOrUpdateRecords(SQLiteDatabase db, ContentValues values, long ref_id, float speed_rec, String speed_rec_name, float your_speed_rec,
                                           int size_rec, String size_rec_name, int your_size_rec, float memuse_rec, String memuse_rec_name, float your_memuse_rec)
     {

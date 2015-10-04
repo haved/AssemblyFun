@@ -2,6 +2,7 @@ package me.havard.assemblyfun;
 
 import android.app.AlertDialog;
 import android.app.LoaderManager;
+import android.content.DialogInterface;
 import android.content.Loader;
 import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
+import me.havard.assemblyfun.data.AFDatabaseInteractionHelper;
 import me.havard.assemblyfun.data.Difficulty;
 import me.havard.assemblyfun.data.TaskInfoAndRecordsCursorLoader;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
@@ -67,7 +69,8 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mTaskTitle.setText(R.string.label_loading);
         mButtonList.setVisibility(View.GONE);
 
-        mLocalID = getIntent().getExtras().getLong(EXTRAS_TASK_ID);
+        Bundle data = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
+        mLocalID = data.getLong(EXTRAS_TASK_ID);
         getLoaderManager().initLoader(LOADER_ID_TASK_CURSOR, null, this);
     }
 
@@ -103,6 +106,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mFavouriteButton.setText(favourite ? R.string.label_task_screen_un_favourite : R.string.label_task_screen_favourite);
         mFavouriteIcon.setVisibility(favourite ? View.VISIBLE : View.INVISIBLE);
         mAddSolutionButton.setText(local?R.string.label_task_screen_add_solution:R.string.label_task_screen_only_local_tasks_can_be_solved);
+        mAddSolutionButton.setEnabled(local);
         mSolveIcon.setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SOLVED)?View.VISIBLE:View.INVISIBLE);
 
         String recordText;
@@ -143,18 +147,36 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.help_task_screen_title);
-            TextView text = new TextView(this);
-            text.setText(R.string.help_task_screen_body);
-            ScrollView sView = new ScrollView(this);
-            sView.addView(text);
-            builder.setView(sView);
+            builder.setMessage(R.string.help_task_screen_body);
             builder.create();
             builder.setPositiveButton(R.string.dialog_button_OK, null);
             builder.show();
             return true;
         }
-
+        else if(id== R.id.action_delete_all_task_data)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.dialog_task_screen_are_you_sure);
+            builder.setMessage(R.string.dialog_task_screen_delete_task_data_body);
+            builder.create();
+            builder.setPositiveButton(R.string.dialog_button_OK, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    AFDatabaseInteractionHelper.deleteAllTaskData(((AssemblyFunApplication)getApplication()).getReadableDatabase(), mLocalID); //nTODO: Maybe use a loader?
+                }
+            });
+            builder.setCancelable(true);
+            builder.show();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle state)
+    {
+        super.onSaveInstanceState(state);
+        state.putLong(EXTRAS_TASK_ID, mLocalID);
     }
 
     @Override

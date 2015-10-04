@@ -70,6 +70,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="action_help">Help</string>
+    <string name="action_delete_all_task_data">Delete all task data</string>
     <string name="action_search">Search</string>
     <string name="action_sort_by_disabled">Sort by:</string>
     <string name="action_sort_by_name">Name</string>
@@ -114,6 +115,11 @@
     <string name="label_task_screen_speed">Speed</string>
     <string name="label_task_screen_size">Size</string>
     <string name="label_task_screen_memuse">Memory usage</string>
+
+    <string name="dialog_task_screen_are_you_sure">Are you sure?</string>
+    <string name="dialog_task_screen_delete_task_data_body">This will delete all info about the task.
+        All your solutions will be deleted, and unless the task is online, it will completely disappear forever.
+        The task will disappear from the task lists. Your records also disappear unless you have the current world record. In that case the record is stored on the server.</string>
 
     <string name="label_month_0">Jan</string>
     <string name="label_month_1">Feb</string>
