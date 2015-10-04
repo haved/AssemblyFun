@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import me.havard.assemblyfun.data.tables.LocalTaskTable;
+import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskIDTable;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
@@ -40,7 +41,7 @@ public final class AFDatabaseInteractionHelper
         }
     }
 
-    private static final String[] TASK_TABLES_TO_BE_DELETED_FROM = {TaskinfoTable.TABLE_NAME, LocalTaskTable.TABLE_NAME, TaskRecordsTable.TABLE_NAME};
+    private static final String[] TASK_TABLES_TO_BE_DELETED_FROM = {TaskinfoTable.TABLE_NAME, LocalTaskTable.TABLE_NAME, TaskRecordsTable.TABLE_NAME, SolutionsTable.TABLE_NAME};
     private static final String TASK_TABLES_WHERE_STATEMENT = TaskIDTable._ID_TaskIDs+"=?";
     private static final String TASK_ID_TABLE_WHERE_STATEMENT = TaskIDTable._ID+"=?";
     public static void deleteAllTaskData(SQLiteDatabase db, long ref_id)

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceListItem"
+        android:id="@+id/solution_list_item_name"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="false"
+        android:layout_toLeftOf="@+id/task_list_item_icon_bar"
+        android:text="Solution Name"
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:text="Status"
+        android:id="@+id/solution_list_item_status"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/solution_list_item_name" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/solution_list_item_name"
+        android:id="@+id/task_list_item_icon_bar"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:id="@+id/task_list_item_local"
+            android:src="@mipmap/ic_local"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/task_list_item_solved"
+            android:layout_toStartOf="@+id/task_list_item_solved"
+            android:layout_alignBottom="@+id/solution_list_item_name"
+            android:visibility="gone"
+            android:layout_alignParentRight="false" />
+
+        <ImageView
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:id="@+id/task_list_item_solved"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/task_list_item_published"
+            android:layout_toStartOf="@+id/task_list_item_published"
+            android:src="@mipmap/ic_solved"
+            android:layout_alignBottom="@+id/solution_list_item_name"
+            android:visibility="gone"
+            android:layout_alignParentRight="false" />
+
+        <ImageView
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:id="@+id/task_list_item_published"
+            android:src="@mipmap/ic_published"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@+id/solution_list_item_name"
+            android:visibility="gone" />
+
+        <ImageView
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:id="@+id/task_list_item_favourite"
+            android:src="@mipmap/ic_favourite"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/task_list_item_solved"
+            android:layout_toStartOf="@+id/task_list_item_solved"
+            android:layout_alignBottom="@+id/solution_list_item_name"
+            android:visibility="gone"
+            android:layout_alignParentRight="false" />
+
+        <ImageView
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:id="@+id/task_list_item_global"
+            android:src="@mipmap/ic_global"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/task_list_item_solved"
+            android:layout_toStartOf="@+id/task_list_item_solved"
+            android:layout_alignBottom="@+id/solution_list_item_name"
+            android:visibility="gone"
+            android:layout_alignParentRight="false" />
+    </LinearLayout>
+
+</RelativeLayout>

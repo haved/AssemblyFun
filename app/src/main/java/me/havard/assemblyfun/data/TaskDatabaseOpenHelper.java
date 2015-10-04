@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskIDTable;
 import me.havard.assemblyfun.data.tables.LocalTaskTable;
 import me.havard.assemblyfun.data.tables.Table;
@@ -83,20 +84,22 @@ public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
         values.clear();
         registerLocalTaskToDB(db, values, someTask, "Make a program that returns max(r0,r1)*max(r1,r2)", "3,2,5=15;7,4,2=28;1,2,3=6");
         values.clear();
-        TaskRecordsTable.addRow(db, values, someTask, 19,"Some Other Guy",22, 25,"Some Other Dude",29, 5,"Haved",5);
+        TaskRecordsTable.addRow(db, values, someTask, 19, "Some Other Guy", 22, 25, "Some Other Dude", 29, 5, "Haved", 5);
         values.clear();
 
         long myTask = addTaskInfoToTables(db, values, "MyTask", "r0=r0+min(r0,r1)", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.6f, "You", false, true, true, 0);
         values.clear();
         registerLocalTaskToDB(db, values, myTask, "Make r0=r0+min(r0,r1)",
                 LocalTaskTable.makeTaskTestString(new int[][]{{0, 2}, {4, 5}, {4, 2}, {7, 3}}, new int[][]{{0}, {8}, {6}, {10}}));
+        values.clear();
+        SolutionsTable.addRow(db, values, myTask, "First speed attempt", 1, 10, 12, 4);
     }
 
     private Table[] tables;
     private Table[] getTables()
     {
         if(tables==null)
-            tables = new Table[]{new TaskIDTable(), new TaskinfoTable(), new LocalTaskTable(), new TaskRecordsTable()};
+            tables = new Table[]{new TaskIDTable(), new TaskinfoTable(), new LocalTaskTable(), new TaskRecordsTable(), new SolutionsTable()};
         return tables;
     }
 }

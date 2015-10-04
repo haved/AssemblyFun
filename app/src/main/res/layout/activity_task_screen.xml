@@ -230,6 +230,18 @@
                 android:layout_below="@+id/task_screen_button_list"
                 android:layout_alignParentLeft="true" />
 
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/task_screen_solution_list"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentRight="false"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/task_screen_task_records"
+                tools:listitem="@android:layout/simple_list_item_2" />
+
         </RelativeLayout>
     </ScrollView>
 
