@@ -41,7 +41,7 @@ public final class AFDatabaseInteractionHelper
     }
 
     public static void addOrUpdateRecords(SQLiteDatabase db, ContentValues values, long ref_id, float speed_rec, String speed_rec_name, float your_speed_rec,
-                                          float size_rec, String size_rec_name, float your_size_rec, float memuse_rec, String memuse_rec_name, float your_memuse_rec)
+                                          int size_rec, String size_rec_name, int your_size_rec, float memuse_rec, String memuse_rec_name, float your_memuse_rec)
     {
         if(containsRowWithWhereStatement(db, TaskRecordsTable.TABLE_NAME, TaskRecordsTable._ID_TaskIDs, Long.toString(ref_id)))
             TaskRecordsTable.updateRow(db, values, ref_id, speed_rec, speed_rec_name, your_speed_rec, size_rec, size_rec_name, your_size_rec, memuse_rec, memuse_rec_name, your_memuse_rec);

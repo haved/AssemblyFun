@@ -1,5 +1,6 @@
 package me.havard.assemblyfun;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.database.Cursor;
@@ -13,12 +14,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.Calendar;
 
 import me.havard.assemblyfun.data.Difficulty;
-import me.havard.assemblyfun.data.SQLiteCursorLoader;
 import me.havard.assemblyfun.data.TaskInfoAndRecordsCursorLoader;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
@@ -36,7 +37,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     private TextView mTaskTitle, mTaskDesc, mTaskDiff, mTaskDate, mTaskAuthor, mTaskRecordsText;
     private LinearLayout mButtonList;
     private RelativeLayout mOnlineRow, mSelfPublishedRow;
-    private Button mLocalButton, mFavouriteButton;
+    private Button mLocalButton, mFavouriteButton, mAddSolutionButton;
     private ImageView mLocalIcon, mFavouriteIcon, mSolveIcon;
 
     @Override
@@ -57,6 +58,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
 
         mLocalButton = (Button) findViewById(R.id.task_screen_local_button);
         mFavouriteButton = (Button) findViewById(R.id.task_screen_favourite_button);
+        mAddSolutionButton = (Button) findViewById(R.id.task_screen_add_solution_button);
 
         mLocalIcon = (ImageView) findViewById(R.id.task_screen_local_icon);
         mSolveIcon = (ImageView) findViewById(R.id.task_screen_solved_icon);
@@ -100,21 +102,22 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mSelfPublishedRow.setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SELF_PUBLISHED) ? View.VISIBLE : View.GONE);
         mFavouriteButton.setText(favourite ? R.string.label_task_screen_un_favourite : R.string.label_task_screen_favourite);
         mFavouriteIcon.setVisibility(favourite ? View.VISIBLE : View.INVISIBLE);
+        mAddSolutionButton.setText(local?R.string.label_task_screen_add_solution:R.string.label_task_screen_only_local_tasks_can_be_solved);
         mSolveIcon.setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SOLVED)?View.VISIBLE:View.INVISIBLE);
 
         String recordText;
         if(cursor.getColumnIndex(TaskRecordsTable.SPEED_REC)>=0)
             recordText = String.format("%s\n" +
                             "%s - '%s': %.2f, %s: %.2f\n" +
-                            "%s - '%s': %.2f, %s: %.2f\n" +
+                            "%s - '%s': %d, %s: %d\n" +
                             "%s - '%s': %.2f, %s: %.2f", getResources().getString(R.string.label_task_screen_records__),
                     getResources().getString(R.string.label_task_screen_speed),
                     cursor.getString(cursor.getColumnIndex(TaskRecordsTable.SPEED_REC_NAME)), cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.SPEED_REC)),
                     getResources().getString(R.string.label_task_screen_records_you), cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.YOUR_SPEED_REC)),
 
                     getResources().getString(R.string.label_task_screen_size),
-                    cursor.getString(cursor.getColumnIndex(TaskRecordsTable.SIZE_REC_NAME)), cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.SIZE_REC)),
-                    getResources().getString(R.string.label_task_screen_records_you), cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.YOUR_SIZE_REC)),
+                    cursor.getString(cursor.getColumnIndex(TaskRecordsTable.SIZE_REC_NAME)), cursor.getInt(cursor.getColumnIndex(TaskRecordsTable.SIZE_REC)),
+                    getResources().getString(R.string.label_task_screen_records_you), cursor.getInt(cursor.getColumnIndex(TaskRecordsTable.YOUR_SIZE_REC)),
 
                     getResources().getString(R.string.label_task_screen_memuse),
                     cursor.getString(cursor.getColumnIndex(TaskRecordsTable.MEMUSE_REC_NAME)), cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.MEMUSE_REC)),
@@ -134,7 +137,22 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //int id = item.getItemId();
+        int id = item.getItemId();
+
+        if(id == R.id.action_help)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.help_task_screen_title);
+            TextView text = new TextView(this);
+            text.setText(R.string.help_task_screen_body);
+            ScrollView sView = new ScrollView(this);
+            sView.addView(text);
+            builder.setView(sView);
+            builder.create();
+            builder.setPositiveButton(R.string.dialog_button_OK, null);
+            builder.show();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

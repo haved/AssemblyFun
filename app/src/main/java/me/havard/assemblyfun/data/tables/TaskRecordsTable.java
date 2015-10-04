@@ -25,9 +25,9 @@ public class TaskRecordsTable extends Table {
                 SPEED_REC, REEL,
                 SPEED_REC_NAME, TEXT,
                 YOUR_SPEED_REC, REEL,
-                SIZE_REC, REEL,
+                SIZE_REC, INT,
                 SIZE_REC_NAME, TEXT,
-                YOUR_SIZE_REC, REEL,
+                YOUR_SIZE_REC, INT,
                 MEMUSE_REC, REEL,
                 MEMUSE_REC_NAME, TEXT,
                 YOUR_MEMUSE_REC, REEL,
@@ -38,7 +38,7 @@ public class TaskRecordsTable extends Table {
     public String getTableName() { return TABLE_NAME; }
 
     public static void populateContentValues(ContentValues values, long ref_id, float speed_rec, String speed_rec_name, float your_speed_rec,
-                                             float size_rec, String size_rec_name, float your_size_rec, float memuse_rec, String memuse_rec_name, float your_memuse_rec)
+                                             int size_rec, String size_rec_name, int your_size_rec, float memuse_rec, String memuse_rec_name, float your_memuse_rec)
     {
         if(ref_id!=0)
             values.put(_ID_TaskIDs, ref_id);
@@ -54,7 +54,7 @@ public class TaskRecordsTable extends Table {
     }
 
     public static long addRow(SQLiteDatabase db, ContentValues values, long ref_id, float speed_rec, String speed_rec_name, float your_speed_rec,
-                              float size_rec, String size_rec_name, float your_size_rec, float memuse_rec, String memuse_rec_name, float your_memuse_rec)
+                              int size_rec, String size_rec_name, int your_size_rec, float memuse_rec, String memuse_rec_name, float your_memuse_rec)
     {
         populateContentValues(values, ref_id, speed_rec, speed_rec_name, your_speed_rec, size_rec, size_rec_name, your_size_rec, memuse_rec, memuse_rec_name, your_memuse_rec);
         return db.insert(TABLE_NAME, null, values);
@@ -62,7 +62,7 @@ public class TaskRecordsTable extends Table {
 
     private static final String UPDATE_WHERE_STATEMENT = _ID_TaskIDs+"=?";
     public static long updateRow(SQLiteDatabase db, ContentValues values, long ref_id, float speed_rec, String speed_rec_name, float your_speed_rec,
-                              float size_rec, String size_rec_name, float your_size_rec, float memuse_rec, String memuse_rec_name, float your_memuse_rec)
+                              int size_rec, String size_rec_name, int your_size_rec, float memuse_rec, String memuse_rec_name, float your_memuse_rec)
     {
         populateContentValues(values, 0, speed_rec, speed_rec_name, your_speed_rec, size_rec, size_rec_name, your_size_rec, memuse_rec, memuse_rec_name, your_memuse_rec);
         return db.update(TABLE_NAME, values, UPDATE_WHERE_STATEMENT, new String[]{Long.toString(ref_id)});
