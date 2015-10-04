@@ -9,7 +9,7 @@ import android.util.Log;
 import me.havard.assemblyfun.data.tables.TaskIDTable;
 import me.havard.assemblyfun.data.tables.LocalTaskTable;
 import me.havard.assemblyfun.data.tables.Table;
-import me.havard.assemblyfun.data.tables.TaskScoreboardTable;
+import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
 import static me.havard.assemblyfun.data.AFDatabaseInteractionHelper.*;
@@ -83,6 +83,8 @@ public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
         values.clear();
         registerLocalTaskToDB(db, values, someTask, "Make a program that returns max(r0,r1)*max(r1,r2)", "3,2,5=15;7,4,2=28;1,2,3=6");
         values.clear();
+        TaskRecordsTable.addRow(db, values, someTask, 19, "Some Other Guy", 22, 25, "Some Other Dude", 29, 5,"Haved",5);
+        values.clear();
 
         long myTask = addTaskInfoToTables(db, values, "MyTask", "r0=r0+min(r0,r1)", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.6f, "You", false, true, true, 0);
         values.clear();
@@ -94,7 +96,7 @@ public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
     private Table[] getTables()
     {
         if(tables==null)
-            tables = new Table[]{new TaskIDTable(), new TaskinfoTable(), new LocalTaskTable(), new TaskScoreboardTable()};
+            tables = new Table[]{new TaskIDTable(), new TaskinfoTable(), new LocalTaskTable(), new TaskRecordsTable()};
         return tables;
     }
 }

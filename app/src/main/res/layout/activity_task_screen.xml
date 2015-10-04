@@ -36,7 +36,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Large Text"
                 android:id="@+id/task_screen_task_title"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true" />
@@ -82,16 +81,18 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/task_screen_task_rating_bar"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" >
+                android:layout_alignParentEnd="true"
+                android:id="@+id/task_screen_button_list">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:id="@+id/task_screen_local_row">
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="STORE / REMOVE LOCALLY"
+                        android:text="@string/label_task_screen_store_locally"
                         android:id="@+id/task_screen_local_button"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
@@ -111,12 +112,14 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:id="@+id/task_screen_online_row"
+                    android:visibility="visible">
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="PUT / SEE ONLINE"
+                        android:text="@string/label_task_screen_see_online"
                         android:id="@+id/task_screen_online_button"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
@@ -137,12 +140,13 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:id="@+id/task_screen_self_published_row">
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ADD TO ONLINE CHANNELS"
+                        android:text="@string/label_task_screen_add_to_online"
                         android:id="@+id/task_screen_publish_button"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
@@ -163,12 +167,13 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:id="@+id/task_screen_favourite_row">
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="UNFAVOURITE"
+                        android:text="@string/label_task_screen_favourite"
                         android:id="@+id/task_screen_favourite_button"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
@@ -186,7 +191,45 @@
                         android:layout_alignBottom="@+id/task_screen_favourite_button"
                         android:visibility="visible" />
                 </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/task_screen_button_list"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/task_screen_solve_row">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_task_screen_add_solution"
+                        android:id="@+id/task_screen_add_solution_button"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_toLeftOf="@+id/task_screen_solved_icon" />
+
+                    <ImageView
+                        android:layout_width="40sp"
+                        android:layout_height="40sp"
+                        android:id="@+id/task_screen_solved_icon"
+                        android:src="@mipmap/ic_solved"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignTop="@+id/task_screen_add_solution_button"
+                        android:layout_alignBottom="@+id/task_screen_add_solution_button"
+                        android:visibility="visible" />
+                </RelativeLayout>
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/task_screen_task_records"
+                android:layout_below="@+id/task_screen_button_list"
+                android:layout_centerHorizontal="true" />
+
         </RelativeLayout>
     </ScrollView>
 

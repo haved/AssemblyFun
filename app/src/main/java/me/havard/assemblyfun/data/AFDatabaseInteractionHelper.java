@@ -7,6 +7,7 @@ import android.util.Log;
 
 import me.havard.assemblyfun.data.tables.LocalTaskTable;
 import me.havard.assemblyfun.data.tables.TaskIDTable;
+import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
 /** A final class that contains methods used when modifying the assembly fun database.
@@ -37,6 +38,15 @@ public final class AFDatabaseInteractionHelper
             Log.d("Assembly Fun", "A task with the id " + ref_id + " is no longer registered as local!   OldFlags: " + flags + " NewFlags: " + (flags & ~TaskinfoTable.FLAG_LOCAL));
             db.update(TaskinfoTable.TABLE_NAME, values, TaskinfoTable._ID_TaskIDs + "=?", new String[]{Long.toString(ref_id)});
         }
+    }
+
+    public static void addOrUpdateRecords(SQLiteDatabase db, ContentValues values, long ref_id, float speed_rec, String speed_rec_name, float your_speed_rec,
+                                          float size_rec, String size_rec_name, float your_size_rec, float memuse_rec, String memuse_rec_name, float your_memuse_rec)
+    {
+        if(containsRowWithWhereStatement(db, TaskRecordsTable.TABLE_NAME, TaskRecordsTable._ID_TaskIDs, Long.toString(ref_id)))
+            TaskRecordsTable.updateRow(db, values, ref_id, speed_rec, speed_rec_name, your_speed_rec, size_rec, size_rec_name, your_size_rec, memuse_rec, memuse_rec_name, your_memuse_rec);
+        else
+            TaskRecordsTable.addRow(db, values, ref_id, speed_rec, speed_rec_name, your_speed_rec, size_rec, size_rec_name, your_size_rec, memuse_rec, memuse_rec_name, your_memuse_rec);
     }
 
     public static long addTaskInfoToTables(SQLiteDatabase db, ContentValues values, String name, String desc, long date, Difficulty diff, float rating, String author,

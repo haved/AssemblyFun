@@ -8,13 +8,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.Calendar;
 
 import me.havard.assemblyfun.data.Difficulty;
 import me.havard.assemblyfun.data.SQLiteCursorLoader;
+import me.havard.assemblyfun.data.TaskInfoAndRecordsCursorLoader;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
+import me.havard.assemblyfun.util.MonthLabels;
 
 public class TaskScreen extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -24,11 +31,12 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     private static final String TASK_QUERY = "SELECT * FROM " + TaskinfoTable.TABLE_NAME + " WHERE " + TaskinfoTable._ID_TaskIDs + " = ?";
 
     private long mLocalID;
-    private String[] mSelectArgs;
 
-    private TextView mTaskTitle, mTaskDesc, mTaskDiff, mTaskDate, mTaskAuthor;
-    private Button mLocalButton, mSolveButton, mPublishButton, mFavouriteButton;
-    private ImageView mLocalIcon, mSolveIcon, mPublishIcon, mFavouriteIcon;
+    private TextView mTaskTitle, mTaskDesc, mTaskDiff, mTaskDate, mTaskAuthor, mTaskRecordsText;
+    private LinearLayout mButtonList;
+    private RelativeLayout mOnlineRow, mSelfPublishedRow;
+    private Button mLocalButton, mFavouriteButton;
+    private ImageView mLocalIcon, mFavouriteIcon, mSolveIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +48,23 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mTaskDiff = (TextView) findViewById(R.id.task_screen_task_diff);
         mTaskDate = (TextView) findViewById(R.id.task_screen_task_date);
         mTaskAuthor = (TextView) findViewById(R.id.task_screen_task_author);
+        mTaskRecordsText = (TextView) findViewById(R.id.task_screen_task_records);
+
+        mButtonList = (LinearLayout)findViewById(R.id.task_screen_button_list);
+        mOnlineRow = (RelativeLayout)findViewById(R.id.task_screen_online_row);
+        mSelfPublishedRow = (RelativeLayout)findViewById(R.id.task_screen_self_published_row);
+
+        mLocalButton = (Button) findViewById(R.id.task_screen_local_button);
+        mFavouriteButton = (Button) findViewById(R.id.task_screen_favourite_button);
 
         mLocalIcon = (ImageView) findViewById(R.id.task_screen_local_icon);
-        mSolveIcon = (ImageView) findViewById(R.id.task_screen_online_icon);
-        mPublishIcon = (ImageView) findViewById(R.id.task_screen_publish_icon);
+        mSolveIcon = (ImageView) findViewById(R.id.task_screen_solved_icon);
         mFavouriteIcon = (ImageView) findViewById(R.id.task_screen_favourite_icon);
 
         mTaskTitle.setText(R.string.label_loading);
+        mButtonList.setVisibility(View.GONE);
 
         mLocalID = getIntent().getExtras().getLong(EXTRAS_TASK_ID);
-        mSelectArgs = new String[]{Long.toString(mLocalID)};
         getLoaderManager().initLoader(LOADER_ID_TASK_CURSOR, null, this);
     }
 
@@ -57,18 +72,34 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     {
         cursor.moveToFirst();
         if(cursor.isAfterLast()) {
-            mTaskTitle.setText("No task with task id '" + mLocalID + "' was not found in the database!");
+            mTaskTitle.setText("No task with task id '" + mLocalID + "' was found in the database!");
             return;
         }
 
         mTaskTitle.setText(cursor.getString(cursor.getColumnIndex(TaskinfoTable.NAME)));
         mTaskDesc.setText(cursor.getString(cursor.getColumnIndex(TaskinfoTable.DESC)));
-        mTaskDate.setText(cursor.getString(cursor.getColumnIndex(TaskinfoTable.DATE)));
         mTaskAuthor.setText(cursor.getString(cursor.getColumnIndex(TaskinfoTable.AUTHOR)));
-
         Difficulty diff = Difficulty.values()[cursor.getInt(cursor.getColumnIndex(TaskinfoTable.DIFFICULTY))];
         mTaskDiff.setText(diff.getLabelId());
         mTaskDiff.setTextColor(ContextCompat.getColor(this, diff.getColorId()));
+        Calendar cl = Calendar.getInstance();
+        cl.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(TaskinfoTable.DATE)));
+        mTaskDate.setText(getResources().getString(MonthLabels.RESOURCE_IDS[cl.get(Calendar.MONTH)])+ " " + cl.get(Calendar.DAY_OF_MONTH) + " " + cl.get(Calendar.YEAR));
+
+        mButtonList.setVisibility(View.VISIBLE);
+        int flags = cursor.getInt(cursor.getColumnIndex(TaskinfoTable.FLAGS));
+        boolean local = TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_LOCAL), global = TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_GLOBAL),
+                favourite = TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_FAVOURITE);
+        mLocalButton.setText(global ?
+                (local ? R.string.label_task_screen_remove_locally : R.string.label_task_screen_store_locally)
+                : R.string.label_task_screen_only_locally);
+        mLocalButton.setEnabled(global);
+        mLocalIcon.setVisibility(local ? View.VISIBLE : View.INVISIBLE);
+        mOnlineRow.setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_GLOBAL) ? View.VISIBLE:View.GONE);
+        mSelfPublishedRow.setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SELF_PUBLISHED) ? View.VISIBLE : View.GONE);
+        mFavouriteButton.setText(favourite ? R.string.label_task_screen_un_favourite : R.string.label_task_screen_favourite);
+        mFavouriteIcon.setVisibility(favourite ? View.VISIBLE : View.INVISIBLE);
+        mSolveIcon.setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SOLVED)?View.VISIBLE:View.INVISIBLE);
     }
 
     @Override
@@ -87,7 +118,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), TASK_QUERY, mSelectArgs);
+        return new TaskInfoAndRecordsCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), mLocalID);
     }
 
     @Override

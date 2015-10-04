@@ -68,4 +68,25 @@
     <string name="label_loading">Loading...</string>
 
     <string name="title_activity_task_screen">Task</string>
+    <string name="label_task_screen_store_locally">Store locally</string>
+    <string name="label_task_screen_remove_locally">Remove locally</string>
+    <string name="label_task_screen_only_locally">Only exists locally</string>
+    <string name="label_task_screen_see_online">See online</string>
+    <string name="label_task_screen_add_to_online">Add to online channels</string>
+    <string name="label_task_screen_favourite">Favourite</string>
+    <string name="label_task_screen_un_favourite">Un-favourite</string>
+    <string name="label_task_screen_add_solution">Add solution</string>
+
+    <string name="label_month_0">Jan</string>
+    <string name="label_month_1">Feb</string>
+    <string name="label_month_2">March</string>
+    <string name="label_month_3">April</string>
+    <string name="label_month_4">May</string>
+    <string name="label_month_5">June</string>
+    <string name="label_month_6">July</string>
+    <string name="label_month_7">Aug</string>
+    <string name="label_month_8">Sep</string>
+    <string name="label_month_9">Oct</string>
+    <string name="label_month_10">Nov</string>
+    <string name="label_month_11">Dec</string>
 </resources>
