@@ -165,6 +165,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
                     AFDatabaseInteractionHelper.deleteAllTaskData(((AssemblyFunApplication)getApplication()).getReadableDatabase(), mLocalID); //nTODO: Maybe use a loader?
                 }
             });
+            builder.setNegativeButton(R.string.dialog_button_Cancel, null);
             builder.setCancelable(true);
             builder.show();
             return true;

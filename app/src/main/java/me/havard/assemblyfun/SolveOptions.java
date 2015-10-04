@@ -60,9 +60,7 @@ public class SolveOptions extends AppCompatActivity {
         if (id == R.id.action_help) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
             dialog.setTitle(R.string.help_solve_options_title);
-            TextView body = new TextView(this);
-            body.setText(R.string.help_solve_options_body);
-            dialog.setView(body);
+            dialog.setMessage(R.string.help_solve_options_body);
             dialog.create();
             dialog.setPositiveButton(R.string.dialog_button_OK, null);
             dialog.show();
