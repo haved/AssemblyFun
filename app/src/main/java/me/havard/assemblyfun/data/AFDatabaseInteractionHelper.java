@@ -102,7 +102,7 @@ public final class AFDatabaseInteractionHelper
             " FROM " + TaskRecordsTable.TABLE_NAME + " WHERE " + WHERE_RECORDS_ID_TASK_IDS_EQUAL_TO + " LIMIT 1";
 
     /** Updates the quality, speed, size and memory usage of a row in the SolutionTable. If the quality isn't SolutionsTable.QUALITY_PERFECT the speed, size and memory will be null.
-     * IF the quality is QUALITY_PERFECT the new speed, size and memory usage will be stored in the TaskRecordsTable. The taskInfoTable row for this task will also get it's flags set so solved.
+     * IF the quality is QUALITY_PERFECT the new speed, size and memory usage will be stored in the TaskRecordsTable. The taskInfoTable row for this task will also get it's flags set to solved if it isn't already.
      * If there are no row's that already contain the task_id as their _id_TaskIDs,
      * a new one will be added were the new speed, size and memory usage are set as both local and global records, and the global record holders is set to "You"
      *
@@ -125,6 +125,35 @@ public final class AFDatabaseInteractionHelper
 
         if(quality!=SolutionsTable.QUALITY_PERFECT)
             return;
+
+        if(task_id<0) {
+            Cursor cursor = makeCursorForOneField(db, SolutionsTable.TABLE_NAME, SolutionsTable._ID_TaskIDs, SolutionsTable._ID + "=?", new String[]{Long.toString(task_id)}, "LIMIT 1");
+            //noinspection TryFinallyCanBeTryWithResources
+            try {
+                cursor.moveToFirst();
+                if(cursor.isAfterLast()) {
+                    Log.e("Assembly Fun", "No task_id was supplied when the solution vales were updated for solution with id: " + solution_id +
+                            ". Tried looking up the task_id in the SolutionsTable, but the row were _id=solution_id doesn't exist!");
+                    return;
+                }
+                task_id = cursor.getLong(cursor.getColumnIndex(SolutionsTable._ID_TaskIDs)); // getColumnIndex should in theory always return 0, but what the heck. One can almost never be too careful!
+                Log.i("Assembly Fun", "No task_id was supplied when updating the values for the solution with the _id " + solution_id + ". A quick look up in the SolutionsTable found the task_id " + task_id);
+            } catch(Exception e) {
+                Log.wtf("Assembly Fun", e);
+            }finally {
+                cursor.close();
+            }
+        }
+
+        int flags = getFlagsFromTaskWithID(db, task_id);
+        if(!TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SOLVED)) {
+            flags = TaskinfoTable.addFlag(flags, TaskinfoTable.FLAG_SOLVED); // flags |= TaskinfoTable.FLAG_SOLVED
+            values.clear();
+            values.put(TaskinfoTable.FLAGS, flags);
+            db.update(TaskinfoTable.TABLE_NAME, values, TaskinfoTable._ID_TaskIDs + "=?", new String[]{Long.toString(task_id)});
+            Log.i("Assembly Fun", "Because the TaskinfoTable row for the task " + task_id + " didn't have the solved flag set when a solution for this task got set to QUALITY_PERFECT, the flag was updated!");
+        }
+
         Cursor taskRecords = db.rawQuery(SELECT_RECORDS_FOR_TASK_ID, new String[]{Long.toString(task_id)});
         //noinspection TryFinallyCanBeTryWithResources
         try {
@@ -259,6 +288,11 @@ public final class AFDatabaseInteractionHelper
             cursor.close();
         }
         return output;
+    }
+
+    public static Cursor makeCursorForOneField(SQLiteDatabase db, String tableName, String columns, String whereStatement, String[] whereArgs, String queryExtras)
+    {
+        return db.rawQuery(String.format("SELECT %s FROM %s WHERE %s %s", columns, tableName, whereStatement, queryExtras), whereArgs);
     }
 
     /* Adds (or updates if there's already a row with the same ref_id) a row to the taskRecordsTable with all the values passed. If a value is -1 or a string is null the field will not be added/updated.
