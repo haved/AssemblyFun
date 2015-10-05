@@ -19,10 +19,18 @@ public class TaskInfoAndRecordsCursorLoader extends AsyncTaskLoader<Cursor> {
 
     private String mRef_id;
 
-    private static final String TASK_INFO_AND_RECORDS_QUERY = "SELECT * FROM " + TaskinfoTable.TABLE_NAME + ", " + TaskRecordsTable.TABLE_NAME + " WHERE " +
-                                    TaskinfoTable.TABLE_NAME+"."+TaskinfoTable._ID_TaskIDs + " = " + TaskRecordsTable.TABLE_NAME+"."+TaskRecordsTable._ID_TaskIDs +
-            " AND " + TaskinfoTable.TABLE_NAME+"."+TaskinfoTable._ID_TaskIDs + " = ? LIMIT 1;";
-    private static final String TASK_INFO_ONLY_QUERY = "SELECT * FROM " + TaskinfoTable.TABLE_NAME + " WHERE " + TaskinfoTable._ID_TaskIDs + " = ? LIMIT 1;";
+    private static final String TASK_INFO_AND_RECORDS_QUERY = String.format("SELECT %s, %s, %s, %s, %s, %s, %s, %s.* FROM %s, %s WHERE %s.%s = ? AND %s.%s = %s.%s LIMIT 1;",
+            TaskinfoTable.NAME, TaskinfoTable.DESC, TaskinfoTable.DIFFICULTY, TaskinfoTable.DATE,
+            TaskinfoTable.AUTHOR, TaskinfoTable.RATING, TaskinfoTable.FLAGS, TaskRecordsTable.TABLE_NAME,
+            TaskinfoTable.TABLE_NAME, TaskRecordsTable.TABLE_NAME,
+            TaskinfoTable.TABLE_NAME, TaskinfoTable._ID_TaskIDs,
+            TaskinfoTable.TABLE_NAME, TaskinfoTable._ID_TaskIDs,
+            TaskRecordsTable.TABLE_NAME, TaskRecordsTable._ID_TaskIDs);
+    private static final String TASK_INFO_ONLY_QUERY = String.format("SELECT %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s=? LIMIT 1;",
+            TaskinfoTable.NAME, TaskinfoTable.DESC, TaskinfoTable.DIFFICULTY, TaskinfoTable.DATE,
+            TaskinfoTable.AUTHOR, TaskinfoTable.RATING, TaskinfoTable.FLAGS,
+            TaskinfoTable.TABLE_NAME,
+            TaskinfoTable._ID_TaskIDs);
 
     public TaskInfoAndRecordsCursorLoader(Context context, SQLiteOpenHelper dbHelper, long ref_id) {
         super(context);

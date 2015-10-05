@@ -14,15 +14,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.Calendar;
 
 import me.havard.assemblyfun.data.AFDatabaseInteractionHelper;
 import me.havard.assemblyfun.data.Difficulty;
+import me.havard.assemblyfun.data.SQLiteCursorLoader;
+import me.havard.assemblyfun.data.SolutionCursorAdapter;
 import me.havard.assemblyfun.data.TaskInfoAndRecordsCursorLoader;
+import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
 import me.havard.assemblyfun.util.MonthLabels;
@@ -31,8 +34,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
 
     public static final String EXTRAS_TASK_ID = "extrasTaskID";
     private static final int LOADER_ID_TASK_CURSOR = 0;
-
-    private static final String TASK_QUERY = "SELECT * FROM " + TaskinfoTable.TABLE_NAME + " WHERE " + TaskinfoTable._ID_TaskIDs + " = ?";
+    private static final int LOADER_ID_SOLUTIONS_CURSOR = 1;
 
     private long mLocalID;
 
@@ -41,6 +43,9 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     private RelativeLayout mOnlineRow, mSelfPublishedRow;
     private Button mLocalButton, mFavouriteButton, mAddSolutionButton;
     private ImageView mLocalIcon, mFavouriteIcon, mSolveIcon;
+
+    private ListView mSolutionList;
+    private SolutionCursorAdapter mSolutionListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +74,17 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mTaskTitle.setText(R.string.label_loading);
         mButtonList.setVisibility(View.GONE);
 
+        mSolutionList = (ListView) findViewById(R.id.task_screen_solution_list);
+        mSolutionListAdapter = new SolutionCursorAdapter(this, null);
+        mSolutionList.setAdapter(mSolutionListAdapter);
+
         Bundle data = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
         mLocalID = data.getLong(EXTRAS_TASK_ID);
         getLoaderManager().initLoader(LOADER_ID_TASK_CURSOR, null, this);
+        getLoaderManager().initLoader(LOADER_ID_SOLUTIONS_CURSOR, null, this);
     }
 
-    protected void useCursor(Cursor cursor)
+    protected void useTaskInfoAndRecordsCursor(Cursor cursor)
     {
         cursor.moveToFirst();
         if(cursor.isAfterLast()) {
@@ -105,7 +115,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mSelfPublishedRow.setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SELF_PUBLISHED) ? View.VISIBLE : View.GONE);
         mFavouriteButton.setText(favourite ? R.string.label_task_screen_un_favourite : R.string.label_task_screen_favourite);
         mFavouriteIcon.setVisibility(favourite ? View.VISIBLE : View.INVISIBLE);
-        mAddSolutionButton.setText(local?R.string.label_task_screen_add_solution:R.string.label_task_screen_only_local_tasks_can_be_solved);
+        mAddSolutionButton.setText(local ? R.string.label_task_screen_add_solution : R.string.label_task_screen_only_local_tasks_can_be_solved);
         mAddSolutionButton.setEnabled(local);
         mSolveIcon.setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SOLVED)?View.VISIBLE:View.INVISIBLE);
 
@@ -162,7 +172,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
             builder.setPositiveButton(R.string.dialog_button_OK, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    AFDatabaseInteractionHelper.deleteAllTaskData(((AssemblyFunApplication)getApplication()).getReadableDatabase(), mLocalID); //nTODO: Maybe use a loader?
+                    AFDatabaseInteractionHelper.deleteAllTaskData(((AssemblyFunApplication) getApplication()).getReadableDatabase(), mLocalID); //nTODO: Maybe use a loader?
                 }
             });
             builder.setNegativeButton(R.string.dialog_button_Cancel, null);
@@ -180,18 +190,28 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         state.putLong(EXTRAS_TASK_ID, mLocalID);
     }
 
+    private static final String SOLUTION_LIST_CURSOR_QUERY = String.format("SELECT %s, %s, %s, %s, %s, %s AS _id FROM %s WHERE %s=?",
+            SolutionsTable.NAME, SolutionsTable.SOLUTION_QUALITY, SolutionsTable.SPEED, SolutionsTable.SIZE, SolutionsTable.MEMUSE, SolutionsTable._ID,
+            SolutionsTable.TABLE_NAME, SolutionsTable._ID_TaskIDs);
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new TaskInfoAndRecordsCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), mLocalID);
+        if(id == LOADER_ID_TASK_CURSOR)
+            return new TaskInfoAndRecordsCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), mLocalID);
+        else //if(id == LOADER_ID_SOLUTIONS_CURSOR)
+            return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), SOLUTION_LIST_CURSOR_QUERY, new String[]{Long.toString(mLocalID)});
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        useCursor(data);
+        if(loader instanceof TaskInfoAndRecordsCursorLoader) //it is the loader for the
+            useTaskInfoAndRecordsCursor(data);
+        else
+            mSolutionListAdapter.changeCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        //Well. No reason to do anything really
+        if(!(loader instanceof TaskInfoAndRecordsCursorLoader))
+            mSolutionListAdapter.changeCursor(null);
     }
 }

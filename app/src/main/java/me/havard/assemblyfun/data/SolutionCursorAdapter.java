@@ -19,7 +19,7 @@ public class SolutionCursorAdapter extends SimpleCursorAdapter
     private static final int[] TO_TEXT_VIEWS = new int[]{R.id.solution_list_item_name};
 
     public SolutionCursorAdapter(Context context, Cursor cursor) {
-        super(context, R.layout.task_list_item, cursor, FROM_COLUMNS, TO_TEXT_VIEWS, 0);
+        super(context, R.layout.solution_list_item, cursor, FROM_COLUMNS, TO_TEXT_VIEWS, 0);
     }
 
     @Override
@@ -31,9 +31,9 @@ public class SolutionCursorAdapter extends SimpleCursorAdapter
             statusText = context.getResources().getString(R.string.label_task_screen_solution_failed);
         else
             statusText = String.format("%s: %.2f,  %s: %d, %s: %.2f",
-                    R.string.label_task_screen_speed, cursor.getFloat(cursor.getColumnIndex(SolutionsTable.SPEED)),
-                    R.string.label_task_screen_size, cursor.getInt(cursor.getColumnIndex(SolutionsTable.SIZE)),
-                    R.string.label_task_screen_memuse, cursor.getFloat(cursor.getColumnIndex(SolutionsTable.MEMUSE)));
+                    context.getResources().getString(R.string.label_task_screen_speed), cursor.getFloat(cursor.getColumnIndex(SolutionsTable.SPEED)),
+                    context.getResources().getString(R.string.label_task_screen_size), cursor.getInt(cursor.getColumnIndex(SolutionsTable.SIZE)),
+                            context.getResources().getString(R.string.label_task_screen_memuse), cursor.getFloat(cursor.getColumnIndex(SolutionsTable.MEMUSE)));
         ((TextView)view.findViewById(R.id.solution_list_item_status)).setText(statusText);
 
     }

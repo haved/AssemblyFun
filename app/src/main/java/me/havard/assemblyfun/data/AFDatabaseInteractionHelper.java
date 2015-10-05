@@ -163,30 +163,6 @@ public final class AFDatabaseInteractionHelper
         }
     }
 
-    /* Adds (or updates if there's already a row with the same ref_id) a row to the taskRecordsTable with all the values passed. If a value is -1 or a string is null the field will not be added/updated.
-     * This method is damaging to the database because the fields should never be null!
-     * @param db A readable and writable SQLiteDatabase object.
-     * @param values A ContentValues object. Has to be cleared. Will be used in the method.
-     * @param ref_id The _id_TaskIDs of the row in the taskRecordsTable to wither be added or updated with the new values.
-     * @param speed_rec The global record for speed. The average of the run time for all tests. Lower is better.
-     * @param speed_rec_name The name of the record setter in the speed category.
-     * @param your_speed_rec The local speed record, made on the device.
-     * @param size_rec The global size record. Smaller is better
-     * @param size_rec_name The record holder globally for the size record.
-     * @param your_size_rec The owner of the devices size record.
-     * @param memuse_rec The global record for the least amount of memory used on average in all the public tests. Can be 0.
-     * @param memuse_rec_name The holder for the global record of least amount of memory used
-     * @param your_memuse_rec The device owners record for least amount of memory used.
-
-    public static void addOrUpdateRecords(SQLiteDatabase db, ContentValues values, long ref_id, float speed_rec, String speed_rec_name, float your_speed_rec,
-                                          int size_rec, String size_rec_name, int your_size_rec, float memuse_rec, String memuse_rec_name, float your_memuse_rec)
-    {
-        if(containsRowWithWhereStatement(db, TaskRecordsTable.TABLE_NAME, TaskRecordsTable._ID_TaskIDs, Long.toString(ref_id)))
-            TaskRecordsTable.updateRow(db, values, ref_id, speed_rec, speed_rec_name, your_speed_rec, size_rec, size_rec_name, your_size_rec, memuse_rec, memuse_rec_name, your_memuse_rec);
-        else
-            TaskRecordsTable.addRow(db, values, ref_id, speed_rec, speed_rec_name, your_speed_rec, size_rec, size_rec_name, your_size_rec, memuse_rec, memuse_rec_name, your_memuse_rec);
-    }*/
-
     /** Adds a row to the taskInfoTable with the supplied values (except for the globalID).
      * The globalID is used to look up in the TaskIDTable. If it already exists there, the _id (localID) from that row in the TaskIDTable is used as the _id_TaskIDs for the new row in the taskInfoTable.
      * Otherwise, if the globalID is new or 0, a new row is added to the TaskIDTable with the supplied globalID (NULL if globalID==0). The _id of this new row is used as the _id_TaskIDs for the new taskInfoTable row.
@@ -283,4 +259,31 @@ public final class AFDatabaseInteractionHelper
         }
         return output;
     }
+
+
+
+
+    /* Adds (or updates if there's already a row with the same ref_id) a row to the taskRecordsTable with all the values passed. If a value is -1 or a string is null the field will not be added/updated.
+     * This method is damaging to the database because the fields should never be null!
+     * @param db A readable and writable SQLiteDatabase object.
+     * @param values A ContentValues object. Has to be cleared. Will be used in the method.
+     * @param ref_id The _id_TaskIDs of the row in the taskRecordsTable to wither be added or updated with the new values.
+     * @param speed_rec The global record for speed. The average of the run time for all tests. Lower is better.
+     * @param speed_rec_name The name of the record setter in the speed category.
+     * @param your_speed_rec The local speed record, made on the device.
+     * @param size_rec The global size record. Smaller is better
+     * @param size_rec_name The record holder globally for the size record.
+     * @param your_size_rec The owner of the devices size record.
+     * @param memuse_rec The global record for the least amount of memory used on average in all the public tests. Can be 0.
+     * @param memuse_rec_name The holder for the global record of least amount of memory used
+     * @param your_memuse_rec The device owners record for least amount of memory used.
+
+    public static void addOrUpdateRecords(SQLiteDatabase db, ContentValues values, long ref_id, float speed_rec, String speed_rec_name, float your_speed_rec,
+                                          int size_rec, String size_rec_name, int your_size_rec, float memuse_rec, String memuse_rec_name, float your_memuse_rec)
+    {
+        if(containsRowWithWhereStatement(db, TaskRecordsTable.TABLE_NAME, TaskRecordsTable._ID_TaskIDs, Long.toString(ref_id)))
+            TaskRecordsTable.updateRow(db, values, ref_id, speed_rec, speed_rec_name, your_speed_rec, size_rec, size_rec_name, your_size_rec, memuse_rec, memuse_rec_name, your_memuse_rec);
+        else
+            TaskRecordsTable.addRow(db, values, ref_id, speed_rec, speed_rec_name, your_speed_rec, size_rec, size_rec_name, your_size_rec, memuse_rec, memuse_rec_name, your_memuse_rec);
+    }*/
 }
