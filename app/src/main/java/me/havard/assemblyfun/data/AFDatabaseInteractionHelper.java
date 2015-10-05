@@ -102,7 +102,8 @@ public final class AFDatabaseInteractionHelper
             " FROM " + TaskRecordsTable.TABLE_NAME + " WHERE " + WHERE_RECORDS_ID_TASK_IDS_EQUAL_TO + " LIMIT 1";
 
     /** Updates the quality, speed, size and memory usage of a row in the SolutionTable. If the quality isn't SolutionsTable.QUALITY_PERFECT the speed, size and memory will be null.
-     * IF the quality is QUALITY_PERFECT the new speed, size and memory usage will be stored in the TaskRecordsTable. If there are no row's that already contain the task_id as their _id_TaskIDs,
+     * IF the quality is QUALITY_PERFECT the new speed, size and memory usage will be stored in the TaskRecordsTable. The taskInfoTable row for this task will also get it's flags set so solved.
+     * If there are no row's that already contain the task_id as their _id_TaskIDs,
      * a new one will be added were the new speed, size and memory usage are set as both local and global records, and the global record holders is set to "You"
      *
      * @param db A readable and writable SQLiteDatabase object.
@@ -259,9 +260,6 @@ public final class AFDatabaseInteractionHelper
         }
         return output;
     }
-
-
-
 
     /* Adds (or updates if there's already a row with the same ref_id) a row to the taskRecordsTable with all the values passed. If a value is -1 or a string is null the field will not be added/updated.
      * This method is damaging to the database because the fields should never be null!

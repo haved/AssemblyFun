@@ -52,31 +52,34 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_screen);
 
-        mTaskTitle = (TextView) findViewById(R.id.task_screen_task_title);
-        mTaskDesc = (TextView) findViewById(R.id.task_screen_task_desc);
-        mTaskDiff = (TextView) findViewById(R.id.task_screen_task_diff);
-        mTaskDate = (TextView) findViewById(R.id.task_screen_task_date);
-        mTaskAuthor = (TextView) findViewById(R.id.task_screen_task_author);
-        mTaskRecordsText = (TextView) findViewById(R.id.task_screen_task_records);
-
-        mButtonList = (LinearLayout)findViewById(R.id.task_screen_button_list);
-        mOnlineRow = (RelativeLayout)findViewById(R.id.task_screen_online_row);
-        mSelfPublishedRow = (RelativeLayout)findViewById(R.id.task_screen_self_published_row);
-
-        mLocalButton = (Button) findViewById(R.id.task_screen_local_button);
-        mFavouriteButton = (Button) findViewById(R.id.task_screen_favourite_button);
-        mAddSolutionButton = (Button) findViewById(R.id.task_screen_add_solution_button);
-
-        mLocalIcon = (ImageView) findViewById(R.id.task_screen_local_icon);
-        mSolveIcon = (ImageView) findViewById(R.id.task_screen_solved_icon);
-        mFavouriteIcon = (ImageView) findViewById(R.id.task_screen_favourite_icon);
-
-        mTaskTitle.setText(R.string.label_loading);
-        mButtonList.setVisibility(View.GONE);
-
         mSolutionList = (ListView) findViewById(R.id.task_screen_solution_list);
         mSolutionListAdapter = new SolutionCursorAdapter(this, null);
         mSolutionList.setAdapter(mSolutionListAdapter);
+
+        View headerView = getLayoutInflater().inflate(R.layout.task_screen_header, null);
+        mSolutionList.addHeaderView(headerView);
+
+        mTaskTitle = (TextView) headerView.findViewById(R.id.task_screen_task_title);
+        mTaskDesc = (TextView) headerView.findViewById(R.id.task_screen_task_desc);
+        mTaskDiff = (TextView) headerView.findViewById(R.id.task_screen_task_diff);
+        mTaskDate = (TextView) headerView.findViewById(R.id.task_screen_task_date);
+        mTaskAuthor = (TextView) headerView.findViewById(R.id.task_screen_task_author);
+        mTaskRecordsText = (TextView) headerView.findViewById(R.id.task_screen_task_records);
+
+        mButtonList = (LinearLayout)headerView.findViewById(R.id.task_screen_button_list);
+        mOnlineRow = (RelativeLayout)headerView.findViewById(R.id.task_screen_online_row);
+        mSelfPublishedRow = (RelativeLayout)headerView.findViewById(R.id.task_screen_self_published_row);
+
+        mLocalButton = (Button) headerView.findViewById(R.id.task_screen_local_button);
+        mFavouriteButton = (Button) headerView.findViewById(R.id.task_screen_favourite_button);
+        mAddSolutionButton = (Button) headerView.findViewById(R.id.task_screen_add_solution_button);
+
+        mLocalIcon = (ImageView) headerView.findViewById(R.id.task_screen_local_icon);
+        mSolveIcon = (ImageView) headerView.findViewById(R.id.task_screen_solved_icon);
+        mFavouriteIcon = (ImageView) headerView.findViewById(R.id.task_screen_favourite_icon);
+
+        mTaskTitle.setText(R.string.label_loading);
+        mButtonList.setVisibility(View.GONE);
 
         Bundle data = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
         mLocalID = data.getLong(EXTRAS_TASK_ID);
