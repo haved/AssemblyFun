@@ -14,7 +14,7 @@ public class LocalTaskTable extends Table {
     @Override
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
-                _ID_TaskIDs, INT,
+                _ID_TaskIDs, PRIMARY_KEY,
                 TASK_TEXT, TEXT,
                 TASK_TESTS, TEXT,
                 TaskIDTable.FOREIGN_KEY_ID_TaskIDs);

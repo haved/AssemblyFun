@@ -30,7 +30,7 @@ public class TaskinfoTable extends Table
     @Override
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
-                _ID_TaskIDs, INT,
+                _ID_TaskIDs, PRIMARY_KEY,
                 NAME, TEXT,
                 DESC, TEXT,
                 DATE, INT,

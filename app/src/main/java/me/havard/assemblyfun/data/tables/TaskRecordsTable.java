@@ -21,7 +21,7 @@ public class TaskRecordsTable extends Table {
     @Override
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
-                _ID_TaskIDs, INT,
+                _ID_TaskIDs, PRIMARY_KEY,
                 SPEED_REC, REEL,
                 SPEED_REC_NAME, TEXT,
                 YOUR_SPEED_REC, REEL,

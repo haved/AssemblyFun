@@ -8,7 +8,8 @@ public abstract class Table {
     public static final String REEL = "REEL";
     public static final String TEXT = "TEXT";
     public static final String BLOB = "BLOB";
-    public static final String PRIMARY_KEY = "INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL";
+    public static final String PRIMARY_KEY_AUTOINCREMENT = "INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL";
+    public static final String PRIMARY_KEY = "INTEGER PRIMARY KEY NOT NULL";
 
     public abstract String getCreateString();
     public abstract String getTableName();

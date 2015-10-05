@@ -23,7 +23,7 @@ public class SolutionsTable extends Table {
     @Override
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
-                _ID, PRIMARY_KEY,
+                _ID, PRIMARY_KEY_AUTOINCREMENT,
                 _ID_TaskIDs, INT,
                 NAME, TEXT,
                 SOLUTION_TEXT, TEXT,

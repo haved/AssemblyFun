@@ -13,7 +13,7 @@ public class TaskIDTable extends Table {
     @Override
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
-                _ID, PRIMARY_KEY,
+                _ID, PRIMARY_KEY_AUTOINCREMENT,
                 GLOBAL_TASK_ID, INT);
     }
 
