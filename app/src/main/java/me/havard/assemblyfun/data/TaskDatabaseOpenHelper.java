@@ -91,8 +91,23 @@ public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
         values.clear();
         registerLocalTaskToDB(db, values, myTask, "Make r0=r0+min(r0,r1)",
                 LocalTaskTable.makeTaskTestString(new int[][]{{0, 2}, {4, 5}, {4, 2}, {7, 3}}, new int[][]{{0}, {8}, {6}, {10}}));
+
         values.clear();
-        SolutionsTable.addRow(db, values, myTask, "First speed attempt", 1, 10, 12, 4);
+        addEmptySolution(db, values, task1, "My fail solution 1!", "Have a bun!");
+        values.clear();
+        long bestS1 = addEmptySolution(db, values, someTask, "My best solution!", "Have another one");
+        values.clear();
+        updateSolutionValues(db, values, bestS1, someTask, SolutionsTable.QUALITY_PERFECT, 20, 27, 6);
+        values.clear();
+        long bestS3 = addEmptySolution(db, values, myTask, "My best solution 3!", "Have nice day");
+        values.clear();
+        updateSolutionValues(db, values, bestS3, myTask, SolutionsTable.QUALITY_PERFECT, 10, 14, 0);
+        values.clear();
+        long bestS4 = addEmptySolution(db, values, myTask, "My best solution 4!", "Have yet another bun!");
+        values.clear();
+        updateSolutionValues(db, values, bestS4, myTask, SolutionsTable.QUALITY_PERFECT, 9, 17, 2);
+        values.clear();
+        addEmptySolution(db, values, myTask, "My fail solution!", "This is your last bun!");
     }
 
     private Table[] tables;

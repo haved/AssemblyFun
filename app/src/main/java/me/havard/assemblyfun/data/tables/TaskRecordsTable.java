@@ -40,17 +40,26 @@ public class TaskRecordsTable extends Table {
     public static void populateContentValues(ContentValues values, long ref_id, float speed_rec, String speed_rec_name, float your_speed_rec,
                                              int size_rec, String size_rec_name, int your_size_rec, float memuse_rec, String memuse_rec_name, float your_memuse_rec)
     {
-        if(ref_id!=0)
+        if(ref_id!=-1)
             values.put(_ID_TaskIDs, ref_id);
-        values.put(SPEED_REC, speed_rec);
-        values.put(SPEED_REC_NAME, speed_rec_name);
-        values.put(YOUR_SPEED_REC, your_speed_rec);
-        values.put(SIZE_REC, size_rec);
-        values.put(SIZE_REC_NAME, size_rec_name);
-        values.put(YOUR_SIZE_REC, your_size_rec);
-        values.put(MEMUSE_REC, memuse_rec);
-        values.put(MEMUSE_REC_NAME, memuse_rec_name);
-        values.put(YOUR_MEMUSE_REC, your_memuse_rec);
+        if(speed_rec!=-1)
+            values.put(SPEED_REC, speed_rec);
+        if(speed_rec_name!=null)
+            values.put(SPEED_REC_NAME, speed_rec_name);
+        if(your_speed_rec!=-1)
+            values.put(YOUR_SPEED_REC, your_speed_rec);
+        if(size_rec!=-1)
+            values.put(SIZE_REC, size_rec);
+        if(size_rec_name!=null)
+            values.put(SIZE_REC_NAME, size_rec_name);
+        if(your_size_rec!=-1)
+            values.put(YOUR_SIZE_REC, your_size_rec);
+        if(memuse_rec!=-1)
+            values.put(MEMUSE_REC, memuse_rec);
+        if(memuse_rec_name!=null)
+            values.put(MEMUSE_REC_NAME, memuse_rec_name);
+        if(your_memuse_rec!=-1)
+            values.put(YOUR_MEMUSE_REC, your_memuse_rec);
     }
 
     public static long addRow(SQLiteDatabase db, ContentValues values, long ref_id, float speed_rec, String speed_rec_name, float your_speed_rec,
