@@ -30,7 +30,6 @@ public class SQLiteCursorLoader extends AsyncTaskLoader<Cursor> {
     {
         //Cursor cursor = mDBHelper.getReadableDatabase().rawQuery(mQueryText, null);
         Cursor cursor = mDBHelper.getReadableDatabase().rawQuery(mQuery, mWhereArgs);
-
         if(cursor!=null)
             cursor.getCount(); /*Don't ask me why.
             Probably to make sure the cursor has gone through the hole list.
@@ -42,6 +41,7 @@ public class SQLiteCursorLoader extends AsyncTaskLoader<Cursor> {
     @Override
     public void deliverResult(Cursor cursor) {
         if (isReset()) {
+            //We don't need the cursor. It was reset!
             onReleaseResources(cursor);
             return;
         }
@@ -62,7 +62,7 @@ public class SQLiteCursorLoader extends AsyncTaskLoader<Cursor> {
         if (mCursor != null) {
             deliverResult(mCursor); //We already have data!
         }
-        if (takeContentChanged() || mCursor == null /*||configChange*/) {
+        if (takeContentChanged() | mCursor==null) {
             forceLoad(); //There's nothing you can do, now. I force you!
         }
     }
