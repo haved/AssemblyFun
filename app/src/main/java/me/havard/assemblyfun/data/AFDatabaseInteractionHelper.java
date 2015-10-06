@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import me.havard.assemblyfun.AssemblyFunApplication;
 import me.havard.assemblyfun.data.tables.LocalTaskTable;
 import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskIDTable;
@@ -265,7 +266,8 @@ public final class AFDatabaseInteractionHelper
         return output;
     }
 
-    private static final String TASK_INFO_TABLE_FLAGS_QUERY = "SELECT " + TaskinfoTable.FLAGS + " FROM " + TaskinfoTable.TABLE_NAME + " WHERE " + TaskinfoTable._ID_TaskIDs + "=?";
+    private static final String WHERE_INFO_ID_TASK_IDS_EQUAL_TO = TaskinfoTable._ID_TaskIDs + "=?";
+    private static final String TASK_INFO_TABLE_FLAGS_QUERY = String.format("SELECT %s FROM %s WHERE %s", TaskinfoTable.FLAGS, TaskinfoTable.TABLE_NAME, WHERE_INFO_ID_TASK_IDS_EQUAL_TO);
 
     /** Gets the 'flags' column from the first row in the TaskInfoTable WHERE _id_TaskIDs = ref_id
      *
@@ -288,6 +290,31 @@ public final class AFDatabaseInteractionHelper
             cursor.close();
         }
         return output;
+    }
+
+    /** A method that will get the flag from a task with a certain _id_TaskIDs. If the favourite part of the
+     *
+     * @param db A writable and readable database object
+     * @param values A clean ContentValues instance
+     * @param taskID The _id_TaskIDs of the task to be flag updated
+     * @param flag The flag value in question. Has to be a power of two or else strange behavior might occur.
+     * @return The new state of the flag in question in the database row. Probably the same as shouldHaveFlag.
+     */
+    public static boolean changeFlag(SQLiteDatabase db, ContentValues values, long taskID, int flag, boolean shouldHaveFlag) {
+        int flags = AFDatabaseInteractionHelper.getFlagsFromTaskWithID(db, taskID);
+        if (TaskinfoTable.hasFlag(flags, flag) == shouldHaveFlag) {
+            Log.w("Assembly Fun", "Tasked with giving/taking from the task " + taskID + " the flag " + flag + " shouldHaveFlag=" + shouldHaveFlag + ". But the flags are already set up this way");
+            return shouldHaveFlag;
+        }
+
+        if (shouldHaveFlag)
+            flags = TaskinfoTable.addFlag(flags, flag);
+        else
+            flags = TaskinfoTable.removeFlag(flags, flag);
+
+        values.put(TaskinfoTable.FLAGS, flags);
+        db.update(TaskinfoTable.TABLE_NAME, values, WHERE_INFO_ID_TASK_IDS_EQUAL_TO, new String[]{Long.toString(taskID)});
+        return shouldHaveFlag;
     }
 
     public static Cursor makeCursorForOneField(SQLiteDatabase db, String tableName, String columns, String whereStatement, String[] whereArgs, String queryExtras)
@@ -318,4 +345,16 @@ public final class AFDatabaseInteractionHelper
         else
             TaskRecordsTable.addRow(db, values, ref_id, speed_rec, speed_rec_name, your_speed_rec, size_rec, size_rec_name, your_size_rec, memuse_rec, memuse_rec_name, your_memuse_rec);
     }*/
+
+    private static ContentValues valuesInstance = new ContentValues();
+    public static ContentValues getClearedContentValuesInstance()
+    {
+        valuesInstance.clear();
+        return valuesInstance;
+    }
+
+    public static void clearContentValuesInstance()
+    {
+        valuesInstance.clear();
+    }
 }

@@ -26,6 +26,7 @@ public class TaskinfoTable extends Table
     public static final int FLAG_SELF_PUBLISHED = 0b100;
     public static final int FLAG_FAVOURITE = 0b1000;
     public static final int FLAG_GLOBAL = 0b10000;
+    public static final int FLAGS_ALL = FLAG_LOCAL+FLAG_SOLVED+FLAG_SELF_PUBLISHED+FLAG_FAVOURITE+FLAG_GLOBAL;
 
     @Override
     public String getCreateString() {
@@ -71,9 +72,14 @@ public class TaskinfoTable extends Table
         return (flags&FLAG)!=0;
     }
 
-    public static int addFlag(int flags, int FLAG)
+    public static int addFlag(int flags, int flag)
     {
-        return flags|FLAG;
+        return flags|flag;
+    }
+
+    public static int removeFlag(int flags, int flag)
+    {
+        return flags&(FLAGS_ALL-flag);
     }
 
     public static int getFlags(boolean local, boolean solved, boolean self_published, boolean favourite, boolean global)

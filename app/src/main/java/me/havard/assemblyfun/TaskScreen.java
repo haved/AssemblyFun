@@ -5,10 +5,10 @@ import android.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Loader;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +31,7 @@ import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
 import me.havard.assemblyfun.util.MonthLabels;
 
-public class TaskScreen extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class TaskScreen extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
     public static final String EXTRAS_TASK_ID = "extrasTaskID";
     private static final int LOADER_ID_TASK_CURSOR = 0;
@@ -42,11 +42,13 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     private TextView mTaskTitle, mTaskDesc, mTaskDiff, mTaskDate, mTaskAuthor, mTaskRecordsText;
     private LinearLayout mButtonList;
     private RelativeLayout mOnlineRow, mSelfPublishedRow;
-    private Button mLocalButton, mFavouriteButton, mAddSolutionButton;
+    private Button mLocalButton, mOnlineButton, mPublishButton, mFavouriteButton, mAddSolutionButton;
     private ImageView mLocalIcon, mFavouriteIcon, mSolveIcon;
 
     private ListView mSolutionList;
     private SolutionCursorAdapter mSolutionListAdapter;
+
+    private boolean mLocalFlag, mGlobalFlag, mSolvedFlag, mFavouriteFlag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +74,15 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mSelfPublishedRow = (RelativeLayout)headerView.findViewById(R.id.task_screen_self_published_row);
 
         mLocalButton = (Button) headerView.findViewById(R.id.task_screen_local_button);
+        mLocalButton.setOnClickListener(this);
+        mOnlineButton = (Button) headerView.findViewById(R.id.task_screen_online_button);
+        mOnlineButton.setOnClickListener(this);
+        mPublishButton = (Button) headerView.findViewById(R.id.task_screen_publish_button);
+        mPublishButton.setOnClickListener(this);
         mFavouriteButton = (Button) headerView.findViewById(R.id.task_screen_favourite_button);
+        mFavouriteButton.setOnClickListener(this);
         mAddSolutionButton = (Button) headerView.findViewById(R.id.task_screen_add_solution_button);
+        mAddSolutionButton.setOnClickListener(this);
 
         mLocalIcon = (ImageView) headerView.findViewById(R.id.task_screen_local_icon);
         mSolveIcon = (ImageView) headerView.findViewById(R.id.task_screen_solved_icon);
@@ -104,24 +113,14 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mTaskDiff.setTextColor(ContextCompat.getColor(this, diff.getColorId()));
         Calendar cl = Calendar.getInstance();
         cl.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(TaskinfoTable.DATE)));
-        mTaskDate.setText(getResources().getString(MonthLabels.RESOURCE_IDS[cl.get(Calendar.MONTH)])+ " " + cl.get(Calendar.DAY_OF_MONTH) + " " + cl.get(Calendar.YEAR));
+        mTaskDate.setText(getResources().getString(MonthLabels.RESOURCE_IDS[cl.get(Calendar.MONTH)]) + " " + cl.get(Calendar.DAY_OF_MONTH) + " " + cl.get(Calendar.YEAR));
 
         mButtonList.setVisibility(View.VISIBLE);
         int flags = cursor.getInt(cursor.getColumnIndex(TaskinfoTable.FLAGS));
-        boolean local = TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_LOCAL), global = TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_GLOBAL),
-                favourite = TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_FAVOURITE);
-        mLocalButton.setText(global ?
-                (local ? R.string.label_task_screen_remove_locally : R.string.label_task_screen_store_locally)
-                : R.string.label_task_screen_only_locally);
-        mLocalButton.setEnabled(global);
-        mLocalIcon.setVisibility(local ? View.VISIBLE : View.INVISIBLE);
-        mOnlineRow.setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_GLOBAL) ? View.VISIBLE:View.GONE);
+
+        useLocalGlobalSolvedFlags(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_LOCAL), TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_GLOBAL), TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SOLVED));
         mSelfPublishedRow.setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SELF_PUBLISHED) ? View.VISIBLE : View.GONE);
-        mFavouriteButton.setText(favourite ? R.string.label_task_screen_un_favourite : R.string.label_task_screen_favourite);
-        mFavouriteIcon.setVisibility(favourite ? View.VISIBLE : View.INVISIBLE);
-        mAddSolutionButton.setText(local ? R.string.label_task_screen_add_solution : R.string.label_task_screen_only_local_tasks_can_be_solved);
-        mAddSolutionButton.setEnabled(local);
-        mSolveIcon.setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SOLVED)?View.VISIBLE:View.INVISIBLE);
+        useFavouriteFlag(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_FAVOURITE));
 
         String recordText;
         if(cursor.getColumnIndex(TaskRecordsTable.SPEED_REC)>=0)
@@ -144,6 +143,29 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
             recordText = getResources().getString(R.string.label_task_screen_no_records);
 
         mTaskRecordsText.setText(recordText);
+    }
+
+    protected void useLocalGlobalSolvedFlags(boolean local, boolean global, boolean solved)
+    {
+        mLocalFlag = local;
+        mGlobalFlag = global;
+        mSolvedFlag = solved;
+        mLocalButton.setText(global ?
+                (local ? R.string.label_task_screen_remove_locally : R.string.label_task_screen_store_locally)
+                : R.string.label_task_screen_only_locally);
+        mLocalButton.setEnabled(global);
+        mLocalIcon.setVisibility(local ? View.VISIBLE : View.INVISIBLE);
+        mOnlineRow.setVisibility(global ? View.VISIBLE : View.GONE);
+        mAddSolutionButton.setText(local ? R.string.label_task_screen_add_solution : R.string.label_task_screen_only_local_tasks_can_be_solved);
+        mAddSolutionButton.setEnabled(local);
+        mSolveIcon.setVisibility(solved ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    protected void useFavouriteFlag(boolean favourite)
+    {
+        mFavouriteFlag = favourite;
+        mFavouriteButton.setText(favourite ? R.string.label_task_screen_un_favourite : R.string.label_task_screen_favourite);
+        mFavouriteIcon.setVisibility(favourite ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -221,5 +243,69 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     public void onLoaderReset(Loader<Cursor> loader) {
         if(!(loader instanceof TaskInfoAndRecordsCursorLoader))
             mSolutionListAdapter.changeCursor(null);
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        if(v==mLocalButton)
+        {
+            if(mLocalFlag) {
+                mLocalButton.setEnabled(false);
+                new RemoveTaskLocally(mLocalID).execute();
+            }
+        }
+        else if(v==mFavouriteButton)
+        {
+            mFavouriteButton.setEnabled(false);
+            new ChangeFavouriteStatusTask(mLocalID, !mFavouriteFlag).execute();
+        }
+    }
+
+    private class RemoveTaskLocally extends AsyncTask<Long, Integer, Void> {
+
+        private long mTaskID;
+
+        public RemoveTaskLocally(long taskID) {
+            mTaskID = taskID;
+        }
+
+        @Override
+        protected Void doInBackground(Long... params) {
+            AFDatabaseInteractionHelper.removeLocalTaskFromDB(((AssemblyFunApplication)getApplication()).getWritableDatabase(), AFDatabaseInteractionHelper.getClearedContentValuesInstance(), mTaskID);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            mLocalButton.setEnabled(true);
+            useLocalGlobalSolvedFlags(false, mGlobalFlag, mSolvedFlag);
+        }
+    }
+
+    private class ChangeFavouriteStatusTask extends AsyncTask<Long, Integer, Boolean> {
+
+        private long mTaskID;
+        private boolean mMakeFavourite;
+
+        public ChangeFavouriteStatusTask(long taskID, boolean makeFavourite) {
+            mTaskID = taskID;
+            mMakeFavourite = makeFavourite;
+        }
+
+        @Override
+        protected Boolean doInBackground(Long... params) {
+
+            Boolean outcome = AFDatabaseInteractionHelper.changeFlag(((AssemblyFunApplication) getApplication()).getWritableDatabase(), AFDatabaseInteractionHelper.getClearedContentValuesInstance(),
+                    mTaskID, TaskinfoTable.FLAG_FAVOURITE, mMakeFavourite);
+            AFDatabaseInteractionHelper.clearContentValuesInstance();
+            return outcome;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            mFavouriteButton.setEnabled(true);
+            useFavouriteFlag(result);
+        }
     }
 }

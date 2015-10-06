@@ -36,18 +36,6 @@ public class AssemblyFunApplication extends Application {
         if(db!=null)
             db.close();
         db=new TaskDatabaseOpenHelper(this);
-
-        /*Cursor c = getReadableDatabase().rawQuery("Select * from " + TaskDatabaseOpenHelper.TASKINFO_TABLE, null);
-        c.moveToFirst();
-        Log.d("Assembly fun", "local taskinfo Has 0 elements? : " + c.isAfterLast());
-        while(!c.isAfterLast())
-        {
-            StringBuilder info = new StringBuilder();
-            for(int i = 0; i < c.getColumnCount(); i++)
-                info.append(c.getColumnName(i) + " is '" + c.getString(i) + "', ");
-            Log.d("Assembly Fun", info.toString());
-            c.moveToNext();
-        }*/
     }
 
     @Override

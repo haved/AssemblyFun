@@ -19,8 +19,8 @@ public class SQLiteCursorLoader extends AsyncTaskLoader<Cursor> {
 
     public SQLiteCursorLoader(Context context, SQLiteOpenHelper dbHelper, String query, String[] whereArgs) {
         super(context);
-        mDBHelper = dbHelper;
 
+        mDBHelper = dbHelper;
         mQuery = query;
         mWhereArgs = whereArgs;
     }
