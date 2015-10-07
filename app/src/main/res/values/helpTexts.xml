@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="help_solve_options_title">Help for solving options</string>
+    <string name="help_solve_options_body">Choose what set of tasks to browse.\n
+    Online Tasks is under construction.\n
+    Local Tasks is where you should start. There you\'ll find all tasks saved locally. Some tutorial tasks are saved there\n
+    Solved Tasks is a list of tasks you\'ve solved. Even tasks you don\'t have downloaded will be shown here.</string>
+    <string name="help_task_screen_title">Help for tasks</string>
+    <string name="help_task_screen_body">You are looking at the task screen for a task. There will be up to five buttons on this screen.
+    Each button is next to an icon. \n\nThe first icon shows if the task is stored locally on your device. You have to store the task locally to solve it.
+    You can use the button to download the task if the icon isn`\'t there, or to remove the task locally if you have it stored. The metadata for the task will still be around,
+    so the task screen will still be present. You can\'t remove the task locally if it only exists on your device (see the next button/icon).
+    To completely remove the task and it\'s metadata, chose \'delete all task data\' from the action bar menu.
+    Please not that this will remove all your solutions to the task for good, and, unless the task is online, delete the task for ever.
+    If you still have the task in your \'make tasks\' task list, you can publish the task again.
+    \n\n
+    If the task is online, you will see a button \'see online\' and a globe icon. If the task isn\'t online, you won\'t see either, and you can\'t remove the task from your device (without removing the metadata).
+    \n\n
+    If you have published the task yourself you will see a button saying \'add to online channels\' as well as an icon with an arrow pointing up.
+    This button lets you put your task online, and add it to online channels you have posting rights in.
+    \n\n
+    The next button is sure to be on the screen. It lets you mark a task as a favourite or remove the star if it\'s already there. The icon next to the button is a star, and only visible if the task is a favourite of yours.
+    When you mark a task as a favourite, you can filter to show favourites only in the task list. Tasks marked as favourite will not be deleted by the cleaning utils in the settings menu.
+    \n\n
+    The final button will say \'add solution\' if the task is downloaded locally. It lets you add a new solution to the task, and buts you into the solution editor.
+    If the tasks isn\'t stored locally the button will be disabled. Solutions you\'ve already started on will be shown in the list bellow the records.
+    \n\n
+    The records that are kept track of are: speed, size and memory usage. Lower is better, and both your local record and the world record is shown. The record might change online, so be sure to hit refresh often.
+    The refresh button will also upload your record if you beat the old world record. Your solution is uploaded and run on the server.
+        On the server some extra secret tests are run to see that the program works for more than the numbers stored locally in the database (anti-cheating measure)
+        However, only the tests you ran will be used when calculating the average speed and memory usage. Ratings will also be synced with online. When a solution fails it will say so in the solution list,
+        but when the solution works for all the tests you will see how well each solution does in each of the record categories.
+    \n
+    Speed - the average instructions run before the program returns the correct answer. Less is better
+    Size - the size of the program. Comments are ignored. Less is better
+    Memory usage - The average of the highest memory location used to store values. Can often be 0 when only cache is needed to solve a task.
+    </string>
+</resources>

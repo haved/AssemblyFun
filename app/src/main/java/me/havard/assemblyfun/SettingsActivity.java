@@ -39,7 +39,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     protected void onStart()
     {
         super.onStart();
-        mKeepUnlistedTasksUsedToBe = SharedPreferencesHelper.alwaysKeepTasks(SharedPreferencesHelper.getPreferences(this));
+        mKeepUnlistedTasksUsedToBe = SharedPreferencesHelper.shouldKeepUnlistedTasks(SharedPreferencesHelper.getPreferences(this));
         mAlwaysKeepTasks.setChecked(mKeepUnlistedTasksUsedToBe);
     }
 
@@ -49,7 +49,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         super.onPause();
         if(mAlwaysKeepTasks.isChecked()!= mKeepUnlistedTasksUsedToBe) {
             SharedPreferences.Editor editor = SharedPreferencesHelper.getPreferences(this).edit();
-            SharedPreferencesHelper.setShouldAlwaysKeepTasks(editor, !mKeepUnlistedTasksUsedToBe); //We know the boolean is the opposite of isChecked()
+            SharedPreferencesHelper.setKeepUnlistedTasks(editor, !mKeepUnlistedTasksUsedToBe); //We know the boolean is the opposite of isChecked()
             editor.commit();
         }
     }

@@ -7,39 +7,77 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
 
+import me.havard.assemblyfun.data.SharedPreferencesHelper;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
-public class SolveOptions extends AppCompatActivity {
+public class SolveOptions extends AppCompatActivity implements View.OnClickListener{
+
+    private Button mOnlineTasks, mLocalTasks, mSolvedTasks, mAllTasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solve_options);
+
+        mOnlineTasks = (Button) findViewById(R.id.solve_options_online_tasks);
+        mOnlineTasks.setOnClickListener(this);
+        mLocalTasks = (Button) findViewById(R.id.solve_options_local_tasks);
+        mLocalTasks.setOnClickListener(this);
+        mSolvedTasks = (Button) findViewById(R.id.solve_options_solved_tasks);
+        mSolvedTasks.setOnClickListener(this);
+        mAllTasks = (Button) findViewById(R.id.solve_options_all_tasks);
+        mAllTasks.setOnClickListener(this);
     }
 
-    public void onSolveOnlinePressed(View source)
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        mAllTasks.setVisibility(SharedPreferencesHelper.shouldKeepUnlistedTasks(SharedPreferencesHelper.getPreferences(this)) ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v == mOnlineTasks)
+            onSolveOnlinePressed();
+        else if(v == mLocalTasks)
+            onSolveLocalPressed();
+        else if(v == mSolvedTasks)
+            onSolveSolvedPressed();
+        else if(v == mAllTasks)
+            onSolveAllTasksPressed();
+    }
+
+    private void onSolveOnlinePressed()
     {
 
     }
 
-    public void onSolveLocalPressed(View source)
+    private void onSolveLocalPressed()
     {
-        Intent localTaskListActivity = new Intent(this, TaskList.class);
-        localTaskListActivity.putExtra(TaskList.KEY_RES_ACTIVITY_TITLE, R.string.solve_option_local);
-        localTaskListActivity.putExtra(TaskList.KEY_CHECK_FLAG_BIT, TaskinfoTable.FLAG_LOCAL);
-        localTaskListActivity.putExtra(TaskList.KEY_HIDE_LOCAL_FILTER_OPTION_ID, true);
-        startActivity(localTaskListActivity);
+        Intent intent = new Intent(this, TaskList.class);
+        intent.putExtra(TaskList.KEY_RES_ACTIVITY_TITLE, R.string.button_solve_option_local);
+        intent.putExtra(TaskList.KEY_CHECK_FLAG_BIT, TaskinfoTable.FLAG_LOCAL);
+        intent.putExtra(TaskList.KEY_HIDE_LOCAL_FILTER_OPTION_ID, true);
+        startActivity(intent);
     }
 
-    public void onSolveSolvedPressed(View source)
+    private void onSolveSolvedPressed()
     {
-        Intent solvedTaskListActivity = new Intent(this, TaskList.class);
-        solvedTaskListActivity.putExtra(TaskList.KEY_RES_ACTIVITY_TITLE, R.string.solve_option_solved);
-        solvedTaskListActivity.putExtra(TaskList.KEY_CHECK_FLAG_BIT, TaskinfoTable.FLAG_SOLVED);
-        solvedTaskListActivity.putExtra(TaskList.KEY_HIDE_UNSOLVED_FILTER_OPTION_ID, true);
-        startActivity(solvedTaskListActivity);
+        Intent intent = new Intent(this, TaskList.class);
+        intent.putExtra(TaskList.KEY_RES_ACTIVITY_TITLE, R.string.button_solve_option_solved);
+        intent.putExtra(TaskList.KEY_CHECK_FLAG_BIT, TaskinfoTable.FLAG_SOLVED);
+        intent.putExtra(TaskList.KEY_HIDE_UNSOLVED_FILTER_OPTION_ID, true);
+        startActivity(intent);
+    }
+
+    private void onSolveAllTasksPressed()
+    {
+        Intent intent = new Intent(this, TaskList.class);
+        intent.putExtra(TaskList.KEY_RES_ACTIVITY_TITLE, R.string.button_solve_option_all_tasks);
+        startActivity(intent);
     }
 
     @Override

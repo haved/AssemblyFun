@@ -14,34 +14,38 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true">
 
-        <TableLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <Button
                 android:layout_width="fill_parent"
-                android:layout_height="70sp"
-                android:text="@string/solve_option_online"
-                android:id="@+id/button"
+                android:layout_height="60sp"
+                android:text="@string/button_solve_option_online"
+                android:id="@+id/solve_options_online_tasks"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:onClick="onSolveOnlinePressed" />
+                android:layout_centerHorizontal="true" />
 
             <Button
                 android:layout_width="fill_parent"
-                android:layout_height="70sp"
-                android:text="@string/solve_option_local"
-                android:id="@+id/button2"
-                android:onClick="onSolveLocalPressed" />
+                android:layout_height="60sp"
+                android:text="@string/button_solve_option_local"
+                android:id="@+id/solve_options_local_tasks" />
 
             <Button
                 android:layout_width="fill_parent"
-                android:layout_height="70sp"
-                android:text="@string/solve_option_solved"
-                android:id="@+id/button3"
-                android:onClick="onSolveSolvedPressed" />
+                android:layout_height="60sp"
+                android:text="@string/button_solve_option_solved"
+                android:id="@+id/solve_options_solved_tasks" />
 
-        </TableLayout>
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="60sp"
+                android:text="@string/button_solve_option_all_tasks"
+                android:id="@+id/solve_options_all_tasks"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
     </ScrollView>
 
     <ImageView
@@ -52,6 +56,7 @@
         android:layout_centerHorizontal="true"
         android:src="@drawable/logo_assemblyfun_576"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/scrollView" />
+        android:layout_below="@+id/scrollView"
+        android:contentDescription="@string/image_solve_options_logo_desc" />
 
 </RelativeLayout>

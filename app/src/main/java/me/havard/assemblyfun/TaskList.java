@@ -76,9 +76,9 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
             return;
         }
 
-        mHideUnsolvedOnly = extras.getBoolean(KEY_HIDE_UNSOLVED_FILTER_OPTION_ID);
-        mHideLocalOnly = extras.getBoolean(KEY_HIDE_LOCAL_FILTER_OPTION_ID);
-        mCheckFlagBit = extras.getInt(KEY_CHECK_FLAG_BIT);
+        mHideUnsolvedOnly = extras.getBoolean(KEY_HIDE_UNSOLVED_FILTER_OPTION_ID, false);
+        mHideLocalOnly = extras.getBoolean(KEY_HIDE_LOCAL_FILTER_OPTION_ID, false);
+        mCheckFlagBit = extras.getInt(KEY_CHECK_FLAG_BIT, -1);
         mTitle = extras.getInt(KEY_RES_ACTIVITY_TITLE, R.string.title_unset);
         setTitle(mTitle);
 
@@ -332,7 +332,6 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     protected static String makeQueryText(ArrayList<String> whereArgs, int mCheckFlagBit, String search,
                                           boolean localOnly, boolean unsolvedOnly, boolean self_publishedOnly, boolean favouritesOnly, OrderBy orderBy) {
         whereArgs.add(Integer.toString(mCheckFlagBit));
-
 
         StringBuilder lawAndOrderStatement = new StringBuilder();
         if(search!=null) {

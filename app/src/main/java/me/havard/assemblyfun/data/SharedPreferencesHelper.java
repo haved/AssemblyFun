@@ -8,17 +8,17 @@ import android.content.SharedPreferences;
  */
 public final class SharedPreferencesHelper {
     public static final String SHARED_PREFERENCES_NAME = "assemblyFunSettings";
-    public static final String BOOL_ALWAYS_KEEP_TASKS = "alwaysKeepTasks";
-    public static final boolean BOOL_ALWAYS_KEEP_TASKS_DEFAULT_VALUE = false;
+    public static final String BOOL_KEEP_UNLISTED_TASKS = "alwaysKeepTasks";
+    public static final boolean BOOL_KEEP_UNLISTED_TASKS_DEFAULT_VALUE = false;
 
-    public static boolean alwaysKeepTasks(SharedPreferences preferences)
+    public static boolean shouldKeepUnlistedTasks(SharedPreferences preferences)
     {
-        return preferences.getBoolean(BOOL_ALWAYS_KEEP_TASKS, BOOL_ALWAYS_KEEP_TASKS_DEFAULT_VALUE);
+        return preferences.getBoolean(BOOL_KEEP_UNLISTED_TASKS, BOOL_KEEP_UNLISTED_TASKS_DEFAULT_VALUE);
     }
 
-    public static void setShouldAlwaysKeepTasks(SharedPreferences.Editor editor, boolean alwaysKeepTasks)
+    public static void setKeepUnlistedTasks(SharedPreferences.Editor editor, boolean alwaysKeepTasks)
     {
-        editor.putBoolean(BOOL_ALWAYS_KEEP_TASKS, alwaysKeepTasks);
+        editor.putBoolean(BOOL_KEEP_UNLISTED_TASKS, alwaysKeepTasks);
     }
 
     public static SharedPreferences getPreferences(Context context)
