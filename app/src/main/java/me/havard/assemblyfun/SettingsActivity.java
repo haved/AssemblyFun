@@ -83,22 +83,15 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         if(v== mVacuumDatabaseButton) {
             mVacuumDatabaseButton.setEnabled(false);
-            new VacuumTask(((AssemblyFunApplication)getApplication()).getWritableDatabase()).execute();
+            new VacuumTask().execute();
         }
     }
 
     private class VacuumTask extends AsyncTask<Void, Void, Void>{
-
-        private SQLiteDatabase mDB;
-
-        public VacuumTask(SQLiteDatabase db) {
-            mDB = db;
-        }
-
         @Override
         protected Void doInBackground(Void... params) {
             Log.i("Assembly Fun", "Vacuuming database!");
-            mDB.execSQL("VACUUM");
+            ((AssemblyFunApplication)getApplication()).getWritableDatabase().execSQL("VACUUM");
             return null;
         }
 

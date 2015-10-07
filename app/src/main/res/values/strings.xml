@@ -83,11 +83,6 @@
     <string name="label_task_screen_solution_failed">Doesn\'t perform to specification</string>
     <string name="label_task_screen_solution_never_run">Never been tested</string>
 
-    <string name="dialog_task_screen_are_you_sure">Are you sure?</string>
-    <string name="dialog_task_screen_delete_task_data_body">This will delete all info about the task.
-        All your solutions will be deleted, and unless the task is online, it will completely disappear forever.
-        The task will disappear from the task lists. Your records also disappear unless you have the current world record. In that case the record is stored on the server.</string>
-
     <string name="label_month_0">Jan</string>
     <string name="label_month_1">Feb</string>
     <string name="label_month_2">March</string>

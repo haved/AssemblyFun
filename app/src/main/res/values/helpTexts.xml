@@ -35,4 +35,12 @@
     Size - the size of the program. Comments are ignored. Less is better
     Memory usage - The average of the highest memory location used to store values. Can often be 0 when only cache is needed to solve a task.
     </string>
+
+    <string name="dialog_task_screen_are_you_sure">Are you sure?</string>
+    <string name="dialog_task_screen_delete_task_data_body">This will delete all info about the task.
+        All your solutions will be deleted, and unless the task is online, it will completely disappear forever.
+        The task will disappear from the task lists. Your records also disappear unless you have the current world record. In that case the record is stored on the server.</string>
+    <string name="dialog_task_screen_make_task_unlisted">This task is not solved, and removing it from the local tasks list will remove this task from all lists.
+        Your unfinished solutions will disappear and you\'ll have to go online to find the task again. To change this behaviour, go to the settings and enable "Keep unlisted tasks"\n
+        This will give you another task list showing all tasks.</string>
 </resources>

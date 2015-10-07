@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,11 +26,13 @@ import java.util.Calendar;
 import me.havard.assemblyfun.data.AFDatabaseInteractionHelper;
 import me.havard.assemblyfun.data.Difficulty;
 import me.havard.assemblyfun.data.SQLiteCursorLoader;
+import me.havard.assemblyfun.data.SharedPreferencesHelper;
 import me.havard.assemblyfun.data.SolutionCursorAdapter;
 import me.havard.assemblyfun.data.TaskInfoAndRecordsCursorLoader;
 import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
+import me.havard.assemblyfun.util.DialogHelper;
 import me.havard.assemblyfun.util.MonthLabels;
 
 public class TaskScreen extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
@@ -40,6 +44,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     private long mLocalID;
 
     private TextView mTaskTitle, mTaskDesc, mTaskDiff, mTaskDate, mTaskAuthor, mTaskRecordsText;
+    private RatingBar mRatingBar;
     private LinearLayout mButtonList;
     private RelativeLayout mOnlineRow, mSelfPublishedRow;
     private Button mLocalButton, mOnlineButton, mPublishButton, mFavouriteButton, mAddSolutionButton;
@@ -68,6 +73,8 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mTaskDate = (TextView) headerView.findViewById(R.id.task_screen_task_date);
         mTaskAuthor = (TextView) headerView.findViewById(R.id.task_screen_task_author);
         mTaskRecordsText = (TextView) headerView.findViewById(R.id.task_screen_task_records);
+
+        mRatingBar = (RatingBar) findViewById(R.id.task_screen_task_rating_bar);
 
         mButtonList = (LinearLayout)headerView.findViewById(R.id.task_screen_button_list);
         mOnlineRow = (RelativeLayout)headerView.findViewById(R.id.task_screen_online_row);
@@ -114,6 +121,8 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         Calendar cl = Calendar.getInstance();
         cl.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(TaskinfoTable.DATE)));
         mTaskDate.setText(getResources().getString(MonthLabels.RESOURCE_IDS[cl.get(Calendar.MONTH)]) + " " + cl.get(Calendar.DAY_OF_MONTH) + " " + cl.get(Calendar.YEAR));
+
+        mRatingBar.setRating(cursor.getFloat(cursor.getColumnIndex(TaskinfoTable.RATING)));
 
         mButtonList.setVisibility(View.VISIBLE);
         int flags = cursor.getInt(cursor.getColumnIndex(TaskinfoTable.FLAGS));
@@ -169,6 +178,17 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     }
 
     @Override
+    protected void onPause()
+    {
+        super.onPause();
+        if(!(mLocalFlag | mSolvedFlag | SharedPreferencesHelper.shouldKeepUnlistedTasks(SharedPreferencesHelper.getPreferences(this))))
+        {
+            Log.i("Assembly Fun", "The task on this task screen is not solved nor local, and shouldKeepUnlistedTasks is false. Prepare for deletion of all task data!");
+            new RemoveAllTaskData(mLocalID, false).execute();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_task_screen, menu);
@@ -181,29 +201,17 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
 
         if(id == R.id.action_help)
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.help_task_screen_title);
-            builder.setMessage(R.string.help_task_screen_body);
-            builder.create();
-            builder.setPositiveButton(R.string.dialog_button_OK, null);
-            builder.show();
+            DialogHelper.makeDialogBuilder(this, R.string.help_task_screen_title, R.string.help_task_screen_body, false, null).show();
             return true;
         }
         else if(id== R.id.action_delete_all_task_data)
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.dialog_task_screen_are_you_sure);
-            builder.setMessage(R.string.dialog_task_screen_delete_task_data_body);
-            builder.create();
-            builder.setPositiveButton(R.string.dialog_button_OK, new DialogInterface.OnClickListener() {
+            DialogHelper.makeDialogBuilder(this, R.string.dialog_task_screen_are_you_sure, R.string.dialog_task_screen_delete_task_data_body, true, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    AFDatabaseInteractionHelper.deleteAllTaskData(((AssemblyFunApplication) getApplication()).getReadableDatabase(), mLocalID); //nTODO: Maybe use a loader?
+                    new RemoveAllTaskData(mLocalID, true).execute();
                 }
-            });
-            builder.setNegativeButton(R.string.dialog_button_Cancel, null);
-            builder.setCancelable(true);
-            builder.show();
+            }).show();
             return true;
         }
         else if(id == android.R.id.home) {
@@ -251,8 +259,19 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         if(v==mLocalButton)
         {
             if(mLocalFlag) {
-                mLocalButton.setEnabled(false);
-                new RemoveTaskLocally(mLocalID).execute();
+                if(!(mSolvedFlag | SharedPreferencesHelper.shouldKeepUnlistedTasks(SharedPreferencesHelper.getPreferences(this)))) {
+                    DialogHelper.makeDialogBuilder(this, R.string.dialog_task_screen_are_you_sure, R.string.dialog_task_screen_make_task_unlisted, true, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mLocalButton.setEnabled(false);
+                            new RemoveTaskLocally(mLocalID).execute();
+                        }
+                    }).show();
+                }
+                else {
+                    mLocalButton.setEnabled(false);
+                    new RemoveTaskLocally(mLocalID).execute();
+                }
             }
         }
         else if(v==mFavouriteButton)
@@ -262,7 +281,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         }
     }
 
-    private class RemoveTaskLocally extends AsyncTask<Long, Integer, Void> {
+    private class RemoveTaskLocally extends AsyncTask<Void, Void, Void> {
 
         private long mTaskID;
 
@@ -271,7 +290,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         }
 
         @Override
-        protected Void doInBackground(Long... params) {
+        protected Void doInBackground(Void... params) {
             AFDatabaseInteractionHelper.removeLocalTaskFromDB(((AssemblyFunApplication)getApplication()).getWritableDatabase(), AFDatabaseInteractionHelper.getClearedContentValuesInstance(), mTaskID);
             return null;
         }
@@ -306,6 +325,29 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         protected void onPostExecute(Boolean result) {
             mFavouriteButton.setEnabled(true);
             useFavouriteFlag(result);
+        }
+    }
+
+    private class RemoveAllTaskData extends AsyncTask<Void, Void, Void> {
+
+        private long mTaskID;
+        private boolean mFinishAfterwards;
+
+        public RemoveAllTaskData(long taskID, boolean finishAfterwards) {
+            mTaskID = taskID;
+            mFinishAfterwards = finishAfterwards;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            AFDatabaseInteractionHelper.deleteAllTaskData(((AssemblyFunApplication) getApplication()).getReadableDatabase(), this.mTaskID);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if(this.mFinishAfterwards)
+                finish();
         }
     }
 }
