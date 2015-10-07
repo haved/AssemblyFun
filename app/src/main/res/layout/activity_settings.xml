@@ -1,0 +1,65 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="me.havard.assemblyfun.SettingsActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/settings_scroll_view"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:fillViewport="true" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/settings_linear_layout">
+
+            <Switch
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/switch_settings_keep_unlisted_tasks"
+                android:id="@+id/settings_keep_tasks_switch"
+                android:layout_gravity="right"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:checked="false"
+                android:textSize="20sp" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/button_settings_delete_unused_rows"
+                android:id="@+id/settings_delete_unused_rows"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/button_settings_vacuum_database"
+                android:id="@+id/settings_vacuum_database"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/button_settings_delete_unlisted_tasks"
+                android:id="@+id/settings_delete_unlisted_tasks"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/button_settings_delete_solved_only_tasks"
+                android:id="@+id/settings_delete_solved_only"
+                android:layout_gravity="center_horizontal" />
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

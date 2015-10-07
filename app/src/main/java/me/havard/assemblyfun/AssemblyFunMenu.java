@@ -6,21 +6,35 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
-public class AssemblyFunMenu extends AppCompatActivity {
+public class AssemblyFunMenu extends AppCompatActivity implements View.OnClickListener {
+
+    private Button mSolveButton, mMakeButton, mSettingsButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assembly_fun_menu);
+
+        mSolveButton        = (Button) findViewById(R.id.main_menu_solve_tasks);
+        mSolveButton        .setOnClickListener(this);
+        mMakeButton         = (Button) findViewById(R.id.main_menu_make_tasks);
+        mMakeButton         .setOnClickListener(this);
+        mSettingsButton     = (Button) findViewById(R.id.main_menu_settings_button);
+        mSettingsButton     .setOnClickListener(this);
     }
 
-    public void solveTasksButton(View v) {
-        Intent intent = new Intent(this, SolveOptions.class);
-        startActivity(intent);
-    }
-
-    public void makeTasksButton(View v) {
-
+    @Override
+    public void onClick(View v) {
+        if(v==mSolveButton) {
+            Intent intent = new Intent(this, SolveOptions.class);
+            startActivity(intent);
+        }
+        else if(v==mSettingsButton) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

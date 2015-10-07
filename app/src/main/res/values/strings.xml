@@ -135,4 +135,12 @@
     <string name="label_month_9">Oct</string>
     <string name="label_month_10">Nov</string>
     <string name="label_month_11">Dec</string>
+
+    <string name="title_activity_settings">Settings</string>
+    <string name="switch_settings_keep_unlisted_tasks">Keep unlisted tasks</string>
+    <string name="button_settings_delete_unused_rows">Clean unused database rows</string>
+    <string name="button_settings_vacuum_database">Vacuum database</string>
+    <string name="button_settings_delete_unlisted_tasks">Delete unlisted tasks</string>
+    <string name="button_settings_delete_solved_only_tasks">Delete solved tasks only</string>
+
 </resources>
