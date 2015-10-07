@@ -3,6 +3,7 @@ package me.havard.assemblyfun.data;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -27,13 +28,19 @@ public class SolutionCursorAdapter extends SimpleCursorAdapter
         super.bindView(view, context, cursor);
         int quality = cursor.getInt(cursor.getColumnIndex(SolutionsTable.SOLUTION_QUALITY));
         String statusText;
-        if(quality==0)
+        if(quality==SolutionsTable.QUALITY_NEVER_RUN)
+            statusText = context.getResources().getString(R.string.label_task_screen_solution_never_run);
+        else if(quality==SolutionsTable.QUALITY_FAILS)
             statusText = context.getResources().getString(R.string.label_task_screen_solution_failed);
-        else
+        else if(quality==SolutionsTable.QUALITY_SOLVED)
             statusText = String.format("%s: %.2f,  %s: %d, %s: %.2f",
                     context.getResources().getString(R.string.label_task_screen_speed), cursor.getFloat(cursor.getColumnIndex(SolutionsTable.SPEED)),
                     context.getResources().getString(R.string.label_task_screen_size), cursor.getInt(cursor.getColumnIndex(SolutionsTable.SIZE)),
-                            context.getResources().getString(R.string.label_task_screen_memuse), cursor.getFloat(cursor.getColumnIndex(SolutionsTable.MEMUSE)));
+                    context.getResources().getString(R.string.label_task_screen_memuse), cursor.getFloat(cursor.getColumnIndex(SolutionsTable.MEMUSE)));
+        else {
+            Log.e("Assembly Fun", "the quality of the task solution with id " + cursor.getLong(cursor.getColumnIndex(SolutionsTable._ID)) + " isn't a valid solution quality! (0 <= x < 3) Found quality was: " + quality);
+            statusText = "The solution quality " + quality + " isn't recognized as a valid solution quality";
+        }
         ((TextView)view.findViewById(R.id.solution_list_item_status)).setText(statusText);
 
     }

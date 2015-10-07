@@ -17,8 +17,9 @@ public class SolutionsTable extends Table {
     public static final String SIZE = "size";
     public static final String MEMUSE = "memuse";
 
-    public static final int QUALITY_FAIL = 0;
-    public static final int QUALITY_PERFECT = 1;
+    public static final int QUALITY_NEVER_RUN = 0;
+    public static final int QUALITY_FAILS = 1;
+    public static final int QUALITY_SOLVED = 2;
 
     @Override
     public String getCreateString() {

@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import me.havard.assemblyfun.AssemblyFunApplication;
 import me.havard.assemblyfun.data.tables.LocalTaskTable;
 import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskIDTable;
@@ -93,7 +92,7 @@ public final class AFDatabaseInteractionHelper
      */
     public static long addEmptySolution(SQLiteDatabase db, ContentValues values, long task_id, String name, String solutionText)
     {
-        return SolutionsTable.addRow(db, values, task_id, name, solutionText, SolutionsTable.QUALITY_FAIL, -1, -1, -1);
+        return SolutionsTable.addRow(db, values, task_id, name, solutionText, SolutionsTable.QUALITY_NEVER_RUN, -1, -1, -1);
     }
 
     private static final String WHERE_SOLUTION_ID_EQUAL_TO = SolutionsTable._ID+"=?";
@@ -119,12 +118,12 @@ public final class AFDatabaseInteractionHelper
     public static void updateSolutionValues(SQLiteDatabase db, ContentValues values, long solution_id, long task_id, int quality, float speed, int size, float memuse)
     {
         values.put(SolutionsTable.SOLUTION_QUALITY, quality);
-        values.put(SolutionsTable.SPEED, quality==SolutionsTable.QUALITY_PERFECT?speed:null);
-        values.put(SolutionsTable.SIZE, quality==SolutionsTable.QUALITY_PERFECT?size:null);
-        values.put(SolutionsTable.MEMUSE, quality == SolutionsTable.QUALITY_PERFECT ? memuse : null);
+        values.put(SolutionsTable.SPEED, quality==SolutionsTable.QUALITY_SOLVED?speed:null);
+        values.put(SolutionsTable.SIZE, quality==SolutionsTable.QUALITY_SOLVED?size:null);
+        values.put(SolutionsTable.MEMUSE, quality == SolutionsTable.QUALITY_SOLVED ? memuse : null);
         db.update(SolutionsTable.TABLE_NAME, values, WHERE_SOLUTION_ID_EQUAL_TO, new String[]{Long.toString(solution_id)});
 
-        if(quality!=SolutionsTable.QUALITY_PERFECT)
+        if(quality!=SolutionsTable.QUALITY_SOLVED)
             return;
 
         if(task_id<=0) {

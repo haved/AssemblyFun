@@ -20,7 +20,7 @@ import static me.havard.assemblyfun.data.AFDatabaseInteractionHelper.*;
  */
 public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "assemblyFunDB";
 
     public TaskDatabaseOpenHelper(Context context) {
@@ -55,71 +55,27 @@ public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
     }
 
     public void addDefaultValues(SQLiteDatabase db) {
+        //New task idea: r0=min(r0-min(r0,r1),r1-min(r0,r1))
         ContentValues values = new ContentValues();
-        TaskIDTable.addRow(db, values, 10004444);
-        values.clear();
-
-        long task1 = addTaskInfoToTables(db, values, "Tutorial task 1: Running", "Running your application", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.4f, "Assembly Fun", false, false, 11111111);
-        values.clear();
-        addTaskInfoToTables(db, values, "Tutorial task 2: Returning", "Returning the number 10", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.7f, "Assembly Fun", false, false, 22002222);
-        values.clear();
-        addTaskInfoToTables(db, values, "Tutorial task 3: Adding", "Adding two numbers", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.1f, "Assembly Fun", false, true, 30000003);
-        values.clear();
-        addTaskInfoToTables(db, values, "Tutorial task 4: Breaking", "How to exit instantly", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.8f, "Assembly Fun", false, true, 10004444);
-        values.clear();
-        addTaskInfoToTables(db, values, "Tutorial task 5: Comparing", "Comparing numbers", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.7f, "Assembly Fun", false, false, 55555005);
-        values.clear();
-        addTaskInfoToTables(db, values, "Tutorial task 6: Comparing#2", "Using comparisons", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.2f, "Assembly Fun", false, true, 100666);
-        values.clear();
-        addTaskInfoToTables(db, values, "Tutorial task 7: Test", "r0 = max(r1,r0)", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.4f, "Assembly Fun", false, true, 0);
-        values.clear();
-        addTaskInfoToTables(db, values, "Tutorial task 8: Test2", "r0=r0>r1?r0-r1:r0", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.6f, "Assembly Fun", false, false, 88887888);
-        values.clear();
-
-        registerLocalTaskToDB(db, values, task1, "Hit the green button to run your program. A series of tests are run to check if your program performs to specification.",
-                LocalTaskTable.makeTaskTestString(new int[][]{{0}, {4}, {-4}, {7}}, new int[][]{{0}, {4}, {-4}, {7}}));
-        values.clear();
-
-        long someTask = addTaskInfoToTables(db, values, "SomeTask", "r0=max(r0,r1)*max(r1,r2)", System.currentTimeMillis()-100000000, Difficulty.VERY_EASY, 4.6f, "SomeGuy", false, true, 90184527);
-        values.clear();
-        registerLocalTaskToDB(db, values, someTask, "Make a program that returns max(r0,r1)*max(r1,r2)", "3,2,5=15;7,4,2=28;1,2,3=6");
-        values.clear();
-        TaskRecordsTable.addRow(db, values, someTask, 19, "Some Other Guy", 22, 25, "Some Other Dude", 29, 5, "Haved", 5);
-        values.clear();
-
-        long myTask = addTaskInfoToTables(db, values, "MyTask", "r0=r0+min(r0,r1)", System.currentTimeMillis(), Difficulty.VERY_EASY, 4.6f, "You", true, true, 0);
-        values.clear();
-        registerLocalTaskToDB(db, values, myTask, "Make r0=r0+min(r0,r1)",
-                LocalTaskTable.makeTaskTestString(new int[][]{{0, 2}, {4, 5}, {4, 2}, {7, 3}}, new int[][]{{0}, {8}, {6}, {10}}));
-
-        values.clear();
-        addEmptySolution(db, values, task1, "My fail solution 1!", "Have a bun!");
-        values.clear();
-        long bestS1 = addEmptySolution(db, values, someTask, "My best solution!", "Have another one");
-        values.clear();
-        updateSolutionValues(db, values, bestS1, someTask, SolutionsTable.QUALITY_PERFECT, 20, 27, 6);
-        values.clear();
-        long bestS3 = addEmptySolution(db, values, myTask, "My best solution 3!", "Have nice day");
-        values.clear();
-        updateSolutionValues(db, values, bestS3, myTask, SolutionsTable.QUALITY_PERFECT, 10, 14, 0);
-        values.clear();
-        long bestS4 = addEmptySolution(db, values, myTask, "My best solution 4!", "Have yet another bun!");
-        values.clear();
-        updateSolutionValues(db, values, bestS4, myTask, SolutionsTable.QUALITY_PERFECT, 9, 17, 2);
-        values.clear();
-        addEmptySolution(db, values, myTask, "My fail solution!", "This is your last bun!");
-
-        values.clear();
-        long localTask = addTaskInfoToTables(db, values, "Unsolved local task", "A test task that is local only", System.currentTimeMillis()-100000000, Difficulty.DIFFICULT, 3.4f, "Some Mate", false, false, 57238985476l);
-        values.clear();
-        registerLocalTaskToDB(db, values, localTask, "I dunno. Just make r0=r1!", "5,4=4;5,3=3;2,9=9");
-        values.clear();
-        long solvedTask = addTaskInfoToTables(db, values, "Solved online task", "A test task that is local only", System.currentTimeMillis() - 100, Difficulty.DIFFICULT, 3.4f, "Some Chap", false, false, 4356364746l);
-        Log.d("Assembly Fun", "the id for the 'Solved online task' is " + solvedTask);
-        values.clear();
-        long solvedTaskSolution = addEmptySolution(db, values, solvedTask, "My proper tidy solution!", "This is your final bun!");
-        values.clear();
-        updateSolutionValues(db, values, solvedTaskSolution, -1, SolutionsTable.QUALITY_PERFECT, 4, 7, 8);
+        long prevTask = addTaskInfoToTables(db, values, "Tutorial task 1: Running", "Running your application", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.4f, "Assembly Fun", false, false, 1L); values.clear();
+        registerLocalTaskToDB(db, values, prevTask, "Hit the green play button to run your program!", "0>0!5>5;4,4>4,4;8>8;7>7:4,5>4,5:10>10:3>3,?:"); values.clear();
+        prevTask = addTaskInfoToTables(db, values, "Tutorial task 2: Returning", "Returning the number 10", System.currentTimeMillis(), Difficulty.TUTORIAL, 3.6f, "Assembly Fun", false, false, 2L); values.clear();
+        registerLocalTaskToDB(db, values, prevTask, "Write mov r0,#10 on the first line to move the number 10 into the registry r0. r0 is a registry that can store numbers. " +
+                        "The return value of your program is stored here when the program exits. Run the application by hitting the green run button",
+                "0>10!5>10;4,4>10;8>10;7,3>10:4,5>10:10>10:3>10:"); values.clear();
+        prevTask = addTaskInfoToTables(db, values, "Tutorial task 3: Returning #2", "Returning the registry r1", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.9f, "Assembly Fun", false, false, 3L); values.clear();
+        registerLocalTaskToDB(db, values, prevTask, "Write mov r0,r1 on the first line to move the number stored in r1 into the registry r0. r0 and r1 are registries and store numbers. 'mov' stores a number inside the first argument",
+                "0,10>10!5,5>5;4,7>7;8,0>0;7,3>3:4,5>5:1,10>10:3,8>8:"); values.clear();
+        prevTask = addTaskInfoToTables(db, values, "Tutorial task 4: Adding", "Returning r1+r2", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.5f, "Assembly Fun", false, false, 4L); values.clear();
+        registerLocalTaskToDB(db, values, prevTask, "Write add r0,r1,r2 on the first line to add r1 and r2 and store it in r0. add x,y,z means x=y+z",
+                "0,10,4>14!5,5,5>10;4,7,-3>4;0,8,0>8;7,3,3>6:4,5,6>11:1,10,3>13:3,8,3>11:"); values.clear();
+        addEmptySolution(db, values, prevTask, "Example solution", "add r0,r1,r2"); values.clear();
+        prevTask = addTaskInfoToTables(db, values, "Product of biggest", "r0=max(r0,r1)*max(r1,r2)", System.currentTimeMillis(), Difficulty.VERY_EASY, 5f, "Some Guy", false, true, 754647L); values.clear();
+        long prevSolution = addEmptySolution(db, values, prevTask, "My solution", "cmp r1,r2\nmovgt r2,r1 ;Move r1 to r2 if r1>r2\ncmp r0,r1\nmovgt r1,r0 ;Move r0 to r1 if r0>r1\n mul r0,r1,r2"); values.clear();
+        updateSolutionValues(db, values, prevSolution, prevTask, SolutionsTable.QUALITY_SOLVED, 5, 5, 0); values.clear();
+        prevTask = addTaskInfoToTables(db, values, "My Task", "r0=r1-min(r0,r1)", System.currentTimeMillis(), Difficulty.VERY_EASY, 2.5f, "You", true, true, 0); values.clear();
+        registerLocalTaskToDB(db, values, prevTask, "Make a program that takes in r0 and r1, and returns r1-min(r0,r1) in r0; r0=r1-min(r0,r1)", "5,7=2!4,2=0;8,7=0;5,5=0;3,6=3:"); values.clear();
+        addEmptySolution(db, values, prevTask, "My solution", "");
     }
 
     private Table[] tables;
