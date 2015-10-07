@@ -127,15 +127,15 @@ public final class AFDatabaseInteractionHelper
         if(quality!=SolutionsTable.QUALITY_PERFECT)
             return;
 
-        if(task_id<0) {
-            Cursor cursor = makeCursorForOneField(db, SolutionsTable.TABLE_NAME, SolutionsTable._ID_TaskIDs, SolutionsTable._ID + "=?", new String[]{Long.toString(task_id)}, "LIMIT 1");
+        if(task_id<=0) {
+            Cursor cursor = makeCursorForOneField(db, SolutionsTable.TABLE_NAME, SolutionsTable._ID_TaskIDs, SolutionsTable._ID + "=?", new String[]{Long.toString(solution_id)}, "LIMIT 1");
             //noinspection TryFinallyCanBeTryWithResources
             try {
                 cursor.moveToFirst();
                 if(cursor.isAfterLast()) {
                     Log.e("Assembly Fun", "No task_id was supplied when the solution vales were updated for solution with id: " + solution_id +
-                            ". Tried looking up the task_id in the SolutionsTable, but the row were _id=solution_id doesn't exist!");
-                    return;
+                            ". Tried looking up the task_id in the SolutionsTable, but the row where _id=solution_id doesn't exist!");
+                    return; //Will still close the cursor!
                 }
                 task_id = cursor.getLong(cursor.getColumnIndex(SolutionsTable._ID_TaskIDs)); // getColumnIndex should in theory always return 0, but what the heck. One can almost never be too careful!
                 Log.i("Assembly Fun", "No task_id was supplied when updating the values for the solution with the _id " + solution_id + ". A quick look up in the SolutionsTable found the task_id " + task_id);
@@ -206,7 +206,6 @@ public final class AFDatabaseInteractionHelper
      * @param diff for the DIFFICULTY column in the new row. An integer corresponing to one of the difficulties in the Difficulty enum.
      * @param rating for the RATING column in the new row. A float.
      * @param author for the AUTHOR column in the new row. A TEXT.
-     * @param solved whether or not the task is solved. Stored in the FLAGS column in the new row.
      * @param selfPublished whether or not the task is published on this device. Stored in the FLAGS column in the new row.
      * @param favourite whether or not the task is a favourite. Stored in the FLAGS column in the new row.
      * @param globalID the globalID of the new task. If it already exists in the TaskIDTable that row is used for the _id_TaskIDs foreign key, otherwise a new row in TaskIDTable is added with this as the globalID.
@@ -214,12 +213,12 @@ public final class AFDatabaseInteractionHelper
      * @return the _id_TaskIDs of the new row in the taskInfoTable
      */
     public static long addTaskInfoToTables(SQLiteDatabase db, ContentValues values, String name, String desc, long date, Difficulty diff, float rating, String author,
-                                           boolean solved, boolean selfPublished, boolean favourite, long globalID)
+                                           boolean selfPublished, boolean favourite, long globalID)
     {
         long localID=getLocalIDFromGlobalID(db, values, globalID);
         values.clear();
 
-        TaskinfoTable.addRow(db, values, localID, name, desc, date, diff, rating, author, TaskinfoTable.getFlags(false, solved, selfPublished, favourite, globalID != 0));
+        TaskinfoTable.addRow(db, values, localID, name, desc, date, diff, rating, author, TaskinfoTable.getFlags(false, false, selfPublished, favourite, globalID != 0));
         return localID;
     }
 
@@ -319,7 +318,7 @@ public final class AFDatabaseInteractionHelper
 
     public static Cursor makeCursorForOneField(SQLiteDatabase db, String tableName, String columns, String whereStatement, String[] whereArgs, String queryExtras)
     {
-        return db.rawQuery(String.format("SELECT %s FROM %s WHERE %s %s", columns, tableName, whereStatement, queryExtras), whereArgs);
+        return db.rawQuery(String.format("SELECT %s FROM %s WHERE %s", columns, tableName, whereStatement), whereArgs);
     }
 
     /* Adds (or updates if there's already a row with the same ref_id) a row to the taskRecordsTable with all the values passed. If a value is -1 or a string is null the field will not be added/updated.
