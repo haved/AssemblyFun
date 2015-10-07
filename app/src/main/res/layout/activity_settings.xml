@@ -37,28 +37,32 @@
                 android:layout_height="wrap_content"
                 android:text="@string/button_settings_delete_unused_rows"
                 android:id="@+id/settings_delete_unused_rows"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:enabled="false" />
 
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/button_settings_vacuum_database"
                 android:id="@+id/settings_vacuum_database"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:enabled="true" />
 
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/button_settings_delete_unlisted_tasks"
                 android:id="@+id/settings_delete_unlisted_tasks"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:enabled="false" />
 
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/button_settings_delete_solved_only_tasks"
                 android:id="@+id/settings_delete_solved_only"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:enabled="false" />
 
         </LinearLayout>
     </ScrollView>

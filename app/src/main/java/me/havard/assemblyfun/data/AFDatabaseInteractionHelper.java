@@ -30,8 +30,7 @@ public final class AFDatabaseInteractionHelper
 
         int flags = getFlagsFromTaskWithID(db, ref_id);
         if(flags>=0) {
-            values.put(TaskinfoTable.FLAGS, flags | TaskinfoTable.FLAG_LOCAL); //kinda funky!;
-            Log.d("Assembly Fun", "A task with the id " + ref_id + " is now registered as local!   OldFlags: " + flags + " NewFlags: " + (flags|TaskinfoTable.FLAG_LOCAL));
+            values.put(TaskinfoTable.FLAGS, TaskinfoTable.addFlag(flags, TaskinfoTable.FLAG_LOCAL)); //Used to be kinda funky!;
             db.update(TaskinfoTable.TABLE_NAME, values, TaskinfoTable._ID_TaskIDs + "=?", new String[]{Long.toString(ref_id)});
         } else {
             Log.e("Assembly Fun", "a local task row was added to localTaskTable, but there was no row in the taskInfoTable with the same _id_TaskIDs! The id in question is " + ref_id);
@@ -51,8 +50,7 @@ public final class AFDatabaseInteractionHelper
 
         int flags = getFlagsFromTaskWithID(db, ref_id);
         if(flags>=0) {
-            values.put(TaskinfoTable.FLAGS, flags & ~TaskinfoTable.FLAG_LOCAL); //super funky!;
-            Log.d("Assembly Fun", "A task with the id " + ref_id + " is no longer registered as local!   OldFlags: " + flags + " NewFlags: " + (flags & ~TaskinfoTable.FLAG_LOCAL));
+            values.put(TaskinfoTable.FLAGS, TaskinfoTable.removeFlag(flags, TaskinfoTable.FLAG_LOCAL)); //Used to be super funky
             db.update(TaskinfoTable.TABLE_NAME, values, TaskinfoTable._ID_TaskIDs + "=?", new String[]{Long.toString(ref_id)});
         } else {
             Log.e("Assembly Fun", "a local task row was removed from localTaskTable, but there was no row in the taskInfoTable with the same _id_TaskIDs! The id in question is " + ref_id);

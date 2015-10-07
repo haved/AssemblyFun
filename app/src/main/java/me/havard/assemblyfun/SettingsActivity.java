@@ -3,6 +3,7 @@ package me.havard.assemblyfun;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -78,6 +79,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-
+        if(v==mVacuumDatabase) {
+            Log.i("Assembly Fun", "Vacuuming database!");
+            ((AssemblyFunApplication)getApplication()).getWritableDatabase().execSQL("VACUUM");
+        }
     }
 }
