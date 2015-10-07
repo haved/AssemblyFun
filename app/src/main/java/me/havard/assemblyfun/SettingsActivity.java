@@ -1,6 +1,8 @@
 package me.havard.assemblyfun;
 
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +17,7 @@ import me.havard.assemblyfun.data.SharedPreferencesHelper;
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Switch mAlwaysKeepTasks;
-    private Button mDeleteUnusedRows, mVacuumDatabase, mDeleteUnlisted, mDeleteSolvedOnlyTasks;
+    private Button mDeleteUnusedRowsButton, mVacuumDatabaseButton, mDeleteUnlistedButton, mDeleteSolvedOnlyTasksButton;
 
     private boolean mKeepUnlistedTasksUsedToBe;
 
@@ -26,14 +28,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         mAlwaysKeepTasks        = (Switch) findViewById(R.id.settings_keep_tasks_switch);
         mAlwaysKeepTasks        .setOnClickListener(this);
-        mDeleteUnusedRows       = (Button) findViewById(R.id.settings_delete_unused_rows);
-        mDeleteUnusedRows       .setOnClickListener(this);
-        mVacuumDatabase         = (Button) findViewById(R.id.settings_vacuum_database);
-        mVacuumDatabase         .setOnClickListener(this);
-        mDeleteUnlisted         = (Button) findViewById(R.id.settings_delete_unlisted_tasks);
-        mDeleteUnlisted         .setOnClickListener(this);
-        mDeleteSolvedOnlyTasks  = (Button) findViewById(R.id.settings_delete_solved_only);
-        mDeleteSolvedOnlyTasks  .setOnClickListener(this);
+        mDeleteUnusedRowsButton = (Button) findViewById(R.id.settings_delete_unused_rows);
+        mDeleteUnusedRowsButton.setOnClickListener(this);
+        mVacuumDatabaseButton = (Button) findViewById(R.id.settings_vacuum_database);
+        mVacuumDatabaseButton.setOnClickListener(this);
+        mDeleteUnlistedButton = (Button) findViewById(R.id.settings_delete_unlisted_tasks);
+        mDeleteUnlistedButton.setOnClickListener(this);
+        mDeleteSolvedOnlyTasksButton = (Button) findViewById(R.id.settings_delete_solved_only);
+        mDeleteSolvedOnlyTasksButton.setOnClickListener(this);
     }
 
     @Override
@@ -79,9 +81,30 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        if(v==mVacuumDatabase) {
+        if(v== mVacuumDatabaseButton) {
+            mVacuumDatabaseButton.setEnabled(false);
+            new VacuumTask(((AssemblyFunApplication)getApplication()).getWritableDatabase()).execute();
+        }
+    }
+
+    private class VacuumTask extends AsyncTask<Void, Void, Void>{
+
+        private SQLiteDatabase mDB;
+
+        public VacuumTask(SQLiteDatabase db) {
+            mDB = db;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
             Log.i("Assembly Fun", "Vacuuming database!");
-            ((AssemblyFunApplication)getApplication()).getWritableDatabase().execSQL("VACUUM");
+            mDB.execSQL("VACUUM");
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            mVacuumDatabaseButton.setEnabled(true);
         }
     }
 }
