@@ -40,7 +40,8 @@
     <string name="dialog_task_screen_delete_task_data_body">This will delete all info about the task.
         All your solutions will be deleted, and unless the task is online, it will completely disappear forever.
         The task will disappear from the task lists. Your records also disappear unless you have the current world record. In that case the record is stored on the server.</string>
-    <string name="dialog_task_screen_make_task_unlisted">This task is not solved, and removing it from the local tasks list will remove this task from all lists.
-        Your unfinished solutions will disappear and you\'ll have to go online to find the task again. To change this behaviour, go to the settings and enable "Keep unlisted tasks"\n
-        This will give you another task list showing all tasks.</string>
+    <string name="snack_bar_unlisted_task">The task is now unlisted. Will be deleted!</string>
+    <string name="dialog_unlisted_task_title">Unlisted task deleted</string>
+    <string name="dialog_unlisted_task_body">When you remove an unsolved task locally, it will no longer appear in neither the local or solved task lists. It is automatically deleted, and all unfinished solutions are removed.
+    By hitting undo, the task is restored locally, and will not be deleted. You can always enable keeping of unlisted tasks in the settings.</string>
 </resources>

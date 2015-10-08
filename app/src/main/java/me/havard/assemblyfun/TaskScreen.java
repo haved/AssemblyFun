@@ -1,12 +1,12 @@
 package me.havard.assemblyfun;
 
-import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,6 +34,7 @@ import me.havard.assemblyfun.data.TaskInfoAndRecordsCursorLoader;
 import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
+import me.havard.assemblyfun.util.BooleanContainer;
 import me.havard.assemblyfun.util.DialogHelper;
 import me.havard.assemblyfun.util.MonthLabels;
 
@@ -204,17 +205,17 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
 
         if(id == R.id.action_help)
         {
-            DialogHelper.makeDialogBuilder(this, R.string.help_task_screen_title, R.string.help_task_screen_body, false, null).show();
+            DialogHelper.makeDialogBuilder(this, R.string.help_task_screen_title, R.string.help_task_screen_body, null, -1, R.string.dialog_button_OK, true).show();
             return true;
         }
         else if(id== R.id.action_delete_all_task_data)
         {
-            DialogHelper.makeDialogBuilder(this, R.string.dialog_task_screen_are_you_sure, R.string.dialog_task_screen_delete_task_data_body, true, new DialogInterface.OnClickListener() {
+            DialogHelper.makeDialogBuilder(this, R.string.dialog_task_screen_are_you_sure, R.string.dialog_task_screen_delete_task_data_body, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     new RemoveAllTaskData(mLocalID, true).execute();
                 }
-            }).show();
+            }, R.string.dialog_button_OK, R.string.dialog_button_Cancel, true).show();
             return true;
         }
         else if(id == android.R.id.home) {
@@ -261,28 +262,47 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     {
         if(v==mLocalButton)
         {
+            mLocalButton.setEnabled(false);
             if(mLocalFlag) {
                 if(!(mSolvedFlag | SharedPreferencesHelper.shouldKeepUnlistedTasks(SharedPreferencesHelper.getPreferences(this)))) {
-                    DialogHelper.makeDialogBuilder(this, R.string.dialog_task_screen_are_you_sure, R.string.dialog_task_screen_make_task_unlisted, true, new DialogInterface.OnClickListener() {
+                    final BooleanContainer shouldSnackbarDelete = new BooleanContainer(true);
+                    Snackbar.make(findViewById(R.id.task_screen_solution_list), R.string.snack_bar_unlisted_task, Snackbar.LENGTH_LONG)
+                            .setAction("Undo", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    shouldSnackbarDelete.bool = false;
+                                    DialogHelper.makeDialogBuilder(TaskScreen.this, R.string.dialog_unlisted_task_title, R.string.dialog_unlisted_task_body, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    mLocalButton.setEnabled(false);
+                                                    new RemoveTaskLocally(mLocalID).execute();
+                                                }
+                                            },
+                                            R.string.dialog_button_Remove_Locally, R.string.dialog_button_Undo, true).show();
+                                }
+                            }).setCallback(new Snackbar.Callback() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mLocalButton.setEnabled(false);
-                            new RemoveTaskLocally(mLocalID).execute();
+                        public void onDismissed(Snackbar snackbar, int event) {
+                            super.onDismissed(snackbar, event);
+                            mLocalButton.setEnabled(true);
+                            if(shouldSnackbarDelete.bool) {
+                                new RemoveTaskLocally(mLocalID).execute();
+                            }
+                        }
+
+                        @Override
+                        public void onShown(Snackbar snackbar) {
+                            super.onShown(snackbar);
                         }
                     }).show();
-                }
-                else {
-                    mLocalButton.setEnabled(false);
+                } else {
                     new RemoveTaskLocally(mLocalID).execute();
                 }
             }
         }
         else if(v==mFavouriteButton)
-        {
-            mFavouriteButton.setEnabled(false);
             new ChangeFavouriteStatusTask(mLocalID, !mFavouriteFlag).execute();
-        }
-    }
+      }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

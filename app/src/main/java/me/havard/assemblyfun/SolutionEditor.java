@@ -37,49 +37,33 @@ public class SolutionEditor extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
-    private long solutionID, taskID;
+    private long mSolutionID, mTaskID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solution_editor);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         Bundle extras = getIntent().getExtras();
         assert(extras!=null);
-        solutionID = extras.getLong(EXTRAS_SOLUTION_ID, -1);
-        taskID = extras.getLong(EXTRAS_TASK_ID, -1);
-        if(solutionID==-1)
+        mSolutionID = extras.getLong(EXTRAS_SOLUTION_ID, -1);
+        mTaskID = extras.getLong(EXTRAS_TASK_ID, -1);
+        if(mSolutionID ==-1)
             throw new IllegalArgumentException("No proper solution id was passed to the SolutionEditor! intent.putExtra(SolutionEditor.EXTRAS_SOLUTION_ID, id)");
-        if(taskID==-1){
-            Log.i("Assembly Fun", "No task id was passed to the SolutionEditor. Looking it up in the SolutionTable in the row for the solution " + solutionID);
-            taskID = AFDatabaseInteractionHelper.getTaskIdFromSolutionId(((AssemblyFunApplication)getApplication()).getReadableDatabase(), solutionID);
-            if(taskID==-1){
-                Log.e("Assembly Fun", "Couldn't look up the taskID for the solutionID " + solutionID + ". Aborting SolutionEditor!");
+        if(mTaskID ==-1){
+            Log.i("Assembly Fun", "No task id was passed to the SolutionEditor. Looking it up in the SolutionTable in the row for the solution " + mSolutionID);
+            mTaskID = AFDatabaseInteractionHelper.getTaskIdFromSolutionId(((AssemblyFunApplication)getApplication()).getReadableDatabase(), mSolutionID);
+            if(mTaskID ==-1){
+                Log.e("Assembly Fun", "Couldn't look up the taskID for the solutionID " + mSolutionID + ". Aborting SolutionEditor!");
                 finish();
             }
-            Log.i("Assembly Fun", "The taskID " + taskID + " was found for the solutionID " + solutionID);
+            Log.i("Assembly Fun", "The taskID " + mTaskID + " was found for the solutionID " + mSolutionID);
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
