@@ -56,7 +56,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     private SolutionCursorAdapter mSolutionListAdapter;
 
     private boolean mLocalFlag, mGlobalFlag, mSolvedFlag, mFavouriteFlag;
-    private boolean mPretendedToDeleted;
+    private boolean mLocalRemovalBuffered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,22 +161,22 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mTaskRecordsText.setText(recordText);
     }
 
-    protected void useLocalGlobalSolvedFlags(boolean local, boolean global, boolean solved, boolean pretendedToDelete)
+    protected void useLocalGlobalSolvedFlags(boolean local, boolean global, boolean solved, boolean localRemovalBuffered)
     {
-        if ((!(!pretendedToDelete || !local))) throw new AssertionError();
+        if (localRemovalBuffered&&!local) throw new AssertionError();
+        boolean actAsStoredLocally = mLocalFlag & !localRemovalBuffered;
         mLocalFlag = local;
         mGlobalFlag = global;
         mSolvedFlag = solved;
-        mPretendedToDeleted = pretendedToDelete;
-        mLocalButton.setText(global ?
-                (local ? R.string.label_task_screen_remove_locally :
-                        (pretendedToDelete ? R.string.label_task_screen_undo_remove_locally : R.string.label_task_screen_store_locally))
-                : R.string.label_task_screen_only_locally);
+        mLocalRemovalBuffered = localRemovalBuffered;
+        mLocalButton.setText(localRemovalBuffered ? R.string.label_task_screen_undo_remove_locally : (global ?
+                (local ? R.string.label_task_screen_remove_locally : R.string.label_task_screen_store_locally)
+                : R.string.label_task_screen_only_locally));
         mLocalButton.setEnabled(global);
         mLocalIcon.setVisibility(local ? View.VISIBLE : View.INVISIBLE);
         mOnlineRow.setVisibility(global ? View.VISIBLE : View.GONE);
-        mAddSolutionButton.setText(local ? R.string.label_task_screen_add_solution : R.string.label_task_screen_only_local_tasks_can_be_solved);
-        mAddSolutionButton.setEnabled(local);
+        mAddSolutionButton.setText(actAsStoredLocally ? R.string.label_task_screen_add_solution : R.string.label_task_screen_only_local_tasks_can_be_solved);
+        mAddSolutionButton.setEnabled(actAsStoredLocally);
         mSolveIcon.setVisibility(solved ? View.VISIBLE : View.INVISIBLE);
     }
 
@@ -190,15 +190,13 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     protected void onDestroy() {
         super.onDestroy();
         boolean solvedOrKeepUnlisted = mSolvedFlag | SharedPreferencesHelper.shouldKeepUnlistedTasks(SharedPreferencesHelper.getPreferences(this));
-        if(!mLocalFlag)
-        {
-            if(mPretendedToDeleted & solvedOrKeepUnlisted) { //We have pretended to delete the task locally, but not all the task data should be deleted
-                Log.i("Assembly Fun", "The task on this task screen is pretended to be remove locally, but is solved or 'keep unlisted tasks' is true. Only removing local task");
-                new RemoveTaskLocally(mLocalID).execute();
-            } else if (!solvedOrKeepUnlisted) {
-                Log.i("Assembly Fun", "The task on this task screen is not solved nor local, and shouldKeepUnlistedTasks is false. Prepare for deletion of all task data!");
-                new RemoveAllTaskData(mLocalID, false).execute();
-            }
+        if((!mLocalFlag | mLocalRemovalBuffered) & !solvedOrKeepUnlisted) {
+            Log.i("Assembly Fun", "The task on this task screen is not solved nor local, and shouldKeepUnlistedTasks is false. Prepare for deletion of all task data!");
+            new RemoveAllTaskData(mLocalID, false).execute();
+        }
+        else if(mLocalFlag & mLocalRemovalBuffered & solvedOrKeepUnlisted) {
+            Log.i("Assembly Fun", "The task on this task screen is buffered to be remove locally, but is solved or 'keep unlisted tasks' is true. Only removing local task");
+            new RemoveTaskLocally(mLocalID).execute();
         }
     }
 
@@ -272,26 +270,23 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     {
         if(v==mLocalButton)
         {
-            if(mPretendedToDeleted)
-                useLocalGlobalSolvedFlags(true, mGlobalFlag, mSolvedFlag, false);   //No longer pretend to be deleted
-            else if(mLocalFlag) {
-                if(!(mSolvedFlag | SharedPreferencesHelper.shouldKeepUnlistedTasks(SharedPreferencesHelper.getPreferences(this)))) {
+            if(mLocalRemovalBuffered)
+                useLocalGlobalSolvedFlags(mLocalFlag, mGlobalFlag, mSolvedFlag, false);   //No longer buffer local removal
+            else if(mLocalFlag & mGlobalFlag) { //Just to make sure the task exists online before removing it.
+                //noinspection ConstantConditions //I like it more when you can see the variables and how they don't change
+                useLocalGlobalSolvedFlags(mLocalFlag/*true*/, mGlobalFlag/*true*/, mSolvedFlag, true); //Buffering removing the task locally. NB: mLocalFlag and mGlobalFlag are always true here. (See 'if')
+
+                if(mLocalRemovalBuffered & !mSolvedFlag & !SharedPreferencesHelper.shouldKeepUnlistedTasks(SharedPreferencesHelper.getPreferences(this))) {
                     Snackbar bar = Snackbar.make(findViewById(R.id.task_screen_solution_list), R.string.snack_bar_unlisted_task, Snackbar.LENGTH_LONG);
-                    bar.setAction(R.string.dialog_button_Undo, new View.OnClickListener() {
+                    bar.setAction(R.string.dialog_button_Info, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            DialogHelper.makeDialogBuilder(TaskScreen.this, R.string.dialog_unlisted_task_title, R.string.dialog_unlisted_task_body, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            useLocalGlobalSolvedFlags(true, mGlobalFlag, mSolvedFlag, false); //No longer pretend to be deleted
-                                        }
-                                    },
-                                    R.string.dialog_button_Undo, R.string.dialog_button_Cancel, true).show();
+                            DialogHelper.makeDialogBuilder(TaskScreen.this, R.string.dialog_unlisted_task_title, R.string.dialog_unlisted_task_body, null,
+                                    -1, R.string.dialog_button_OK, true).show();
                         }
                     });
                     bar.show();
                 }
-                useLocalGlobalSolvedFlags(false, mGlobalFlag, mSolvedFlag, true);
             }
         }
         else if(v==mFavouriteButton)

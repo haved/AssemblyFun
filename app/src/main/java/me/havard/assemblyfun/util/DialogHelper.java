@@ -30,7 +30,7 @@ public class DialogHelper {
         if(doButtonLister != null)
             builder.setPositiveButton(doButtonText, doButtonLister);
         if(nothingButton!=-1)
-            builder.setNeutralButton(nothingButton, null);
+            builder.setNegativeButton(nothingButton, null);
         builder.setCancelable(dismissible);
         return builder;
     }
