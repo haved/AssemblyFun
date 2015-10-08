@@ -197,7 +197,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
                 new RemoveTaskLocally(mLocalID).execute();
             } else if (!solvedOrKeepUnlisted) {
                 Log.i("Assembly Fun", "The task on this task screen is not solved nor local, and shouldKeepUnlistedTasks is false. Prepare for deletion of all task data!");
-                new RemoveAllTaskData(mLocalID, true).execute();
+                new RemoveAllTaskData(mLocalID, false).execute();
             }
         }
     }
