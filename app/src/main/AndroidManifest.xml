@@ -50,6 +50,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.havard.assemblyfun.AssemblyFunMenu" />
         </activity>
+        <activity
+            android:name=".SolutionEditor"
+            android:label="@string/title_activity_solution_editor"
+            android:theme="@style/AppThemeWithBar.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>

@@ -7,6 +7,12 @@
     <style name="AppThemeWithBar" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
     </style>
+    <style name="AppThemeWithBar.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AppThemeWithBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppThemeWithBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
    <!--<style name="TaskBrowserTheme" parent="Theme.AppCompat.Light">
         <item name="android:actionBarStyle">@style/BlueActionBar</item>
     </style>

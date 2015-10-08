@@ -3,6 +3,7 @@ package me.havard.assemblyfun;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,7 +37,7 @@ import me.havard.assemblyfun.data.tables.TaskinfoTable;
 import me.havard.assemblyfun.util.DialogHelper;
 import me.havard.assemblyfun.util.MonthLabels;
 
-public class TaskScreen extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+public class TaskScreen extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, ListView.OnItemClickListener {
 
     public static final String EXTRAS_TASK_ID = "extrasTaskID";
     private static final int LOADER_ID_TASK_CURSOR = 0;
@@ -63,6 +65,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mSolutionList = (ListView) findViewById(R.id.task_screen_solution_list);
         mSolutionListAdapter = new SolutionCursorAdapter(this, null);
         mSolutionList.setAdapter(mSolutionListAdapter);
+        mSolutionList.setOnItemClickListener(this);
 
         View headerView = getLayoutInflater().inflate(R.layout.task_screen_header, null);
         mSolutionList.addHeaderView(headerView);
@@ -279,6 +282,14 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
             mFavouriteButton.setEnabled(false);
             new ChangeFavouriteStatusTask(mLocalID, !mFavouriteFlag).execute();
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent solutionEditor = new Intent(this, SolutionEditor.class);
+        solutionEditor.putExtra(SolutionEditor.EXTRAS_SOLUTION_ID, id);
+        solutionEditor.putExtra(SolutionEditor.EXTRAS_TASK_ID, mLocalID);
+        startActivity(solutionEditor);
     }
 
     private class RemoveTaskLocally extends AsyncTask<Void, Void, Void> {
