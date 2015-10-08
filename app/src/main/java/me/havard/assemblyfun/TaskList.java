@@ -169,6 +169,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         mListAdapterStatusText.setText("The cursor was removed!");
     }
 
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         ArrayList<String> whereArgs = new ArrayList<>();

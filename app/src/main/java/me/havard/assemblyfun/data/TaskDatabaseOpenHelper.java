@@ -59,6 +59,8 @@ public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         long prevTask = addTaskInfoToTables(db, values, "Tutorial task 1: Running", "Running your application", System.currentTimeMillis(), Difficulty.TUTORIAL, 4.4f, "Assembly Fun", false, false, 1L); values.clear();
         registerLocalTaskToDB(db, values, prevTask, "Hit the green play button to run your program!", "0>0!5>5;4,4>4,4;8>8;7>7:4,5>4,5:10>10:3>3,?:"); values.clear();
+        long prevSolution = addEmptySolution (db, values, prevTask, "Me good solution", "Ay lmao!"); values.clear();
+        updateSolutionValues(db, values, prevSolution, prevTask, SolutionsTable.QUALITY_SOLVED, 0, 0, 0); values.clear();
         prevTask = addTaskInfoToTables(db, values, "Tutorial task 2: Returning", "Returning the number 10", System.currentTimeMillis(), Difficulty.TUTORIAL, 3.6f, "Assembly Fun", false, false, 2L); values.clear();
         registerLocalTaskToDB(db, values, prevTask, "Write mov r0,#10 on the first line to move the number 10 into the registry r0. r0 is a registry that can store numbers. " +
                         "The return value of your program is stored here when the program exits. Run the application by hitting the green run button",
@@ -71,7 +73,7 @@ public class TaskDatabaseOpenHelper extends SQLiteOpenHelper {
                 "0,10,4>14!5,5,5>10;4,7,-3>4;0,8,0>8;7,3,3>6:4,5,6>11:1,10,3>13:3,8,3>11:"); values.clear();
         addEmptySolution(db, values, prevTask, "Example solution", "add r0,r1,r2"); values.clear();
         prevTask = addTaskInfoToTables(db, values, "Product of biggest", "r0=max(r0,r1)*max(r1,r2)", System.currentTimeMillis(), Difficulty.VERY_EASY, 5f, "Some Guy", false, true, 754647L); values.clear();
-        long prevSolution = addEmptySolution(db, values, prevTask, "My solution", "cmp r1,r2\nmovgt r2,r1 ;Move r1 to r2 if r1>r2\ncmp r0,r1\nmovgt r1,r0 ;Move r0 to r1 if r0>r1\n mul r0,r1,r2"); values.clear();
+        prevSolution = addEmptySolution(db, values, prevTask, "My solution", "cmp r1,r2\nmovgt r2,r1 ;Move r1 to r2 if r1>r2\ncmp r0,r1\nmovgt r1,r0 ;Move r0 to r1 if r0>r1\n mul r0,r1,r2"); values.clear();
         updateSolutionValues(db, values, prevSolution, prevTask, SolutionsTable.QUALITY_SOLVED, 5, 5, 0); values.clear();
         prevTask = addTaskInfoToTables(db, values, "My Task", "r0=r1-min(r0,r1)", System.currentTimeMillis(), Difficulty.VERY_EASY, 2.5f, "You", true, true, 0); values.clear();
         registerLocalTaskToDB(db, values, prevTask, "Make a program that takes in r0 and r1, and returns r1-min(r0,r1) in r0; r0=r1-min(r0,r1)", "5,7=2!4,2=0;8,7=0;5,5=0;3,6=3:"); values.clear();

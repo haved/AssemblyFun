@@ -65,8 +65,9 @@
     <string name="label_loading">Loading...</string>
 
     <string name="title_activity_task_screen">Task</string>
-    <string name="label_task_screen_store_locally">Store locally</string>
+    <string name="label_task_screen_store_locally">Download</string>
     <string name="label_task_screen_remove_locally">Remove locally</string>
+    <string name="label_task_screen_undo_remove_locally">Undo Remove locally</string>
     <string name="label_task_screen_only_locally">Only exists locally</string>
     <string name="label_task_screen_see_online">See online</string>
     <string name="label_task_screen_add_to_online">Add to online channels</string>
