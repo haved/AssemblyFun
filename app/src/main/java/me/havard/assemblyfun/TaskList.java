@@ -25,13 +25,17 @@ import me.havard.assemblyfun.data.SQLiteCursorLoader;
 import me.havard.assemblyfun.data.TaskCursorAdapter;
 import me.havard.assemblyfun.data.tables.TaskIDTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
+import me.havard.assemblyfun.util.AllDoneCounter;
+import me.havard.assemblyfun.util.RemoveAllTaskData;
+import me.havard.assemblyfun.util.RemoveTaskLocally;
 
-public class TaskList extends AppCompatActivity implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class TaskList extends AppCompatActivity implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor>, AllDoneCounter.AllDoneListener {
     public static final String KEY_HIDE_UNSOLVED_FILTER_OPTION_ID = "hide_action_unsolved_filter";
     public static final String KEY_HIDE_LOCAL_FILTER_OPTION_ID = "hide_action_local_filter";
     public static final String KEY_CHECK_FLAG_BIT = "check_flag_bit";
     public static final String KEY_RES_ACTIVITY_TITLE = "activity_title_res";
     private static final int TASK_CURSOR_LOADER_ID = 0;
+    private static final int REQUEST_CODE_TASK_SCREEN = 1;
 
     private static final String KEY_SAVE_LIST_SEARCH = "key_list_search";
     private static final String KEY_SAVE_LIST_LOCAL_ONLY = "key_list_local_only";
@@ -58,6 +62,11 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     private OrderBy mListOrderBy;
     private String mCurrentQuery;
 
+    /**
+     * Used to make sure all tasks are finished before loading the task screen.
+     */
+    private AllDoneCounter mAllDoneCounter;
+
     @Override
     protected void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
@@ -82,6 +91,8 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         mTitle = extras.getInt(KEY_RES_ACTIVITY_TITLE, R.string.title_unset);
         setTitle(mTitle);
 
+        mAllDoneCounter = new AllDoneCounter(this);
+
         if(savedInstanceBundle != null)
         {
             updateTaskListQuery(savedInstanceBundle.getString(KEY_SAVE_LIST_SEARCH), savedInstanceBundle.getBoolean(KEY_SAVE_LIST_LOCAL_ONLY),
@@ -92,10 +103,42 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         }
     }
 
+    private boolean mWaitForCounter;
+
     @Override
     protected void onStart() {
-        reloadTaskList(false);
+        Log.d("Assembly Fun", "onStart()!");
+        if(mWaitForCounter) {
+            mListAdapterStatusText.setText(R.string.label_task_list_loading_items);
+            mClearLawAndOrderButton.setVisibility(View.GONE);
+            mWaitForCounter = false;
+        } else
+            mAllDoneCounter.checkIfAllDone();
         super.onStart();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent resultIntent)
+    {
+        Log.d("Assembly Fun", "Received onActivityResult!");
+        if(requestCode != REQUEST_CODE_TASK_SCREEN | resultCode != TaskScreen.RESULT_CODE) {
+            Log.e("Assembly Fun", "The Activity result received by the TaskList didn't have the right requestCode and resultCode");
+            return;
+        }
+
+        Bundle extras = resultIntent.getExtras();
+        if(extras==null)
+            return;
+        long removeTaskLocallyID = extras.getLong(TaskScreen.RESULT_LONG_REMOVE_LOCAL_TASK_ID, -1);
+        long removeAllTaskDataTaskID = extras.getLong(TaskScreen.RESULT_LONG_REMOVE_ALL_TASK_DATA_ID, -1);
+        if(removeAllTaskDataTaskID != -1){
+            new RemoveAllTaskData(((AssemblyFunApplication)getApplication()).getDatabase(), removeAllTaskDataTaskID, mAllDoneCounter).execute();
+        } else if(removeTaskLocallyID != -1){
+            new RemoveTaskLocally(((AssemblyFunApplication)getApplication()).getDatabase(), removeTaskLocallyID, mAllDoneCounter).execute();
+        }
+
+        if(!mAllDoneCounter.isEmpty())
+            mWaitForCounter = true;
     }
 
     protected void updateTaskListQuery(String search, boolean localOnly, boolean solvedOnly, boolean selfPublishedOnly, boolean favouritesOnly, OrderBy orderBy, boolean loadNewList) {
@@ -169,6 +212,11 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         mListAdapterStatusText.setText("The cursor was removed!");
     }
 
+    @Override
+    public void onAllDone(AllDoneCounter counter) {
+        Log.d("Assembly Fun", "onAllDone() called!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        reloadTaskList(false);
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -192,7 +240,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent task = new Intent(this, TaskScreen.class);
         task.putExtra(TaskScreen.EXTRAS_TASK_ID, id);
-        startActivity(task);
+        startActivityForResult(task, REQUEST_CODE_TASK_SCREEN);
     }
 
     @Override
