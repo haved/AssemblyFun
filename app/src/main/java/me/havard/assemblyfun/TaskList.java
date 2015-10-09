@@ -26,6 +26,7 @@ import me.havard.assemblyfun.data.TaskCursorAdapter;
 import me.havard.assemblyfun.data.tables.TaskIDTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
 import me.havard.assemblyfun.util.AllDoneCounter;
+import me.havard.assemblyfun.util.DialogHelper;
 import me.havard.assemblyfun.util.RemoveAllTaskData;
 import me.havard.assemblyfun.util.RemoveTaskLocally;
 
@@ -120,7 +121,6 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent resultIntent)
     {
-        Log.d("Assembly Fun", "Received onActivityResult!");
         if(requestCode != REQUEST_CODE_TASK_SCREEN | resultCode != TaskScreen.RESULT_CODE) {
             Log.e("Assembly Fun", "The Activity result received by the TaskList didn't have the right requestCode and resultCode");
             return;
@@ -214,7 +214,6 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
 
     @Override
     public void onAllDone(AllDoneCounter counter) {
-        Log.d("Assembly Fun", "onAllDone() called!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         reloadTaskList(false);
     }
 
@@ -272,9 +271,6 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         boolean change = false;
@@ -318,27 +314,12 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
         }
 
         if(id == R.id.action_search) {
-            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setTitle(R.string.dialog_title_search_task_list);
-            final EditText text = new EditText(this);
-            text.setInputType(InputType.TYPE_CLASS_TEXT);
-            text.setText(mListFilterText);
-            dialog.setView(text);
-
-            dialog.setPositiveButton(R.string.dialog_button_OK, new DialogInterface.OnClickListener() {
+            DialogHelper.makeInputDialogBuilder(this, R.string.dialog_title_search_task_list, -1, mListFilterText, new DialogHelper.TextDialogListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    updateTaskListQuery(text.getText().toString().split("'")[0], mListFilterLocal, mListFilterUnsolved, mListFilterSelfPublished, mListFilterFavourites, mListOrderBy, true);
+                public void onTextEntered(String text) {
+                    updateTaskListQuery(text.split("'")[0], mListFilterLocal, mListFilterUnsolved, mListFilterSelfPublished, mListFilterFavourites, mListOrderBy, true);
                 }
-            });
-            dialog.setNegativeButton(R.string.dialog_button_Cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-
-            dialog.show();
+            }, R.string.dialog_button_OK, R.string.dialog_button_Cancel).show();
 
             return true;
         }

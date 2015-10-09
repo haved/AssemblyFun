@@ -62,7 +62,6 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
 
     private boolean mLocalFlag, mGlobalFlag, mSolvedFlag, mFavouriteFlag;
     private boolean mLocalRemovalBuffered;
-    private long mSolutionJustAdded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,7 +169,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     protected void useLocalGlobalSolvedFlags(boolean local, boolean global, boolean solved, boolean localRemovalBuffered)
     {
         if (localRemovalBuffered&&!local) throw new AssertionError();
-        boolean actAsStoredLocally = mLocalFlag & !localRemovalBuffered;
+        boolean actAsStoredLocally = local & !localRemovalBuffered;
         mLocalFlag = local;
         mGlobalFlag = global;
         mSolvedFlag = solved;
@@ -190,6 +189,13 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mFavouriteFlag = favourite;
         mFavouriteButton.setText(favourite ? R.string.label_task_screen_un_favourite : R.string.label_task_screen_favourite);
         mFavouriteIcon.setVisibility(favourite ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    protected void onSolutionAdded(long solution_id)
+    {
+        Loader<?> solutions_loader = getLoaderManager().initLoader(LOADER_ID_SOLUTIONS_CURSOR, null, this);
+        solutions_loader.reset();
+        solutions_loader.startLoading();
     }
 
     @Override
@@ -306,7 +312,18 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         }
         else if(v==mFavouriteButton)
             new ChangeFavouriteStatusTask(mLocalID, !mFavouriteFlag).execute();
-      }
+        else if(v==mAddSolutionButton){
+            if(!mLocalFlag) //Has to be local. The button is in theory not enabled when it's not local, but just to be safe
+                return;
+
+            DialogHelper.makeInputDialogBuilder(this, R.string.dialog_title_name_new_solution, -1, getResources().getString(R.string.dialog_default_text_new_solution), new DialogHelper.TextDialogListener() {
+                @Override
+                public void onTextEntered(String text) {
+                    new AddNewSolution(mLocalID, text).execute();
+                }
+            }, R.string.dialog_button_OK, R.string.dialog_button_Cancel).show();
+        }
+    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -339,6 +356,28 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         protected void onPostExecute(Boolean result) {
             mFavouriteButton.setEnabled(true);
             useFavouriteFlag(result);
+        }
+    }
+
+    private class AddNewSolution extends AsyncTask<Void, Void, Long> {
+
+        private long mTaskID;
+        private String mSolutionName;
+
+        public AddNewSolution(long taskID, String solutionName) {
+            mTaskID = taskID;
+            mSolutionName = solutionName;
+        }
+
+        @Override
+        protected Long doInBackground(Void... params) {
+            return AFDatabaseInteractionHelper.addEmptySolution(((AssemblyFunApplication)getApplication()).getWritableDatabase(),
+                    AFDatabaseInteractionHelper.getClearedContentValuesInstance(), mTaskID, mSolutionName, "");
+        }
+
+        @Override
+        protected void onPostExecute(Long solutionId) {
+            onSolutionAdded(solutionId);
         }
     }
 }

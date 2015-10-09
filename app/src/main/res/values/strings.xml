@@ -28,6 +28,7 @@
 
     <string name="dialog_button_OK">OK</string>
     <string name="dialog_button_Info">Info</string>
+    <string name="dialog_button_Undo">Undo</string>
     <string name="dialog_button_Cancel">Cancel</string>
     <string name="dialog_title_search_task_list">Enter search query:</string>
 

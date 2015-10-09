@@ -44,4 +44,6 @@
     <string name="dialog_unlisted_task_title">Unlisted task deleted</string>
     <string name="dialog_unlisted_task_body">When you remove an unsolved task locally, it will no longer appear in neither the local or solved task lists. It is automatically deleted, and all unfinished solutions are removed.
     By hitting undo, the task is restored locally, and will not be deleted. You can always enable keeping of unlisted tasks in the settings.</string>
+    <string name="dialog_title_name_new_solution">Name the new solution:</string>
+    <string name="dialog_default_text_new_solution">My solution</string>
 </resources>
