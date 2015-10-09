@@ -106,6 +106,5 @@
     <string name="button_settings_delete_unlisted_tasks">Delete unlisted tasks</string>
     <string name="button_settings_delete_solved_only_tasks">Delete solved tasks only</string>
     <string name="title_activity_solution_editor">Solution Editor</string>
-    <string name="section_format">Hello World from section: %1$d</string>
 
 </resources>
