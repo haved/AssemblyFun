@@ -329,7 +329,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent solutionEditor = new Intent(this, SolutionEditorTest.class);
+        Intent solutionEditor = new Intent(this, SolutionEditor.class);
         solutionEditor.putExtra(SolutionEditor.EXTRAS_SOLUTION_ID, id);
         solutionEditor.putExtra(SolutionEditor.EXTRAS_TASK_ID, mLocalID);
         startActivity(solutionEditor);

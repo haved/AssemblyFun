@@ -43,6 +43,14 @@
                 android:value="me.havard.assemblyfun.SolveOptions" />
         </activity>
         <activity
+            android:name=".SolutionEditor"
+            android:label="@string/title_activity_solution_editor"
+            android:parentActivityName=".TaskScreen" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="me.havard.assemblyfun.TaskScreen" />
+        </activity>
+        <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".AssemblyFunMenu" >
@@ -51,4 +59,5 @@
                 android:value="me.havard.assemblyfun.AssemblyFunMenu" />
         </activity>
     </application>
+
 </manifest>
