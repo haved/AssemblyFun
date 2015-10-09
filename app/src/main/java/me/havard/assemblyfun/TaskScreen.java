@@ -193,6 +193,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
 
     protected void onSolutionAdded(long solution_id)
     {
+        mAddSolutionButton.setEnabled(true);
         Loader<?> solutions_loader = getLoaderManager().initLoader(LOADER_ID_SOLUTIONS_CURSOR, null, this);
         solutions_loader.reset();
         solutions_loader.startLoading();
@@ -316,6 +317,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
             if(!mLocalFlag) //Has to be local. The button is in theory not enabled when it's not local, but just to be safe
                 return;
 
+            mAddSolutionButton.setEnabled(false);
             DialogHelper.makeInputDialogBuilder(this, R.string.dialog_title_name_new_solution, -1, getResources().getString(R.string.dialog_default_text_new_solution), new DialogHelper.TextDialogListener() {
                 @Override
                 public void onTextEntered(String text) {
