@@ -4,19 +4,17 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 
-public class SolutionEditor extends FragmentActivity {
+public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabSelectedListener{
 
     public static final String EXTRAS_SOLUTION_ID = "solutionId";
     public static final String EXTRAS_TASK_ID = "taskId";
@@ -42,6 +40,9 @@ public class SolutionEditor extends FragmentActivity {
         mPagerAdapter = new TaskSolutionPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setCurrentItem(SOLUTION_PAGE);
+        mTabLayout.setTabsFromPagerAdapter(mPagerAdapter);
+        mTabLayout.setOnTabSelectedListener(this);
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
         Bundle extras = getIntent().getExtras();
         if(extras==null) {
@@ -74,7 +75,23 @@ public class SolutionEditor extends FragmentActivity {
             super.onBackPressed();
     }
 
-    class TaskSolutionPagerAdapter extends FragmentStatePagerAdapter{
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        Log.d("Assembly Fun", "onTabSelected()");
+        mViewPager.setCurrentItem(tab.getPosition(), true);
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
+    }
+
+    class TaskSolutionPagerAdapter extends FragmentPagerAdapter {
 
         public TaskSolutionPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -82,22 +99,72 @@ public class SolutionEditor extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return new EditorSolutionFragment();
+            Bundle args = new Bundle();
+            args.putLong(EXTRAS_SOLUTION_ID, mSolutionId);
+            args.putLong(EXTRAS_TASK_ID, mTaskId);
+            if(position == SOLUTION_PAGE) {
+                EditorSolutionFragment fragment = new EditorSolutionFragment();
+                fragment.setArguments(args);
+                return fragment;
+            } else if(position == TASK_PAGE) {
+                EditorTaskFragment fragment = new EditorTaskFragment();
+                fragment.setArguments(args);
+                return fragment;
+            }
+
+            Log.e("Assembly Fun", "The TaskSolutionAdapter doesn't have a page with position " + position);
+            return null;
         }
 
         @Override
         public int getCount() {
             return NUM_PAGES;
         }
+
+        @Override
+        public String getPageTitle(int position)
+        {
+            if(position>=0&position<2)
+                return getResources().getString(position==0?R.string.title_solution_editor_task_tab:R.string.title_solution_editor_solve_tab);
+            return "unknown title";
+        }
     }
 
-    public static class EditorSolutionFragment extends android.support.v4.app.Fragment {
+    public static class EditorSolutionFragment extends Fragment {
+
+        private long mSolutionId, mTaskId;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            return inflater.inflate(
+            View view = inflater.inflate(
                     R.layout.fragment_editor_solution_page, container, false);
+
+            Bundle args = getArguments();
+            if(args!=null){
+                mSolutionId = args.getLong(EXTRAS_SOLUTION_ID, -1);
+                mTaskId = args.getLong(EXTRAS_TASK_ID, -1);
+            }
+            return view;
+        }
+    }
+
+    public static class EditorTaskFragment extends Fragment {
+
+        private long mSolutionId, mTaskId;
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View view = inflater.inflate(
+                    R.layout.fragment_editor_task_page, container, false);
+
+            Bundle args = getArguments();
+            if(args!=null){
+                mSolutionId = args.getLong(EXTRAS_SOLUTION_ID, -1);
+                mTaskId = args.getLong(EXTRAS_TASK_ID, -1);
+            }
+            return view;
         }
     }
 }
