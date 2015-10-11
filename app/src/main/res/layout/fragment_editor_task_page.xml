@@ -28,14 +28,13 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Task title"
                 android:id="@+id/solution_editor_task_title"
-                android:textSize="28sp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true" />
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Task description"
                 android:id="@+id/solution_editor_task_desc"
                 android:layout_below="@+id/solution_editor_task_title"
@@ -44,7 +43,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Records:"
                 android:id="@+id/solution_editor_records_label"
                 android:layout_below="@+id/solution_editor_task_desc"
@@ -55,7 +54,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Speed:"
                 android:id="@+id/solution_editor_task_records_speed_label"
                 android:layout_below="@+id/solution_editor_records_label"
@@ -65,7 +64,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Size:"
                 android:id="@+id/solution_editor_task_records_size_label"
                 android:layout_below="@+id/solution_editor_task_records_speed_label"
@@ -75,7 +74,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Memory usage:"
                 android:id="@+id/solution_editor_task_records_memuse_label"
                 android:layout_below="@+id/solution_editor_task_records_size_label"
@@ -85,7 +84,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Current solution:"
                 android:id="@+id/solution_editor_current_solution_label"
                 android:layout_below="@+id/solution_editor_task_records_memuse_label"
@@ -96,17 +95,17 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Memory usage:"
-                android:id="@+id/solution_editor_current_solution_memuse_label"
-                android:layout_below="@+id/solution_editor_current_solution_size_label"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Speed:"
+                android:id="@+id/solution_editor_current_solution_speed_label"
+                android:layout_below="@+id/solution_editor_current_solution_label"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Size:"
                 android:id="@+id/solution_editor_current_solution_size_label"
                 android:layout_below="@+id/solution_editor_current_solution_speed_label"
@@ -116,10 +115,10 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Speed:"
-                android:id="@+id/solution_editor_current_solution_speed_label"
-                android:layout_below="@+id/solution_editor_current_solution_label"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Memory usage:"
+                android:id="@+id/solution_editor_current_solution_memuse_label"
+                android:layout_below="@+id/solution_editor_current_solution_size_label"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
