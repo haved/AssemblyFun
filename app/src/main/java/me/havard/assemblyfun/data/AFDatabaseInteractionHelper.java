@@ -171,8 +171,8 @@ public final class AFDatabaseInteractionHelper
 
     private static final String WHERE_SOLUTION_ID_EQUAL_TO = SolutionsTable._ID+"=?";
     private static final String WHERE_RECORDS_ID_TASK_IDS_EQUAL_TO = TaskRecordsTable._ID_TaskIDs+"=?";
-    private static final String SELECT_RECORDS_FOR_TASK_ID = "SELECT " + TaskRecordsTable.YOUR_SPEED_REC + ", " + TaskRecordsTable.SPEED_REC + ", " +
-            TaskRecordsTable.YOUR_SIZE_REC + ", " + TaskRecordsTable.SIZE_REC + ", " + TaskRecordsTable.YOUR_MEMUSE_REC + ", " + TaskRecordsTable.MEMUSE_REC +
+    private static final String SELECT_RECORDS_FOR_TASK_ID = "SELECT " + TaskRecordsTable.PERSONAL_SPEED_REC + ", " + TaskRecordsTable.SPEED_REC + ", " +
+            TaskRecordsTable.PERSONAL_SIZE_REC + ", " + TaskRecordsTable.SIZE_REC + ", " + TaskRecordsTable.PERSONAL_MEMUSE_REC + ", " + TaskRecordsTable.MEMUSE_REC +
             " FROM " + TaskRecordsTable.TABLE_NAME + " WHERE " + WHERE_RECORDS_ID_TASK_IDS_EQUAL_TO + " LIMIT 1";
 
     /** Updates the quality, speed, size and memory usage of a row in the SolutionTable. If the quality isn't SolutionsTable.QUALITY_PERFECT the speed, size and memory will be null.
@@ -221,22 +221,22 @@ public final class AFDatabaseInteractionHelper
             }
             else { //There already is a row in the taskRecordTable for this task. Let's check if we've beat any of the previous records.
                 values.clear(); //Here we clear the values. This instance will be used for all the new records
-                if(speed < taskRecords.getFloat(taskRecords.getColumnIndex(TaskRecordsTable.YOUR_SPEED_REC))) {   //New local speed record!
-                    values.put(TaskRecordsTable.YOUR_SPEED_REC, speed);
+                if(speed < taskRecords.getFloat(taskRecords.getColumnIndex(TaskRecordsTable.PERSONAL_SPEED_REC))) {   //New local speed record!
+                    values.put(TaskRecordsTable.PERSONAL_SPEED_REC, speed);
                     if(speed < taskRecords.getFloat(taskRecords.getColumnIndex(TaskRecordsTable.SPEED_REC))) {   //New global speed record!
                         values.put(TaskRecordsTable.SPEED_REC, speed);
                         values.put(TaskRecordsTable.SPEED_REC_NAME, "You");
                     }
                 }
-                if(size < taskRecords.getInt(taskRecords.getColumnIndex(TaskRecordsTable.YOUR_SIZE_REC))) {   //New local size record!
-                    values.put(TaskRecordsTable.YOUR_SIZE_REC, size);
+                if(size < taskRecords.getInt(taskRecords.getColumnIndex(TaskRecordsTable.PERSONAL_SIZE_REC))) {   //New local size record!
+                    values.put(TaskRecordsTable.PERSONAL_SIZE_REC, size);
                     if(size < taskRecords.getFloat(taskRecords.getColumnIndex(TaskRecordsTable.SIZE_REC))) {   //New global size record!
                         values.put(TaskRecordsTable.SIZE_REC, size);
                         values.put(TaskRecordsTable.SIZE_REC_NAME, "You");
                     }
                 }
-                if(memuse < taskRecords.getFloat(taskRecords.getColumnIndex(TaskRecordsTable.YOUR_MEMUSE_REC))) {  //New local memory usage record!
-                    values.put(TaskRecordsTable.YOUR_MEMUSE_REC, memuse);
+                if(memuse < taskRecords.getFloat(taskRecords.getColumnIndex(TaskRecordsTable.PERSONAL_MEMUSE_REC))) {  //New local memory usage record!
+                    values.put(TaskRecordsTable.PERSONAL_MEMUSE_REC, memuse);
                     if(memuse < taskRecords.getFloat(taskRecords.getColumnIndex(TaskRecordsTable.MEMUSE_REC))) {  //New global memory usage record!
                         values.put(TaskRecordsTable.MEMUSE_REC, memuse);
                         values.put(TaskRecordsTable.MEMUSE_REC_NAME, "You");

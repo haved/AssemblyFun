@@ -11,26 +11,26 @@ public class TaskRecordsTable extends Table {
     public static final String _ID_TaskIDs = TaskIDTable._ID_TaskIDs;
     public static final String SPEED_REC = "speed_rec";
     public static final String SPEED_REC_NAME = "speed_rec_name";
-    public static final String YOUR_SPEED_REC = "your_speed_rec";
+    public static final String PERSONAL_SPEED_REC = "personal_speed_rec";
     public static final String SIZE_REC = "size_rec";
     public static final String SIZE_REC_NAME = "size_rec_name";
-    public static final String YOUR_SIZE_REC = "your_size_rec";
+    public static final String PERSONAL_SIZE_REC = "personal_size_rec";
     public static final String MEMUSE_REC = "memuse_rec";
     public static final String MEMUSE_REC_NAME = "memuse_rec_name";
-    public static final String YOUR_MEMUSE_REC = "your_memuse_rec";
+    public static final String PERSONAL_MEMUSE_REC = "personal_memuse_rec";
     @Override
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
                 _ID_TaskIDs, PRIMARY_KEY,
                 SPEED_REC, REEL,
                 SPEED_REC_NAME, TEXT,
-                YOUR_SPEED_REC, REEL,
+                PERSONAL_SPEED_REC, REEL,
                 SIZE_REC, INT,
                 SIZE_REC_NAME, TEXT,
-                YOUR_SIZE_REC, INT,
+                PERSONAL_SIZE_REC, INT,
                 MEMUSE_REC, REEL,
                 MEMUSE_REC_NAME, TEXT,
-                YOUR_MEMUSE_REC, REEL,
+                PERSONAL_MEMUSE_REC, REEL,
                 TaskIDTable.FOREIGN_KEY_ID_TaskIDs);
     }
 
@@ -47,19 +47,19 @@ public class TaskRecordsTable extends Table {
         if(speed_rec_name!=null)
             values.put(SPEED_REC_NAME, speed_rec_name);
         if(your_speed_rec!=-1)
-            values.put(YOUR_SPEED_REC, your_speed_rec);
+            values.put(PERSONAL_SPEED_REC, your_speed_rec);
         if(size_rec!=-1)
             values.put(SIZE_REC, size_rec);
         if(size_rec_name!=null)
             values.put(SIZE_REC_NAME, size_rec_name);
         if(your_size_rec!=-1)
-            values.put(YOUR_SIZE_REC, your_size_rec);
+            values.put(PERSONAL_SIZE_REC, your_size_rec);
         if(memuse_rec!=-1)
             values.put(MEMUSE_REC, memuse_rec);
         if(memuse_rec_name!=null)
             values.put(MEMUSE_REC_NAME, memuse_rec_name);
         if(your_memuse_rec!=-1)
-            values.put(YOUR_MEMUSE_REC, your_memuse_rec);
+            values.put(PERSONAL_MEMUSE_REC, your_memuse_rec);
     }
 
     public static long addRow(SQLiteDatabase db, ContentValues values, long ref_id, float speed_rec, String speed_rec_name, float your_speed_rec,

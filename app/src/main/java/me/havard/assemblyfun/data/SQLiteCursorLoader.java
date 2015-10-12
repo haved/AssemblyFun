@@ -25,6 +25,19 @@ public class SQLiteCursorLoader extends AsyncTaskLoader<Cursor> {
         mWhereArgs = whereArgs;
     }
 
+    private int mId;
+
+    public SQLiteCursorLoader setId(int id)
+    {
+        mId = id;
+        return this;
+    }
+
+    public int getId()
+    {
+        return mId;
+    }
+
     @Override
     public Cursor loadInBackground()
     {

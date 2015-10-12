@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -29,7 +30,8 @@
                 android:text="Task title"
                 android:id="@+id/solution_editor_task_title"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="fill_parent"
@@ -38,87 +40,46 @@
                 android:text="Task description"
                 android:id="@+id/solution_editor_task_desc"
                 android:layout_below="@+id/solution_editor_task_title"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Records:"
+                android:text="@string/label_solution_editor_world_records"
                 android:id="@+id/solution_editor_records_label"
                 android:layout_below="@+id/solution_editor_task_desc"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginTop="32dp" />
+                android:layout_marginTop="12sp" />
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Speed:"
-                android:id="@+id/solution_editor_task_records_speed_label"
+                android:id="@+id/solution_editor_world_records_fill_label"
                 android:layout_below="@+id/solution_editor_records_label"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Size:"
-                android:id="@+id/solution_editor_task_records_size_label"
-                android:layout_below="@+id/solution_editor_task_records_speed_label"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Memory usage:"
-                android:id="@+id/solution_editor_task_records_memuse_label"
-                android:layout_below="@+id/solution_editor_task_records_size_label"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Current solution:"
-                android:id="@+id/solution_editor_current_solution_label"
-                android:layout_below="@+id/solution_editor_task_records_memuse_label"
+                android:text="@string/label_solution_editor_personal_records"
+                android:id="@+id/solution_editor_personal_record_label"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginTop="30sp" />
+                android:layout_marginTop="12sp"
+                android:layout_below="@+id/solution_editor_world_records_fill_label" />
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Speed:"
-                android:id="@+id/solution_editor_current_solution_speed_label"
-                android:layout_below="@+id/solution_editor_current_solution_label"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Size:"
-                android:id="@+id/solution_editor_current_solution_size_label"
-                android:layout_below="@+id/solution_editor_current_solution_speed_label"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Memory usage:"
-                android:id="@+id/solution_editor_current_solution_memuse_label"
-                android:layout_below="@+id/solution_editor_current_solution_size_label"
+                android:id="@+id/solution_editor_personal_records_fill_label"
+                android:layout_below="@+id/solution_editor_personal_record_label"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
@@ -126,13 +87,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Not tested"
-                android:id="@+id/solution_editor_task_records_not_tested_label"
-                android:layout_below="@+id/solution_editor_current_solution_label"
-                android:layout_alignParentLeft="false"
-                android:layout_alignLeft="@+id/solution_editor_current_solution_label"
-                android:layout_alignRight="@+id/solution_editor_current_solution_label"
-                android:gravity="center_horizontal" />
+                android:text="@string/label_solution_editor_current_solution"
+                android:id="@+id/solution_editor_current_solution_label"
+                android:layout_below="@+id/solution_editor_personal_records_fill_label"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="12sp" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/solution_editor_current_solution_fill_label"
+                android:layout_centerVertical="true"
+                android:layout_below="@+id/solution_editor_current_solution_label" />
 
         </RelativeLayout>
     </ScrollView>
@@ -141,7 +109,7 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Test solution!"
+        android:text="@string/button_solution_editor_text_solution"
         android:id="@+id/solution_editor_test_solution_button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
