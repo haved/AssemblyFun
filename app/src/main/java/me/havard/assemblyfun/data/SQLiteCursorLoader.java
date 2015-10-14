@@ -33,6 +33,7 @@ public class SQLiteCursorLoader extends AsyncTaskLoader<Cursor> {
         return this;
     }
 
+    @Override
     public int getId()
     {
         return mId;

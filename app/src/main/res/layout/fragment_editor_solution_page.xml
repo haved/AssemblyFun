@@ -3,47 +3,12 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/fragment_editor_solution_separator"
-        android:layout_width="match_parent"
-        android:layout_height="4sp"
-        android:background="@android:color/darker_gray"
-        android:layout_above="@+id/fragment_editor_solution_newline_button"
-        android:paddingLeft="12sp"
-        android:paddingRight="12sp"
-        android:paddingTop="12sp"
-        android:paddingBottom="12sp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="true" />
-
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_editor_solution_line_field"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:text="textextextextext"
-        android:layout_toLeftOf="@+id/fragment_editor_solution_newline_button" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_editor_solution_newline_button"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:src="@mipmap/ic_return"
-        android:layout_alignParentBottom="true"
-        android:layout_alignTop="@+id/fragment_editor_solution_line_field" />
-
-    <ListView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_editor_solution_lines"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentLeft="false"
-        android:layout_alignParentRight="false"
-        android:layout_above="@+id/fragment_editor_solution_separator" />
-
+        android:layout_height="fill_parent"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/solution_editor_solution_text_field"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

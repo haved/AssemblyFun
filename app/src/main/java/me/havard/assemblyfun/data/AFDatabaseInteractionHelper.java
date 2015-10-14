@@ -3,6 +3,7 @@ package me.havard.assemblyfun.data;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import me.havard.assemblyfun.data.tables.LocalTaskTable;
@@ -170,6 +171,11 @@ public final class AFDatabaseInteractionHelper
     }
 
     private static final String WHERE_SOLUTION_ID_EQUAL_TO = SolutionsTable._ID+"=?";
+    public static void changeSolutionText(SQLiteDatabase db, ContentValues values, long solution_id, String newText) {
+        values.put(SolutionsTable.SOLUTION_TEXT, newText);
+        db.update(SolutionsTable.TABLE_NAME, values, WHERE_SOLUTION_ID_EQUAL_TO, new String[]{Long.toString(solution_id)});
+    }
+
     private static final String WHERE_RECORDS_ID_TASK_IDS_EQUAL_TO = TaskRecordsTable._ID_TaskIDs+"=?";
     private static final String SELECT_RECORDS_FOR_TASK_ID = "SELECT " + TaskRecordsTable.PERSONAL_SPEED_REC + ", " + TaskRecordsTable.SPEED_REC + ", " +
             TaskRecordsTable.PERSONAL_SIZE_REC + ", " + TaskRecordsTable.SIZE_REC + ", " + TaskRecordsTable.PERSONAL_MEMUSE_REC + ", " + TaskRecordsTable.MEMUSE_REC +

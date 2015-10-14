@@ -4,6 +4,8 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -16,11 +18,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import me.havard.assemblyfun.data.AFDatabaseInteractionHelper;
 import me.havard.assemblyfun.data.SQLiteCursorLoader;
 import me.havard.assemblyfun.data.tables.LocalTaskTable;
+import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
@@ -35,6 +39,8 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
 
     private static final int LOADER_ID_TASK_PAGE_CURSOR = 0;
     private static final int LOADER_ID_TASK_PAGE_RECORDS_CURSOR = 1;
+    private static final int LOADER_ID_SOLUTION_TEXT_CURSOR = 2;
+
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
@@ -67,13 +73,93 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
     }
 
     public void useTaskPageCursor(Cursor cursor) {
-        EditorTaskFragment fragment = mPagerAdapter.getTaskFragment();
-        fragment.useTaskCursor(cursor);
+        View v = mPagerAdapter.getTaskFragment().getView();
+        if(v==null) {
+            Log.e("Assembly Fun", "The EditorTaskFragment had no view when trying to use the database cursor");
+            return;
+        }
+        cursor.moveToFirst();
+        if(cursor.isAfterLast()) {
+            Log.e("Assembly Fun", "The Task Cursor passed to the EditorTaskFragment didn't have any items. Nothing to fill fields with!");
+            ((TextView)v.findViewById(R.id.solution_editor_task_title)).setText(R.string.label_solution_editor_n_a);
+            ((TextView)v.findViewById(R.id.solution_editor_task_desc)).setText(R.string.label_solution_editor_n_a);
+            return;
+        }
+        ((TextView)v.findViewById(R.id.solution_editor_task_title)).setText(cursor.getString(cursor.getColumnIndex(TaskinfoTable.NAME)));
+        ((TextView)v.findViewById(R.id.solution_editor_task_desc)).setText(cursor.getString(cursor.getColumnIndex(LocalTaskTable.TASK_TEXT)));
     }
 
     public void useTaskRecordsCursor(Cursor cursor) {
-        EditorTaskFragment fragment = mPagerAdapter.getTaskFragment();
-        fragment.useRecordsCursor(cursor);
+        View v = mPagerAdapter.getTaskFragment().getView();
+        if(v==null) {
+            Log.e("Assembly Fun", "The EditorTaskFragment had no view when trying to use the database cursor");
+            return;
+        }
+        cursor.moveToFirst();
+        if(cursor.isAfterLast()) {
+            Log.i("Assembly Fun", "The Records Cursor passed to the EditorTaskFragment didn't have any items. Saying 'none' for records");
+            ((TextView)v.findViewById(R.id.solution_editor_world_records_fill_label)).setText(R.string.label_solution_editor_None);
+            ((TextView)v.findViewById(R.id.solution_editor_personal_records_fill_label)).setText(R.string.label_solution_editor_None);
+            return;
+        }
+        String worldRecords = getResources().getString(R.string.label_solution_editor_world_records_fill,
+                cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.SPEED_REC)), cursor.getString(cursor.getColumnIndex(TaskRecordsTable.SPEED_REC_NAME)),
+                cursor.getInt(cursor.getColumnIndex(TaskRecordsTable.SIZE_REC)), cursor.getString(cursor.getColumnIndex(TaskRecordsTable.SIZE_REC_NAME)),
+                cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.MEMUSE_REC)), cursor.getString(cursor.getColumnIndex(TaskRecordsTable.MEMUSE_REC_NAME)));
+
+        String personalRecords = getResources().getString(R.string.label_solution_editor_personal_records_fill,
+                cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.PERSONAL_SPEED_REC)),
+                cursor.getInt(cursor.getColumnIndex(TaskRecordsTable.PERSONAL_SIZE_REC)),
+                cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.PERSONAL_MEMUSE_REC)));
+
+        ((TextView)v.findViewById(R.id.solution_editor_world_records_fill_label)).setText(worldRecords);
+        ((TextView)v.findViewById(R.id.solution_editor_personal_records_fill_label)).setText(personalRecords);
+    }
+
+    public void useSolutionTextCursor(Cursor cursor) {
+        View v = mPagerAdapter.getSolutionFragment().getView();
+        if(v==null) {
+            Log.e("Assembly Fun", "The EditorTaskFragment had no view when trying to use the database cursor");
+            return;
+        }
+        cursor.moveToFirst();
+        if(cursor.isAfterLast()) {
+            Log.i("Assembly Fun", "The solution text cursor didn't have any items.");
+            return;
+        }
+        ((EditText)v.findViewById(R.id.solution_editor_solution_text_field)).setText(cursor.getString(cursor.getColumnIndex(SolutionsTable.SOLUTION_TEXT)));
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        View v = mPagerAdapter.getSolutionFragment().getView();
+        EditText text;
+        if(v!=null && (text=(EditText)v.findViewById(R.id.solution_editor_solution_text_field))!=null)
+            new SaveSolutionTextTask(((AssemblyFunApplication)getApplication()).getDatabase(), mSolutionId,
+                text.getText().toString()).execute();
+        else
+            Log.e("Assembly Fun", "Tried saving the solution text to the database, but failed to find the text field");
+    }
+
+    static class SaveSolutionTextTask extends AsyncTask<Void, Void, Void> {
+
+        private SQLiteOpenHelper mDb;
+        private long mSolutionId;
+        private String mText;
+
+        public SaveSolutionTextTask(SQLiteOpenHelper db, long solution_id, String text) {
+            mDb = db;
+            mSolutionId = solution_id;
+            mText = text;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            AFDatabaseInteractionHelper.changeSolutionText(mDb.getWritableDatabase(), AFDatabaseInteractionHelper.getClearedContentValuesInstance(), mSolutionId, mText);
+            return null;
+        }
     }
 
     @Override
@@ -117,6 +203,7 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
             TaskinfoTable.TABLE_NAME, LocalTaskTable.TABLE_NAME,      TaskinfoTable.TABLE_NAME,TaskinfoTable._ID_TaskIDs,        LocalTaskTable.TABLE_NAME,LocalTaskTable._ID_TaskIDs);
 
     private static final String QUERY_TASK_PAGE_RECORDS_CURSOR = String.format("SELECT * FROM %s WHERE %s=? LIMIT 1", TaskRecordsTable.TABLE_NAME, TaskRecordsTable._ID_TaskIDs);
+    private static final String QUERY_SOLUTION_TEXT_CURSOR = String.format("SELECT %s FROM %s WHERE %s=? LIMIT 1", SolutionsTable.SOLUTION_TEXT, SolutionsTable.TABLE_NAME, SolutionsTable._ID);
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -126,15 +213,23 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
         else if(id==LOADER_ID_TASK_PAGE_RECORDS_CURSOR)
             return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(),
                     QUERY_TASK_PAGE_RECORDS_CURSOR, new String[]{Long.toString(mTaskId)}).setId(LOADER_ID_TASK_PAGE_RECORDS_CURSOR);
+        else if(id==LOADER_ID_SOLUTION_TEXT_CURSOR)
+            return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(),
+                    QUERY_SOLUTION_TEXT_CURSOR, new String[]{Long.toString(mSolutionId)}).setId(LOADER_ID_SOLUTION_TEXT_CURSOR);
         return null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if(loader.getId() == LOADER_ID_TASK_PAGE_CURSOR)
+        int id = loader.getId();
+        if(id == LOADER_ID_TASK_PAGE_CURSOR)
             useTaskPageCursor(data);
-        else if(loader.getId() == LOADER_ID_TASK_PAGE_RECORDS_CURSOR)
+        else if(id == LOADER_ID_TASK_PAGE_RECORDS_CURSOR)
             useTaskRecordsCursor(data);
+        else if(id == LOADER_ID_SOLUTION_TEXT_CURSOR)
+            useSolutionTextCursor(data);
+        else
+            Log.w("Assembly Fun", "onLoadFinished in the SolutionEditor returned a loader with unknown id: " + id);
     }
 
     @Override
@@ -144,15 +239,11 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
 
     class TaskSolutionPagerAdapter extends FragmentPagerAdapter {
 
-        Bundle mFragmentArgs;
         EditorSolutionFragment mSolutionFragment;
         EditorTaskFragment mTaskFragment;
 
         public TaskSolutionPagerAdapter(FragmentManager fm) {
             super(fm);
-            mFragmentArgs = new Bundle();
-            mFragmentArgs.putLong(EXTRAS_SOLUTION_ID, mSolutionId);
-            mFragmentArgs.putLong(EXTRAS_TASK_ID, mTaskId);
         }
 
         public EditorSolutionFragment getSolutionFragment()
@@ -161,7 +252,7 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
                 return mSolutionFragment;
 
             mSolutionFragment = new EditorSolutionFragment();
-            mSolutionFragment.setArguments(mFragmentArgs);
+            SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_SOLUTION_TEXT_CURSOR, null, SolutionEditor.this);
             return mSolutionFragment;
         }
 
@@ -171,7 +262,6 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
                 return mTaskFragment;
 
             mTaskFragment = new EditorTaskFragment();
-            mTaskFragment.setArguments(mFragmentArgs);
             SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_TASK_PAGE_CURSOR, null, SolutionEditor.this);
             SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_TASK_PAGE_RECORDS_CURSOR, null, SolutionEditor.this);
             return mTaskFragment;
@@ -203,79 +293,15 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
     }
 
     public static class EditorSolutionFragment extends Fragment {
-
-        private long mSolutionId, mTaskId;
-
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View view = inflater.inflate(
+            return inflater.inflate(
                     R.layout.fragment_editor_solution_page, container, false);
-
-            Bundle args = getArguments();
-            if(args!=null){
-                mSolutionId = args.getLong(EXTRAS_SOLUTION_ID, -1);
-                mTaskId = args.getLong(EXTRAS_TASK_ID, -1);
-            }
-            return view;
-        }
-
-        public class SolutionLineListAdapter implements Adapter {
-            @Override
-            public void registerDataSetObserver(DataSetObserver observer) {
-
-            }
-
-            @Override
-            public void unregisterDataSetObserver(DataSetObserver observer) {
-
-            }
-
-            @Override
-            public int getCount() {
-                return 0;
-            }
-
-            @Override
-            public Object getItem(int position) {
-                return null;
-            }
-
-            @Override
-            public long getItemId(int position) {
-                return 0;
-            }
-
-            @Override
-            public boolean hasStableIds() {
-                return false;
-            }
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                return null;
-            }
-
-            @Override
-            public int getItemViewType(int position) {
-                return 0;
-            }
-
-            @Override
-            public int getViewTypeCount() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
         }
     }
 
     public static class EditorTaskFragment extends Fragment {
-
-        private long mSolutionId, mTaskId;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -283,59 +309,9 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
             View view = inflater.inflate(
                     R.layout.fragment_editor_task_page, container, false);
 
-            Bundle args = getArguments();
-            if(args!=null){
-                mSolutionId = args.getLong(EXTRAS_SOLUTION_ID, -1);
-                mTaskId = args.getLong(EXTRAS_TASK_ID, -1);
-            }
-
             ((TextView)view.findViewById(R.id.solution_editor_current_solution_fill_label)).setText("");
 
             return view;
-        }
-
-        public void useTaskCursor(Cursor cursor) {
-            View v = getView();
-            if(v==null){
-                Log.e("Assembly Fun", "The EditorTaskFragment had no view when trying to use the database cursor");
-                return;
-            }
-            cursor.moveToFirst();
-            if(cursor.isAfterLast()){
-                Log.e("Assembly Fun", "The Task Cursor passed to the EditorTaskFragment didn't have any items. Nothing to fill fields with!");
-                ((TextView)v.findViewById(R.id.solution_editor_task_title)).setText(R.string.label_solution_editor_n_a);
-                ((TextView)v.findViewById(R.id.solution_editor_task_desc)).setText(R.string.label_solution_editor_n_a);
-                return;
-            }
-            ((TextView)v.findViewById(R.id.solution_editor_task_title)).setText(cursor.getString(cursor.getColumnIndex(TaskinfoTable.NAME)));
-            ((TextView)v.findViewById(R.id.solution_editor_task_desc)).setText(cursor.getString(cursor.getColumnIndex(LocalTaskTable.TASK_TEXT)));
-        }
-
-        public void useRecordsCursor(Cursor cursor) {
-            View v = getView();
-            if(v==null){
-                Log.e("Assembly Fun", "The EditorTaskFragment had no view when trying to use the database cursor");
-                return;
-            }
-            cursor.moveToFirst();
-            if(cursor.isAfterLast()){
-                Log.i("Assembly Fun", "The Records Cursor passed to the EditorTaskFragment didn't have any items. Saying 'none' for records");
-                ((TextView)v.findViewById(R.id.solution_editor_world_records_fill_label)).setText(R.string.label_solution_editor_None);
-                ((TextView)v.findViewById(R.id.solution_editor_personal_records_fill_label)).setText(R.string.label_solution_editor_None);
-                return;
-            }
-            String worldRecords = getResources().getString(R.string.label_solution_editor_world_records_fill,
-                    cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.SPEED_REC)), cursor.getString(cursor.getColumnIndex(TaskRecordsTable.SPEED_REC_NAME)),
-                    cursor.getInt(cursor.getColumnIndex(TaskRecordsTable.SIZE_REC)), cursor.getString(cursor.getColumnIndex(TaskRecordsTable.SIZE_REC_NAME)),
-                    cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.MEMUSE_REC)), cursor.getString(cursor.getColumnIndex(TaskRecordsTable.MEMUSE_REC_NAME)));
-
-            String personalRecords = getResources().getString(R.string.label_solution_editor_personal_records_fill,
-                    cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.PERSONAL_SPEED_REC)),
-                    cursor.getInt(cursor.getColumnIndex(TaskRecordsTable.PERSONAL_SIZE_REC)),
-                    cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.PERSONAL_MEMUSE_REC)));
-
-            ((TextView)v.findViewById(R.id.solution_editor_world_records_fill_label)).setText(worldRecords);
-            ((TextView)v.findViewById(R.id.solution_editor_personal_records_fill_label)).setText(personalRecords);
         }
     }
 }
