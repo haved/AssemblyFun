@@ -70,6 +70,9 @@ public final class AFDatabaseInteractionHelper
         return localID;
     }
 
+    private static final String WHERE_INFO_ID_TASK_IDS_EQUAL_TO = TaskinfoTable._ID_TaskIDs + "=?";
+    private static final String TASK_INFO_TABLE_FLAGS_QUERY = String.format("SELECT %s FROM %s WHERE %s", TaskinfoTable.FLAGS, TaskinfoTable.TABLE_NAME, WHERE_INFO_ID_TASK_IDS_EQUAL_TO);
+
     /** Gets the 'flags' column from the first row in the TaskInfoTable WHERE _id_TaskIDs = ref_id
      *
      * @param db A readable SQLiteDatabase object.
@@ -155,6 +158,13 @@ public final class AFDatabaseInteractionHelper
         } else {
             Log.e("Assembly Fun", "a local task row was removed from localTaskTable, but there was no row in the taskInfoTable with the same _id_TaskIDs! The id in question is " + ref_id);
         }
+    }
+
+    public static String getTaskTests(SQLiteDatabase db, long task_id) {
+        Cursor cursor = makeCursorForOneField(db, LocalTaskTable.TABLE_NAME, LocalTaskTable.TASK_TESTS, WHERE_INFO_ID_TASK_IDS_EQUAL_TO, new String[]{Long.toString(task_id)}, "LIMIT 1");
+        String output = cursor.getString(cursor.getColumnIndex(LocalTaskTable.TASK_TEXT)); //Should be 0
+        cursor.close();
+        return output;
     }
 
     /** Adds a new row to the solution table were the quality is failed and the records are all -1
@@ -318,11 +328,8 @@ public final class AFDatabaseInteractionHelper
         return output;
     }
 
-    private static final String WHERE_INFO_ID_TASK_IDS_EQUAL_TO = TaskinfoTable._ID_TaskIDs + "=?";
-    private static final String TASK_INFO_TABLE_FLAGS_QUERY = String.format("SELECT %s FROM %s WHERE %s", TaskinfoTable.FLAGS, TaskinfoTable.TABLE_NAME, WHERE_INFO_ID_TASK_IDS_EQUAL_TO);
-
     public static Cursor makeCursorForOneField(SQLiteDatabase db, String tableName, String columns, String whereStatement, String[] whereArgs, String queryExtras) {
-        return db.rawQuery(String.format("SELECT %s FROM %s WHERE %s", columns, tableName, whereStatement), whereArgs);
+        return db.rawQuery(String.format("SELECT %s FROM %s WHERE %s %s", columns, tableName, whereStatement, queryExtras), whereArgs);
     }
 
     private static ContentValues valuesInstance = new ContentValues();

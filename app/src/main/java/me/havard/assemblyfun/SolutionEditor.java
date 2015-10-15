@@ -18,9 +18,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import me.havard.assemblyfun.assembly.SolutionTester;
 import me.havard.assemblyfun.data.AFDatabaseInteractionHelper;
 import me.havard.assemblyfun.data.SQLiteCursorLoader;
 import me.havard.assemblyfun.data.tables.LocalTaskTable;
@@ -28,7 +30,7 @@ import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
 
-public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabSelectedListener, LoaderManager.LoaderCallbacks<Cursor>{
+public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabSelectedListener, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener{
 
     public static final String EXTRAS_SOLUTION_ID = "solutionId";
     public static final String EXTRAS_TASK_ID = "taskId";
@@ -134,11 +136,10 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
     public void onPause()
     {
         super.onPause();
-        View v = mPagerAdapter.getSolutionFragment().getView();
-        EditText text;
-        if(v!=null && (text=(EditText)v.findViewById(R.id.solution_editor_solution_text_field))!=null)
+        String solution = mPagerAdapter.getSolutionFragment().getSolutionText();
+        if(solution != null)
             new SaveSolutionTextTask(((AssemblyFunApplication)getApplication()).getDatabase(), mSolutionId,
-                text.getText().toString()).execute();
+                solution).execute();
         else
             Log.e("Assembly Fun", "Tried saving the solution text to the database, but failed to find the text field");
     }
@@ -160,6 +161,15 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
             AFDatabaseInteractionHelper.changeSolutionText(mDb.getWritableDatabase(), AFDatabaseInteractionHelper.getClearedContentValuesInstance(), mSolutionId, mText);
             return null;
         }
+    }
+
+    private SolutionTester mTester;
+    @Override
+    public void onClick(View v) {
+        if(mTester == null)
+            mTester = new SolutionTester();
+
+        mTester.runAllTests(AFDatabaseInteractionHelper.getTaskTests(((AssemblyFunApplication)getApplication()).getReadableDatabase(), mTaskId), mPagerAdapter.getSolutionFragment().getSolutionText());
     }
 
     @Override
@@ -262,6 +272,7 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
                 return mTaskFragment;
 
             mTaskFragment = new EditorTaskFragment();
+            mTaskFragment.getTestSolutionButton().setOnClickListener(SolutionEditor.this);
             SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_TASK_PAGE_CURSOR, null, SolutionEditor.this);
             SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_TASK_PAGE_RECORDS_CURSOR, null, SolutionEditor.this);
             return mTaskFragment;
@@ -299,9 +310,21 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
             return inflater.inflate(
                     R.layout.fragment_editor_solution_page, container, false);
         }
+
+        public String getSolutionText() {
+            View v = getView();
+            if(v==null)
+                return null;
+            EditText text = (EditText)v.findViewById(R.id.solution_editor_solution_text_field);
+            if(text == null)
+                return null;
+            return text.getText().toString();
+        }
     }
 
     public static class EditorTaskFragment extends Fragment {
+
+        private Button mTaskSolutionButton;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -310,8 +333,13 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
                     R.layout.fragment_editor_task_page, container, false);
 
             ((TextView)view.findViewById(R.id.solution_editor_current_solution_fill_label)).setText("");
+            mTaskSolutionButton = (Button) view.findViewById(R.id.solution_editor_test_solution_button);
 
             return view;
+        }
+
+        public Button getTestSolutionButton() {
+            return mTaskSolutionButton;
         }
     }
 }
