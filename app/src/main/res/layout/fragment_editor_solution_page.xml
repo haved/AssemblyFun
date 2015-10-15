@@ -10,5 +10,6 @@
         android:ems="10"
         android:id="@+id/solution_editor_solution_text_field"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:gravity="top|left" />
 </RelativeLayout>
