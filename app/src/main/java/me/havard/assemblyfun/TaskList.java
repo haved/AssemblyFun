@@ -370,13 +370,13 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
                 whereArgs.add("%"+search+"%");
         }
         if(localOnly)
-            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_LOCAL).append(")=1");
+            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_LOCAL).append(")!=0");
         if(unsolvedOnly)
             lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_SOLVED).append(")=0");
         if(self_publishedOnly)
-            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_SELF_PUBLISHED).append(")=1");
+            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_SELF_PUBLISHED).append(")!=0");
         if(favouritesOnly)
-            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_FAVOURITE).append(")=1");
+            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_FAVOURITE).append(")!=0");
         if(orderBy!=null)
             lawAndOrderStatement.append(" ORDER BY ").append(orderBy.getOrderByStatement());
 
