@@ -272,7 +272,6 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
                 return mTaskFragment;
 
             mTaskFragment = new EditorTaskFragment();
-            mTaskFragment.getTestSolutionButton().setOnClickListener(SolutionEditor.this);
             SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_TASK_PAGE_CURSOR, null, SolutionEditor.this);
             SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_TASK_PAGE_RECORDS_CURSOR, null, SolutionEditor.this);
             return mTaskFragment;
@@ -322,9 +321,10 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
         }
     }
 
-    public static class EditorTaskFragment extends Fragment {
+    public static class EditorTaskFragment extends Fragment implements View.OnClickListener {
 
-        private Button mTaskSolutionButton;
+        public EditorTaskFragment() {
+        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -333,13 +333,16 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
                     R.layout.fragment_editor_task_page, container, false);
 
             ((TextView)view.findViewById(R.id.solution_editor_current_solution_fill_label)).setText("");
-            mTaskSolutionButton = (Button) view.findViewById(R.id.solution_editor_test_solution_button);
+            view.findViewById(R.id.solution_editor_test_solution_button).setOnClickListener(this);
 
             return view;
         }
 
-        public Button getTestSolutionButton() {
-            return mTaskSolutionButton;
+        @Override
+        public void onClick(View v) {
+            FragmentActivity activity = getActivity();
+            if(activity != null && activity instanceof SolutionEditor)
+                ((SolutionEditor)activity).onClick(v);
         }
     }
 }

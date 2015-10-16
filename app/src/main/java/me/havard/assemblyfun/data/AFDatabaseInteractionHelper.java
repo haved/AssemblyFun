@@ -162,7 +162,12 @@ public final class AFDatabaseInteractionHelper
 
     public static String getTaskTests(SQLiteDatabase db, long task_id) {
         Cursor cursor = makeCursorForOneField(db, LocalTaskTable.TABLE_NAME, LocalTaskTable.TASK_TESTS, WHERE_INFO_ID_TASK_IDS_EQUAL_TO, new String[]{Long.toString(task_id)}, "LIMIT 1");
-        String output = cursor.getString(cursor.getColumnIndex(LocalTaskTable.TASK_TEXT)); //Should be 0
+        cursor.moveToFirst();
+        if(cursor.isAfterLast()) {
+            Log.e("Assembly Fun", "Tried to ge the taskTests for the task where task_id=" + task_id + " but the cursor found no rows! Returning an empty string as in \"No tests\"");
+            return "";
+        }
+        String output = cursor.getString(cursor.getColumnIndex(LocalTaskTable.TASK_TESTS)); //Should be 0
         cursor.close();
         return output;
     }
