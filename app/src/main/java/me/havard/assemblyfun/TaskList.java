@@ -357,7 +357,7 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
     private static final String SEARCH_STATEMENT = "(" + TaskinfoTable.NAME + " LIKE ? OR " + TaskinfoTable.DESC + " LIKE ? OR " + TaskinfoTable.AUTHOR + " LIKE ?)";
     private static final int SEARCH_STATEMENT_WHERE_ARG_COUNT = 3;
 
-    private static final String AND_FLAGS_ND = " AND (" + TaskinfoTable.FLAGS + " & ";
+    private static final String AND_FLAGS_ND = " AND (" + TaskinfoTable.FLAGS + "&";
 
     protected static String makeQueryText(ArrayList<String> whereArgs, int mCheckFlagBit, String search,
                                           boolean localOnly, boolean unsolvedOnly, boolean self_publishedOnly, boolean favouritesOnly, OrderBy orderBy) {
@@ -370,15 +370,17 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
                 whereArgs.add("%"+search+"%");
         }
         if(localOnly)
-            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_LOCAL).append(")='1'");
+            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_LOCAL).append(")=1");
         if(unsolvedOnly)
-            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_SOLVED).append(")='0'");
+            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_SOLVED).append(")=0");
         if(self_publishedOnly)
-            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_SELF_PUBLISHED).append(")='1'");
+            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_SELF_PUBLISHED).append(")=1");
         if(favouritesOnly)
-            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_FAVOURITE).append(")='1'");
+            lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_FAVOURITE).append(")=1");
         if(orderBy!=null)
             lawAndOrderStatement.append(" ORDER BY ").append(orderBy.getOrderByStatement());
+
+        Log.d("Assembly Fun", QUERY_START + lawAndOrderStatement.toString());
 
         return QUERY_START + lawAndOrderStatement.toString();
     }
