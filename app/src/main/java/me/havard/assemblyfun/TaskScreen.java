@@ -30,7 +30,6 @@ import me.havard.assemblyfun.data.Difficulty;
 import me.havard.assemblyfun.data.SQLiteCursorLoader;
 import me.havard.assemblyfun.data.SharedPreferencesHelper;
 import me.havard.assemblyfun.data.SolutionCursorAdapter;
-import me.havard.assemblyfun.data.TaskInfoAndRecordsCursorLoader;
 import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
@@ -46,7 +45,8 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     public static final String RESULT_LONG_REMOVE_LOCAL_TASK_ID = "removeLocalTask";
     public static final String RESULT_LONG_REMOVE_ALL_TASK_DATA_ID = "removeAllTaskData";
     private static final int LOADER_ID_TASK_CURSOR = 0;
-    private static final int LOADER_ID_SOLUTIONS_CURSOR = 1;
+    private static final int LOADER_ID_RECORDS_CURSOR = 1;
+    private static final int LOADER_ID_SOLUTIONS_CURSOR = 2;
 
     private long mLocalID;
 
@@ -110,10 +110,11 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         Bundle data = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
         mLocalID = data.getLong(EXTRAS_TASK_ID);
         getLoaderManager().initLoader(LOADER_ID_TASK_CURSOR, null, this);
+        getLoaderManager().initLoader(LOADER_ID_RECORDS_CURSOR, null, this);
         getLoaderManager().initLoader(LOADER_ID_SOLUTIONS_CURSOR, null, this);
     }
 
-    protected void useTaskInfoAndRecordsCursor(Cursor cursor)
+    protected void useTaskInfoCursor(Cursor cursor)
     {
         cursor.moveToFirst();
         if(cursor.isAfterLast()) {
@@ -129,7 +130,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mTaskDiff.setTextColor(ContextCompat.getColor(this, diff.getColorId()));
         Calendar cl = Calendar.getInstance();
         cl.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(TaskinfoTable.DATE)));
-        mTaskDate.setText(getResources().getString(MonthLabels.RESOURCE_IDS[cl.get(Calendar.MONTH)]) + " " + cl.get(Calendar.DAY_OF_MONTH) + " " + cl.get(Calendar.YEAR));
+        mTaskDate.setText(String.format("%s %s %s", getResources().getString(MonthLabels.RESOURCE_IDS[cl.get(Calendar.MONTH)]), cl.get(Calendar.DAY_OF_MONTH), cl.get(Calendar.YEAR)));
 
         mRatingBar.setRating(cursor.getFloat(cursor.getColumnIndex(TaskinfoTable.RATING)));
 
@@ -142,9 +143,15 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
                 false); //We don't pretend to be deleting the task locally
         mSelfPublishedRow.setVisibility(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_SELF_PUBLISHED) ? View.VISIBLE : View.GONE);
         useFavouriteFlag(TaskinfoTable.hasFlag(flags, TaskinfoTable.FLAG_FAVOURITE));
+    }
 
+    protected void useRecordsCursor(Cursor cursor)
+    {
         String recordText;
-        if(cursor.getColumnIndex(TaskRecordsTable.SPEED_REC)>=0)
+        cursor.moveToFirst();
+        if(cursor.isAfterLast())
+            recordText = getResources().getString(R.string.label_task_screen_no_records);
+        else
             recordText = String.format("%s\n" +
                             "%s - '%s': %.2f, %s: %.2f\n" +
                             "%s - '%s': %d, %s: %d\n" +
@@ -160,8 +167,6 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
                     getResources().getString(R.string.label_task_screen_memuse),
                     cursor.getString(cursor.getColumnIndex(TaskRecordsTable.MEMUSE_REC_NAME)), cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.MEMUSE_REC)),
                     getResources().getString(R.string.label_task_screen_records_you), cursor.getFloat(cursor.getColumnIndex(TaskRecordsTable.PERSONAL_MEMUSE_REC)));
-        else
-            recordText = getResources().getString(R.string.label_task_screen_no_records);
 
         mTaskRecordsText.setText(recordText);
     }
@@ -262,28 +267,43 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         state.putLong(EXTRAS_TASK_ID, mLocalID);
     }
 
+    private static final String TASK_INFO_QUERY = String.format("SELECT %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s=? LIMIT 1;",
+            TaskinfoTable.NAME, TaskinfoTable.DESC, TaskinfoTable.DIFFICULTY, TaskinfoTable.DATE,
+            TaskinfoTable.AUTHOR, TaskinfoTable.RATING, TaskinfoTable.FLAGS,
+            TaskinfoTable.TABLE_NAME,
+            TaskinfoTable._ID_TaskIDs);
+
+    private static final String RECORDS_QUERY = String.format("SELECT %s.* FROM %s WHERE %s=? LIMIT 1;",
+            TaskRecordsTable.TABLE_NAME, TaskRecordsTable.TABLE_NAME,
+            TaskRecordsTable._ID_TaskIDs);
+
     private static final String SOLUTION_LIST_CURSOR_QUERY = String.format("SELECT %s, %s, %s, %s, %s, %s AS _id FROM %s WHERE %s=?",
             SolutionsTable.NAME, SolutionsTable.SOLUTION_QUALITY, SolutionsTable.SPEED, SolutionsTable.SIZE, SolutionsTable.MEMUSE, SolutionsTable._ID,
             SolutionsTable.TABLE_NAME, SolutionsTable._ID_TaskIDs);
     @Override
+
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if(id == LOADER_ID_TASK_CURSOR)
-            return new TaskInfoAndRecordsCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), mLocalID);
+            return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), TASK_INFO_QUERY, new String[]{Long.toString(mLocalID)}).setId(LOADER_ID_TASK_CURSOR);
+        else if(id== LOADER_ID_RECORDS_CURSOR)
+            return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), RECORDS_QUERY, new String[]{Long.toString(mLocalID)}).setId(LOADER_ID_RECORDS_CURSOR);
         else //if(id == LOADER_ID_SOLUTIONS_CURSOR)
-            return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), SOLUTION_LIST_CURSOR_QUERY, new String[]{Long.toString(mLocalID)});
+            return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), SOLUTION_LIST_CURSOR_QUERY, new String[]{Long.toString(mLocalID)}).setId(LOADER_ID_SOLUTIONS_CURSOR);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if(loader instanceof TaskInfoAndRecordsCursorLoader) //it is the loader for the
-            useTaskInfoAndRecordsCursor(data);
-        else
+        if(loader.getId()==LOADER_ID_TASK_CURSOR)
+            useTaskInfoCursor(data);
+        else if(loader.getId()== LOADER_ID_RECORDS_CURSOR)
+            useRecordsCursor(data);
+        else if(loader.getId() == LOADER_ID_SOLUTIONS_CURSOR)
             mSolutionListAdapter.changeCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        if(!(loader instanceof TaskInfoAndRecordsCursorLoader))
+        if(loader.getId()==LOADER_ID_SOLUTIONS_CURSOR)
             mSolutionListAdapter.changeCursor(null);
     }
 
