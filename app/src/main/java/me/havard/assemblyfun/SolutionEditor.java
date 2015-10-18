@@ -3,7 +3,6 @@ package me.havard.assemblyfun;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
@@ -18,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -39,9 +37,10 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
     public static final int TASK_PAGE = 0;
     public static final int SOLUTION_PAGE=1;
 
-    private static final int LOADER_ID_TASK_PAGE_CURSOR = 0;
-    private static final int LOADER_ID_TASK_PAGE_RECORDS_CURSOR = 1;
-    private static final int LOADER_ID_SOLUTION_TEXT_CURSOR = 2;
+    private static final int LOADER_ID_TASK_PAGE_TASK_INFO_CURSOR = 0;
+    private static final int LOADER_ID_TASK_PAGE_TASK_TEXT_CURSOR = 1;
+    private static final int LOADER_ID_TASK_PAGE_RECORDS_CURSOR = 2;
+    private static final int LOADER_ID_SOLUTION_TEXT_CURSOR = 3;
 
 
     private TabLayout mTabLayout;
@@ -74,7 +73,7 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
         mTaskId = extras.getLong(EXTRAS_TASK_ID, -1);
     }
 
-    public void useTaskPageCursor(Cursor cursor) {
+    public void useTaskPageTaskInfoCursor(Cursor cursor) {
         View v = mPagerAdapter.getTaskFragment().getView();
         if(v==null) {
             Log.e("Assembly Fun", "The EditorTaskFragment had no view when trying to use the database cursor");
@@ -82,13 +81,28 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
         }
         cursor.moveToFirst();
         if(cursor.isAfterLast()) {
-            Log.e("Assembly Fun", "The Task Cursor passed to the EditorTaskFragment didn't have any items. Nothing to fill fields with!");
+            Log.e("Assembly Fun", "The Task Info Cursor passed to the SolutionEditor.useTaskPageTaskInfoCursor(Cursor) didn't have any items. Nothing to fill fields with!");
             ((TextView)v.findViewById(R.id.solution_editor_task_title)).setText(R.string.label_solution_editor_n_a);
-            ((TextView)v.findViewById(R.id.solution_editor_task_desc)).setText(R.string.label_solution_editor_n_a);
             return;
         }
         ((TextView)v.findViewById(R.id.solution_editor_task_title)).setText(cursor.getString(cursor.getColumnIndex(TaskinfoTable.NAME)));
+    }
+
+    public void useTaskPageTaskTextCursor(Cursor cursor) {
+        View v = mPagerAdapter.getTaskFragment().getView();
+        if(v==null) {
+            Log.e("Assembly Fun", "The EditorTaskFragment had no view when trying to use the database cursor");
+            return;
+        }
+        cursor.moveToFirst();
+        if(cursor.isAfterLast()) {
+            Log.e("Assembly Fun", "The Task Text Cursor passed to the SolutionEditor.useTaskPageTaskTextCursor(Cursor) didn't have any items. Nothing to fill fields with!");
+            ((TextView)v.findViewById(R.id.solution_editor_task_desc)).setText(R.string.label_solution_editor_task_not_local);
+            v.findViewById(R.id.solution_editor_test_solution_button).setEnabled(false);
+            return;
+        }
         ((TextView)v.findViewById(R.id.solution_editor_task_desc)).setText(cursor.getString(cursor.getColumnIndex(LocalTaskTable.TASK_TEXT)));
+        v.findViewById(R.id.solution_editor_test_solution_button).setEnabled(true);
     }
 
     public void useTaskRecordsCursor(Cursor cursor) {
@@ -209,17 +223,19 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
 
     }
 
-    private static final String QUERY_TASK_PAGE_CURSOR = String.format("SELECT %s, %s FROM %s, %s WHERE %s.%s=? AND %s.%s=? LIMIT 1", TaskinfoTable.NAME, LocalTaskTable.TASK_TEXT,
-            TaskinfoTable.TABLE_NAME, LocalTaskTable.TABLE_NAME,      TaskinfoTable.TABLE_NAME,TaskinfoTable._ID_TaskIDs,        LocalTaskTable.TABLE_NAME,LocalTaskTable._ID_TaskIDs);
-
-    private static final String QUERY_TASK_PAGE_RECORDS_CURSOR = String.format("SELECT * FROM %s WHERE %s=? LIMIT 1", TaskRecordsTable.TABLE_NAME, TaskRecordsTable._ID_TaskIDs);
-    private static final String QUERY_SOLUTION_TEXT_CURSOR = String.format("SELECT %s FROM %s WHERE %s=? LIMIT 1", SolutionsTable.SOLUTION_TEXT, SolutionsTable.TABLE_NAME, SolutionsTable._ID);
+    private static final String QUERY_TASK_PAGE_INFO_CURSOR =       String.format("SELECT %s FROM %s WHERE %s=? LIMIT 1", TaskinfoTable.NAME, TaskinfoTable.TABLE_NAME, TaskinfoTable._ID_TaskIDs);
+    private static final String QUERY_TASK_PAGE_TASK_TEXT_CURSOR =  String.format("SELECT %s FROM %s WHERE %s=? LIMIT 1", LocalTaskTable.TASK_TEXT, LocalTaskTable.TABLE_NAME, LocalTaskTable._ID_TaskIDs);
+    private static final String QUERY_TASK_PAGE_RECORDS_CURSOR =    String.format("SELECT *  FROM %s WHERE %s=? LIMIT 1", TaskRecordsTable.TABLE_NAME, TaskRecordsTable._ID_TaskIDs);
+    private static final String QUERY_SOLUTION_TEXT_CURSOR =        String.format("SELECT %s FROM %s WHERE %s=? LIMIT 1", SolutionsTable.SOLUTION_TEXT, SolutionsTable.TABLE_NAME, SolutionsTable._ID);
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if(id==LOADER_ID_TASK_PAGE_CURSOR)
-            return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), QUERY_TASK_PAGE_CURSOR,
-                    new String[]{Long.toString(mTaskId), Long.toString(mTaskId)}).setId(LOADER_ID_TASK_PAGE_CURSOR);
+        if(id== LOADER_ID_TASK_PAGE_TASK_INFO_CURSOR)
+            return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), QUERY_TASK_PAGE_INFO_CURSOR,
+                    new String[]{Long.toString(mTaskId)}).setId(LOADER_ID_TASK_PAGE_TASK_INFO_CURSOR);
+        else if(id== LOADER_ID_TASK_PAGE_TASK_TEXT_CURSOR)
+            return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(), QUERY_TASK_PAGE_TASK_TEXT_CURSOR,
+                    new String[]{Long.toString(mTaskId)}).setId(LOADER_ID_TASK_PAGE_TASK_TEXT_CURSOR);
         else if(id==LOADER_ID_TASK_PAGE_RECORDS_CURSOR)
             return new SQLiteCursorLoader(this, ((AssemblyFunApplication)getApplication()).getDatabase(),
                     QUERY_TASK_PAGE_RECORDS_CURSOR, new String[]{Long.toString(mTaskId)}).setId(LOADER_ID_TASK_PAGE_RECORDS_CURSOR);
@@ -232,8 +248,10 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         int id = loader.getId();
-        if(id == LOADER_ID_TASK_PAGE_CURSOR)
-            useTaskPageCursor(data);
+        if(id == LOADER_ID_TASK_PAGE_TASK_INFO_CURSOR)
+            useTaskPageTaskInfoCursor(data);
+        else if(id == LOADER_ID_TASK_PAGE_TASK_TEXT_CURSOR)
+            useTaskPageTaskTextCursor(data);
         else if(id == LOADER_ID_TASK_PAGE_RECORDS_CURSOR)
             useTaskRecordsCursor(data);
         else if(id == LOADER_ID_SOLUTION_TEXT_CURSOR)
@@ -272,7 +290,8 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
                 return mTaskFragment;
 
             mTaskFragment = new EditorTaskFragment();
-            SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_TASK_PAGE_CURSOR, null, SolutionEditor.this);
+            SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_TASK_PAGE_TASK_INFO_CURSOR, null, SolutionEditor.this);
+            SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_TASK_PAGE_TASK_TEXT_CURSOR, null, SolutionEditor.this);
             SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_TASK_PAGE_RECORDS_CURSOR, null, SolutionEditor.this);
             return mTaskFragment;
         }

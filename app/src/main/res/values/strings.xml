@@ -114,6 +114,7 @@
     <string name="label_solution_editor_personal_records">Personal Records:</string>
     <string name="label_solution_editor_world_records">World Records:</string>
     <string name="label_solution_editor_n_a">N/A</string>
+    <string name="label_solution_editor_task_not_local">The task is not downloaded locally and can\'t be tested!</string>
     <string name="label_solution_editor_None">None</string>
     <string name="label_solution_editor_world_records_fill">Speed: %1$.2f, %2$s\nSize: %3$d, %4$s\nMemory Usage: %5$.2f, %6$s</string>
     <string name="label_solution_editor_personal_records_fill">Speed: %1$.2f\nSize: %2$d\nMemory Usage: %3$.2f</string>
