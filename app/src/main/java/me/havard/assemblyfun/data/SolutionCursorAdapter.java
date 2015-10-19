@@ -16,7 +16,7 @@ import me.havard.assemblyfun.data.tables.SolutionsTable;
  */
 public class SolutionCursorAdapter extends SimpleCursorAdapter
 {
-    private static final String[] FROM_COLUMNS = new String[] {SolutionsTable.NAME};
+    private static final String[] FROM_COLUMNS = new String[] {SolutionsTable.TITLE};
     private static final int[] TO_TEXT_VIEWS = new int[]{R.id.solution_list_item_name};
 
     public SolutionCursorAdapter(Context context, Cursor cursor) {

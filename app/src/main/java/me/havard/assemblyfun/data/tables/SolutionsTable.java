@@ -10,7 +10,7 @@ public class SolutionsTable extends Table {
     public static final String TABLE_NAME = "solutionsTable";
     public static final String _ID = "_id";
     public static final String _ID_TaskIDs = TaskIDTable._ID_TaskIDs;
-    public static final String NAME = "name";
+    public static final String TITLE = "name";
     public static final String SOLUTION_TEXT = "solution_text";
     public static final String SOLUTION_QUALITY = "solution_quality";
     public static final String SPEED = "speed";
@@ -26,7 +26,7 @@ public class SolutionsTable extends Table {
         return getSQLCreate(TABLE_NAME,
                 _ID, PRIMARY_KEY_AUTOINCREMENT,
                 _ID_TaskIDs, INT,
-                NAME, TEXT,
+                TITLE, TEXT,
                 SOLUTION_TEXT, TEXT,
                 SOLUTION_QUALITY, INT,
                 SPEED, INT,
@@ -44,7 +44,7 @@ public class SolutionsTable extends Table {
     public static long addRow(SQLiteDatabase db, ContentValues values, long ref_id, String name, String solutionText, int quality, int speed, int size, int memuse)
     {
         values.put(_ID_TaskIDs, ref_id);
-        values.put(NAME, name);
+        values.put(TITLE, name);
         values.put(SOLUTION_TEXT, solutionText);
         values.put(SOLUTION_QUALITY, quality);
         values.put(SPEED, speed);
