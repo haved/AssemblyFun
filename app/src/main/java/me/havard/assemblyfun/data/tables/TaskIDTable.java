@@ -14,7 +14,7 @@ public class TaskIDTable extends Table {
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
                 _ID, PRIMARY_KEY_AUTOINCREMENT,
-                GLOBAL_TASK_ID, INT);
+                GLOBAL_TASK_ID, TYPE_INT);
     }
 
     @Override

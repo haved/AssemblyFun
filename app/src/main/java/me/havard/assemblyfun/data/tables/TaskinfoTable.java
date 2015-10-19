@@ -2,7 +2,6 @@ package me.havard.assemblyfun.data.tables;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import me.havard.assemblyfun.data.Difficulty;
 
@@ -32,13 +31,13 @@ public class TaskinfoTable extends Table
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
                 _ID_TaskIDs, PRIMARY_KEY,
-                NAME, TEXT,
-                DESC, TEXT,
-                DATE, INT,
-                DIFFICULTY, INT,
-                RATING, REEL,
-                AUTHOR, TEXT,
-                FLAGS, INT,
+                NAME, TYPE_TEXT,
+                DESC, TYPE_TEXT,
+                DATE, TYPE_INT,
+                DIFFICULTY, TYPE_INT,
+                RATING, TYPE_REEL,
+                AUTHOR, TYPE_TEXT,
+                FLAGS, TYPE_INT,
                 TaskIDTable.FOREIGN_KEY_ID_TaskIDs);
     }
 

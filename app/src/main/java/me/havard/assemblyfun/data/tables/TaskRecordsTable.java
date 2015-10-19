@@ -22,15 +22,15 @@ public class TaskRecordsTable extends Table {
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
                 _ID_TaskIDs, PRIMARY_KEY,
-                SPEED_REC, REEL,
-                SPEED_REC_NAME, TEXT,
-                PERSONAL_SPEED_REC, REEL,
-                SIZE_REC, INT,
-                SIZE_REC_NAME, TEXT,
-                PERSONAL_SIZE_REC, INT,
-                MEMUSE_REC, REEL,
-                MEMUSE_REC_NAME, TEXT,
-                PERSONAL_MEMUSE_REC, REEL,
+                SPEED_REC, TYPE_REEL,
+                SPEED_REC_NAME, TYPE_TEXT,
+                PERSONAL_SPEED_REC, TYPE_REEL,
+                SIZE_REC, TYPE_INT,
+                SIZE_REC_NAME, TYPE_TEXT,
+                PERSONAL_SIZE_REC, TYPE_INT,
+                MEMUSE_REC, TYPE_REEL,
+                MEMUSE_REC_NAME, TYPE_TEXT,
+                PERSONAL_MEMUSE_REC, TYPE_REEL,
                 TaskIDTable.FOREIGN_KEY_ID_TaskIDs);
     }
 

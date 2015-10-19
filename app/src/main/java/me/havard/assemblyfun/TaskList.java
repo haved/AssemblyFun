@@ -108,7 +108,6 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
 
     @Override
     protected void onStart() {
-        Log.d("Assembly Fun", "onStart()!");
         if(mWaitForCounter) {
             mListAdapterStatusText.setText(R.string.label_task_list_loading_items);
             mClearLawAndOrderButton.setVisibility(View.GONE);
@@ -379,8 +378,6 @@ public class TaskList extends AppCompatActivity implements AdapterView.OnItemCli
             lawAndOrderStatement.append(AND_FLAGS_ND).append(TaskinfoTable.FLAG_FAVOURITE).append(")!=0");
         if(orderBy!=null)
             lawAndOrderStatement.append(" ORDER BY ").append(orderBy.getOrderByStatement());
-
-        Log.d("Assembly Fun", QUERY_START + lawAndOrderStatement.toString());
 
         return QUERY_START + lawAndOrderStatement.toString();
     }

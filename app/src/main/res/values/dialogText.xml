@@ -47,6 +47,7 @@
     <string name="dialog_title_name_new_solution">Name the new solution:</string>
     <string name="dialog_default_text_new_solution">My solution</string>
     <string name="dialog_title_rename_solution">Rename Solution</string>
+    <string name="dialog_title_copy_solution">Copy Solution</string>
     <string name="dialog_enter_new_name">Enter new name:</string>
 
     <string name="dialog_button_OK">OK</string>
@@ -54,5 +55,6 @@
     <string name="dialog_button_Undo">Undo</string>
     <string name="dialog_button_Cancel">Cancel</string>
     <string name="dialog_button_Rename">Rename</string>
+    <string name="dialog_button_Copy">Copy</string>
     <string name="dialog_title_search_task_list">Enter search query:</string>
 </resources>
