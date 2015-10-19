@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,7 +40,7 @@ import me.havard.assemblyfun.util.DialogHelper;
 import me.havard.assemblyfun.util.MonthLabels;
 import me.havard.assemblyfun.util.RemoveAllTaskData;
 
-public class TaskScreen extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, ListView.OnItemClickListener, AllDoneCounter.AllDoneListener {
+public class TaskScreen extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, ListView.OnItemClickListener, ListView.OnItemLongClickListener, AllDoneCounter.AllDoneListener {
 
     public static final String EXTRAS_TASK_ID = "extrasTaskID";
     public static final int RESULT_CODE = 1;
@@ -72,6 +74,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         mSolutionListAdapter = new SolutionCursorAdapter(this, null);
         mSolutionList.setAdapter(mSolutionListAdapter);
         mSolutionList.setOnItemClickListener(this);
+        mSolutionList.setOnItemLongClickListener(this);
 
         View headerView = getLayoutInflater().inflate(R.layout.task_screen_header, null);
         mSolutionList.addHeaderView(headerView);
@@ -199,9 +202,109 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     protected void onSolutionAdded(long solution_id)
     {
         mAddSolutionButton.setEnabled(true);
+        reloadSolutionList();
+    }
+
+    protected void reloadSolutionList() {
         Loader<?> solutions_loader = getLoaderManager().initLoader(LOADER_ID_SOLUTIONS_CURSOR, null, this);
         solutions_loader.reset();
         solutions_loader.startLoading();
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        if(v==mLocalButton)
+        {
+            if(mLocalRemovalBuffered)
+                useLocalGlobalSolvedFlags(mLocalFlag, mGlobalFlag, mSolvedFlag, false);   //No longer buffer local removal
+            else if(mLocalFlag & mGlobalFlag) { //Just to make sure the task exists online before removing it.
+                //noinspection ConstantConditions //I like it more when you can see the variables and how they don't change
+                useLocalGlobalSolvedFlags(mLocalFlag/*true*/, mGlobalFlag/*true*/, mSolvedFlag, true); //Buffering removing the task locally. NB: mLocalFlag and mGlobalFlag are always true here. (See 'if')
+
+                if(mLocalRemovalBuffered & !mSolvedFlag & !SharedPreferencesHelper.shouldKeepUnlistedTasks(SharedPreferencesHelper.getPreferences(this))) {
+                    Snackbar bar = Snackbar.make(findViewById(R.id.task_screen_solution_list), R.string.snack_bar_unlisted_task, Snackbar.LENGTH_LONG);
+                    bar.setAction(R.string.dialog_button_Info, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            DialogHelper.makeDialogBuilder(TaskScreen.this, R.string.dialog_unlisted_task_title, R.string.dialog_unlisted_task_body, null,
+                                    -1, R.string.dialog_button_OK, true).show();
+                        }
+                    });
+                    bar.show();
+                }
+            }
+        }
+        else if(v==mFavouriteButton)
+            new ChangeFavouriteStatusTask(mLocalID, !mFavouriteFlag).execute();
+        else if(v==mAddSolutionButton){
+            if(!mLocalFlag) //Has to be local. The button is in theory not enabled when it's not local, but just to be safe
+                return;
+
+            mAddSolutionButton.setEnabled(false);
+            DialogHelper.makeInputDialogBuilder(this, R.string.dialog_title_name_new_solution, -1, getResources().getString(R.string.dialog_default_text_new_solution), new DialogHelper.TextDialogListener() {
+                @Override
+                public void onTextEntered(String text) {
+                    new AddNewSolution(mLocalID, text).execute();
+                }
+            }, R.string.dialog_button_OK, R.string.dialog_button_Cancel).show();
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent solutionEditor = new Intent(this, SolutionEditor.class);
+        solutionEditor.putExtra(SolutionEditor.EXTRAS_SOLUTION_ID, id);
+        solutionEditor.putExtra(SolutionEditor.EXTRAS_TASK_ID, mLocalID);
+        startActivity(solutionEditor);
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, final long id) {
+        PopupMenu menu = new PopupMenu(this, view);
+        menu.inflate(R.menu.menu_task_screen_solution_item);
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int menuItemId = item.getItemId();
+                if(menuItemId==R.id.action_rename_solution) {
+                    DialogHelper.makeInputDialogBuilder(TaskScreen.this, R.string.dialog_title_rename_solution, R.string.dialog_enter_new_name,
+                            AFDatabaseInteractionHelper.getSolutionTitle(((AssemblyFunApplication)getApplication()).getReadableDatabase(), id),
+                            new DialogHelper.TextDialogListener() {
+                                @Override
+                                public void onTextEntered(String text) {
+                                    new RenameSolutionTask(((AssemblyFunApplication)getApplication()).getDatabase(), id, text).execute();
+                                }
+                            }, R.string.dialog_button_Rename, R.string.dialog_button_Cancel).show();
+                    return true;
+                }
+                return false;
+            }
+        });
+        menu.show();
+        return true;
+    }
+
+    private class RenameSolutionTask extends AsyncTask<Void, Void, Void> {
+        private SQLiteOpenHelper mDb;
+        private long mSolutionId;
+        private String mNewName;
+        public RenameSolutionTask(SQLiteOpenHelper db, long solutionId, String newName) {
+            mDb = db;
+            mSolutionId = solutionId;
+            mNewName = newName;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            AFDatabaseInteractionHelper.changeSolutionTitle(mDb.getWritableDatabase(), AFDatabaseInteractionHelper.getClearedContentValuesInstance(), mSolutionId, mNewName);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            reloadSolutionList();
+        }
     }
 
     @Override
@@ -278,7 +381,7 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
             TaskRecordsTable._ID_TaskIDs);
 
     private static final String SOLUTION_LIST_CURSOR_QUERY = String.format("SELECT %s, %s, %s, %s, %s, %s AS _id FROM %s WHERE %s=?",
-            SolutionsTable.NAME, SolutionsTable.SOLUTION_QUALITY, SolutionsTable.SPEED, SolutionsTable.SIZE, SolutionsTable.MEMUSE, SolutionsTable._ID,
+            SolutionsTable.TITLE, SolutionsTable.SOLUTION_QUALITY, SolutionsTable.SPEED, SolutionsTable.SIZE, SolutionsTable.MEMUSE, SolutionsTable._ID,
             SolutionsTable.TABLE_NAME, SolutionsTable._ID_TaskIDs);
     @Override
 
@@ -305,54 +408,6 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
     public void onLoaderReset(Loader<Cursor> loader) {
         if(loader.getId()==LOADER_ID_SOLUTIONS_CURSOR)
             mSolutionListAdapter.changeCursor(null);
-    }
-
-    @Override
-    public void onClick(View v)
-    {
-        if(v==mLocalButton)
-        {
-            if(mLocalRemovalBuffered)
-                useLocalGlobalSolvedFlags(mLocalFlag, mGlobalFlag, mSolvedFlag, false);   //No longer buffer local removal
-            else if(mLocalFlag & mGlobalFlag) { //Just to make sure the task exists online before removing it.
-                //noinspection ConstantConditions //I like it more when you can see the variables and how they don't change
-                useLocalGlobalSolvedFlags(mLocalFlag/*true*/, mGlobalFlag/*true*/, mSolvedFlag, true); //Buffering removing the task locally. NB: mLocalFlag and mGlobalFlag are always true here. (See 'if')
-
-                if(mLocalRemovalBuffered & !mSolvedFlag & !SharedPreferencesHelper.shouldKeepUnlistedTasks(SharedPreferencesHelper.getPreferences(this))) {
-                    Snackbar bar = Snackbar.make(findViewById(R.id.task_screen_solution_list), R.string.snack_bar_unlisted_task, Snackbar.LENGTH_LONG);
-                    bar.setAction(R.string.dialog_button_Info, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            DialogHelper.makeDialogBuilder(TaskScreen.this, R.string.dialog_unlisted_task_title, R.string.dialog_unlisted_task_body, null,
-                                    -1, R.string.dialog_button_OK, true).show();
-                        }
-                    });
-                    bar.show();
-                }
-            }
-        }
-        else if(v==mFavouriteButton)
-            new ChangeFavouriteStatusTask(mLocalID, !mFavouriteFlag).execute();
-        else if(v==mAddSolutionButton){
-            if(!mLocalFlag) //Has to be local. The button is in theory not enabled when it's not local, but just to be safe
-                return;
-
-            mAddSolutionButton.setEnabled(false);
-            DialogHelper.makeInputDialogBuilder(this, R.string.dialog_title_name_new_solution, -1, getResources().getString(R.string.dialog_default_text_new_solution), new DialogHelper.TextDialogListener() {
-                @Override
-                public void onTextEntered(String text) {
-                    new AddNewSolution(mLocalID, text).execute();
-                }
-            }, R.string.dialog_button_OK, R.string.dialog_button_Cancel).show();
-        }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent solutionEditor = new Intent(this, SolutionEditor.class);
-        solutionEditor.putExtra(SolutionEditor.EXTRAS_SOLUTION_ID, id);
-        solutionEditor.putExtra(SolutionEditor.EXTRAS_TASK_ID, mLocalID);
-        startActivity(solutionEditor);
     }
 
     private class ChangeFavouriteStatusTask extends AsyncTask<Long, Integer, Boolean> {

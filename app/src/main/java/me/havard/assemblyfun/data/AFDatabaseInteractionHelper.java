@@ -3,7 +3,6 @@ package me.havard.assemblyfun.data;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import me.havard.assemblyfun.data.tables.LocalTaskTable;
@@ -161,7 +160,7 @@ public final class AFDatabaseInteractionHelper
     }
 
     public static String getTaskTests(SQLiteDatabase db, long task_id) {
-        Cursor cursor = makeCursorForOneField(db, LocalTaskTable.TABLE_NAME, LocalTaskTable.TASK_TESTS, WHERE_INFO_ID_TASK_IDS_EQUAL_TO, new String[]{Long.toString(task_id)}, "LIMIT 1");
+        Cursor cursor = makeCursorForField(db, LocalTaskTable.TABLE_NAME, LocalTaskTable.TASK_TESTS, WHERE_INFO_ID_TASK_IDS_EQUAL_TO, new String[]{Long.toString(task_id)}, "LIMIT 1");
         cursor.moveToFirst();
         if(cursor.isAfterLast()) {
             Log.e("Assembly Fun", "Tried to ge the taskTests for the task where task_id=" + task_id + " but the cursor found no rows! Returning an empty string as in \"No tests\"");
@@ -189,6 +188,24 @@ public final class AFDatabaseInteractionHelper
     public static void changeSolutionText(SQLiteDatabase db, ContentValues values, long solution_id, String newText) {
         values.put(SolutionsTable.SOLUTION_TEXT, newText);
         db.update(SolutionsTable.TABLE_NAME, values, WHERE_SOLUTION_ID_EQUAL_TO, new String[]{Long.toString(solution_id)});
+    }
+
+    public static void changeSolutionTitle(SQLiteDatabase db, ContentValues values, long solution_id, String newTitle) {
+        values.put(SolutionsTable.TITLE, newTitle);
+        db.update(SolutionsTable.TABLE_NAME, values, WHERE_SOLUTION_ID_EQUAL_TO, new String[]{Long.toString(solution_id)});
+    }
+
+    private static final String SOLUTION_TITLE_QUERY = makeCursorTextForField(SolutionsTable.TABLE_NAME, SolutionsTable.TITLE, WHERE_SOLUTION_ID_EQUAL_TO, "LIMIT 1");
+    public static String getSolutionTitle(SQLiteDatabase db, long solution_id) {
+        Cursor cursor = db.rawQuery(SOLUTION_TITLE_QUERY, new String[]{Long.toString(solution_id)});
+        cursor.moveToFirst();
+        if(cursor.isAfterLast()) {
+            Log.e("Assembly Fun", "getSolutionTitle could not find a title for the solution with id " + solution_id);
+            return null;
+        }
+        String output = cursor.getString(cursor.getColumnIndex(SolutionsTable.TITLE));
+        cursor.close();
+        return output;
     }
 
     private static final String WHERE_RECORDS_ID_TASK_IDS_EQUAL_TO = TaskRecordsTable._ID_TaskIDs+"=?";
@@ -278,7 +295,7 @@ public final class AFDatabaseInteractionHelper
      * @return the _id_TaskIDs of the solution (the _id of the task the solution is for)
      */
     public static long getTaskIdFromSolutionId(SQLiteDatabase db, long solution_id) {
-        Cursor cursor = makeCursorForOneField(db, SolutionsTable.TABLE_NAME, SolutionsTable._ID_TaskIDs, SolutionsTable._ID + "=?", new String[]{Long.toString(solution_id)}, "LIMIT 1");
+        Cursor cursor = makeCursorForField(db, SolutionsTable.TABLE_NAME, SolutionsTable._ID_TaskIDs, SolutionsTable._ID + "=?", new String[]{Long.toString(solution_id)}, "LIMIT 1");
         //noinspection TryFinallyCanBeTryWithResources
         try {
             cursor.moveToFirst();
@@ -333,8 +350,12 @@ public final class AFDatabaseInteractionHelper
         return output;
     }
 
-    public static Cursor makeCursorForOneField(SQLiteDatabase db, String tableName, String columns, String whereStatement, String[] whereArgs, String queryExtras) {
-        return db.rawQuery(String.format("SELECT %s FROM %s WHERE %s %s", columns, tableName, whereStatement, queryExtras), whereArgs);
+    public static Cursor makeCursorForField(SQLiteDatabase db, String tableName, String columns, String whereStatement, String[] whereArgs, String queryExtras) {
+        return db.rawQuery(makeCursorTextForField(tableName, columns, whereStatement, queryExtras), whereArgs);
+    }
+
+    public static String makeCursorTextForField(String tableName, String columns, String whereStatement, String queryExtras) {
+        return String.format("SELECT %s FROM %s WHERE %s %s", columns, tableName, whereStatement, queryExtras);
     }
 
     private static ContentValues valuesInstance = new ContentValues();

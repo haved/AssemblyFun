@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_rename_solution" android:title="@string/action_rename_solution"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_copy_solution" android:title="@string/action_copy_solution"
+        android:orderInCategory="200" app:showAsAction="never" />
+    <item android:id="@+id/action_delete_solution" android:title="@string/action_delete_solution"
+        android:orderInCategory="300" app:showAsAction="never" />
+</menu>
