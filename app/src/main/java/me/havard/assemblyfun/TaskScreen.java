@@ -40,7 +40,7 @@ import me.havard.assemblyfun.util.DialogHelper;
 import me.havard.assemblyfun.util.MonthLabels;
 import me.havard.assemblyfun.util.RemoveAllTaskData;
 
-public class TaskScreen extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, ListView.OnItemClickListener, ListView.OnItemLongClickListener, AllDoneCounter.AllDoneListener {
+public class TaskScreen extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, AllDoneCounter.AllDoneListener {
 
     public static final String EXTRAS_TASK_ID = "extrasTaskID";
     public static final int RESULT_CODE = 1;
