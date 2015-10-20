@@ -278,6 +278,17 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
                             }, R.string.dialog_button_Rename, R.string.dialog_button_Cancel).show();
                     return true;
                 }
+                else if(menuItemId==R.id.action_copy_solution) {
+                    DialogHelper.makeInputDialogBuilder(TaskScreen.this, R.string.dialog_title_copy_solution, R.string.dialog_enter_new_name,
+                            AFDatabaseInteractionHelper.getSolutionTitle(((AssemblyFunApplication)getApplication()).getReadableDatabase(), id),
+                            new DialogHelper.TextDialogListener() {
+                                @Override
+                                public void onTextEntered(String text) {
+                                    new CopySolutionTask(((AssemblyFunApplication)getApplication()).getDatabase(), id, mLocalID, text).execute();
+                                }
+                            }, R.string.dialog_button_Copy, R.string.dialog_button_Cancel).show();
+                    return true;
+                }
                 return false;
             }
         });
@@ -298,6 +309,29 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         @Override
         protected Void doInBackground(Void... params) {
             AFDatabaseInteractionHelper.changeSolutionTitle(mDb.getWritableDatabase(), AFDatabaseInteractionHelper.getClearedContentValuesInstance(), mSolutionId, mNewName);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            reloadSolutionList();
+        }
+    }
+
+    private class CopySolutionTask extends AsyncTask<Void, Void, Void> {
+        private SQLiteOpenHelper mDb;
+        private long mSolutionId, mTaskId;
+        private String mNewName;
+        public CopySolutionTask(SQLiteOpenHelper db, long solutionId, long taskId, String newName) {
+            mDb = db;
+            mSolutionId = solutionId;
+            mTaskId = taskId;
+            mNewName = newName;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            AFDatabaseInteractionHelper.copySolution(mDb.getWritableDatabase(), AFDatabaseInteractionHelper.getClearedContentValuesInstance(), mSolutionId, mTaskId, mNewName);
             return null;
         }
 

@@ -53,7 +53,7 @@ public final class AFDatabaseInteractionHelper
      * @param date for the DATA column in the new row. Milliseconds since Jan 1. 1970
      * @param diff for the DIFFICULTY column in the new row. An integer corresponing to one of the difficulties in the Difficulty enum.
      * @param rating for the RATING column in the new row. A float.
-     * @param author for the AUTHOR column in the new row. A TEXT.
+     * @param author for the AUTHOR column in the new row. A TYPE_TEXT.
      * @param selfPublished whether or not the task is published on this device. Stored in the FLAGS column in the new row.
      * @param favourite whether or not the task is a favourite. Stored in the FLAGS column in the new row.
      * @param globalID the globalID of the new task. If it already exists in the TaskIDTable that row is used for the _id_TaskIDs foreign key, otherwise a new row in TaskIDTable is added with this as the globalID.
@@ -62,10 +62,18 @@ public final class AFDatabaseInteractionHelper
      */
     public static long addTaskInfoToTables(SQLiteDatabase db, ContentValues values, String name, String desc, long date, Difficulty diff, float rating, String author,
                                            boolean selfPublished, boolean favourite, long globalID) {
-        long localID=getLocalIDFromGlobalID(db, values, globalID);
-        values.clear();
+        long localID = -1;
 
-        TaskinfoTable.addRow(db, values, localID, name, desc, date, diff, rating, author, TaskinfoTable.getFlags(false, false, selfPublished, favourite, globalID != 0));
+        try {
+            db.beginTransaction();
+            localID = getLocalIDFromGlobalID(db, values, globalID);
+            values.clear();
+
+            TaskinfoTable.addRow(db, values, localID, name, desc, date, diff, rating, author, TaskinfoTable.getFlags(false, false, selfPublished, favourite, globalID != 0));
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
         return localID;
     }
 
@@ -193,6 +201,33 @@ public final class AFDatabaseInteractionHelper
     public static void changeSolutionTitle(SQLiteDatabase db, ContentValues values, long solution_id, String newTitle) {
         values.put(SolutionsTable.TITLE, newTitle);
         db.update(SolutionsTable.TABLE_NAME, values, WHERE_SOLUTION_ID_EQUAL_TO, new String[]{Long.toString(solution_id)});
+    }
+
+    private static final String SELECT_ALL_FROM_SOLUTIONS_TABLE_WHERE = makeCursorTextForField(SolutionsTable.TABLE_NAME, "*", WHERE_SOLUTION_ID_EQUAL_TO, "LIMIT 1");
+    public static long copySolution(SQLiteDatabase db, ContentValues values, long solution_id, long task_id, String newTitle) {
+        long output = -1;
+        try {
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery(SELECT_ALL_FROM_SOLUTIONS_TABLE_WHERE, new String[]{Long.toString(solution_id)});
+            cursor.moveToFirst();
+            if (cursor.isAfterLast())
+                Log.e("Assembly Fun", "Could not copy a solution that doesn't exist!");
+            else {
+                values.put(SolutionsTable._ID_TaskIDs, task_id);
+                values.put(SolutionsTable.TITLE, newTitle);
+                values.put(SolutionsTable.SOLUTION_TEXT, cursor.getString(cursor.getColumnIndex(SolutionsTable.SOLUTION_TEXT)));
+                values.put(SolutionsTable.SOLUTION_QUALITY, cursor.getInt(cursor.getColumnIndex(SolutionsTable.SOLUTION_QUALITY)));
+                values.put(SolutionsTable.SPEED, cursor.getFloat(cursor.getColumnIndex(SolutionsTable.SPEED)));
+                values.put(SolutionsTable.SIZE, cursor.getInt(cursor.getColumnIndex(SolutionsTable.SIZE)));
+                values.put(SolutionsTable.MEMUSE, cursor.getFloat(cursor.getColumnIndex(SolutionsTable.MEMUSE)));
+                output = db.insert(SolutionsTable.TABLE_NAME, null, values);
+                db.setTransactionSuccessful();
+            }
+        }
+        finally {
+            db.endTransaction();
+        }
+        return output;
     }
 
     private static final String SOLUTION_TITLE_QUERY = makeCursorTextForField(SolutionsTable.TABLE_NAME, SolutionsTable.TITLE, WHERE_SOLUTION_ID_EQUAL_TO, "LIMIT 1");

@@ -4,10 +4,10 @@ package me.havard.assemblyfun.data.tables;
  * Created by Havard on 13/09/2015.
  */
 public abstract class Table {
-    public static final String INT = "INT";
-    public static final String REEL = "REEL";
-    public static final String TEXT = "TEXT";
-    public static final String BLOB = "BLOB";
+    public static final String TYPE_INT = "INT";
+    public static final String TYPE_REEL = "REEL";
+    public static final String TYPE_TEXT = "TEXT";
+    public static final String TYPE_BLOB = "BLOB";
     public static final String PRIMARY_KEY_AUTOINCREMENT = "INTEGER PRIMARY KEY ASC AUTOINCREMENT NOT NULL";
     public static final String PRIMARY_KEY = "INTEGER PRIMARY KEY ASC NOT NULL";
 

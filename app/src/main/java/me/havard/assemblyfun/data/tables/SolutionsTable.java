@@ -25,13 +25,13 @@ public class SolutionsTable extends Table {
     public String getCreateString() {
         return getSQLCreate(TABLE_NAME,
                 _ID, PRIMARY_KEY_AUTOINCREMENT,
-                _ID_TaskIDs, INT,
-                TITLE, TEXT,
-                SOLUTION_TEXT, TEXT,
-                SOLUTION_QUALITY, INT,
-                SPEED, INT,
-                SIZE, INT,
-                MEMUSE, INT,
+                _ID_TaskIDs, TYPE_INT,
+                TITLE, TYPE_TEXT,
+                SOLUTION_TEXT, TYPE_TEXT,
+                SOLUTION_QUALITY, TYPE_INT,
+                SPEED, TYPE_INT,
+                SIZE, TYPE_INT,
+                MEMUSE, TYPE_INT,
                 TaskIDTable.FOREIGN_KEY_ID_TaskIDs);
     }
 
