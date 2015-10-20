@@ -49,6 +49,8 @@
     <string name="dialog_title_rename_solution">Rename Solution</string>
     <string name="dialog_title_copy_solution">Copy Solution</string>
     <string name="dialog_enter_new_name">Enter new name:</string>
+    <string name="dialog_title_delete_solution">Are your sure?</string>
+    <string name="dialog_message_you_sure_delete_solution">This will permanently delete the solution!</string>
 
     <string name="dialog_button_OK">OK</string>
     <string name="dialog_button_Info">Info</string>
@@ -56,5 +58,6 @@
     <string name="dialog_button_Cancel">Cancel</string>
     <string name="dialog_button_Rename">Rename</string>
     <string name="dialog_button_Copy">Copy</string>
+    <string name="dialog_button_Delete">Delete</string>
     <string name="dialog_title_search_task_list">Enter search query:</string>
 </resources>

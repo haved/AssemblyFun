@@ -289,6 +289,16 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
                             }, R.string.dialog_button_Copy, R.string.dialog_button_Cancel).show();
                     return true;
                 }
+                else if(menuItemId==R.id.action_delete_solution) {
+                    DialogHelper.makeDialogBuilder(TaskScreen.this, R.string.dialog_title_delete_solution, R.string.dialog_message_you_sure_delete_solution,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    new DeleteSolutionTask(((AssemblyFunApplication)getApplication()).getDatabase(), id).execute();
+                                }
+                            }, R.string.dialog_button_Delete, R.string.dialog_button_Cancel, true).show();
+                    return true;
+                }
                 return false;
             }
         });
@@ -332,6 +342,26 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
         @Override
         protected Void doInBackground(Void... params) {
             AFDatabaseInteractionHelper.copySolution(mDb.getWritableDatabase(), AFDatabaseInteractionHelper.getClearedContentValuesInstance(), mSolutionId, mTaskId, mNewName);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            reloadSolutionList();
+        }
+    }
+
+    private class DeleteSolutionTask extends AsyncTask<Void, Void, Void> {
+        private SQLiteOpenHelper mDb;
+        private long mSolutionId;
+        public DeleteSolutionTask(SQLiteOpenHelper db, long solutionId) {
+            mDb = db;
+            mSolutionId = solutionId;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            AFDatabaseInteractionHelper.deleteSolution(mDb.getWritableDatabase(), mSolutionId);
             return null;
         }
 

@@ -230,6 +230,17 @@ public final class AFDatabaseInteractionHelper
         return output;
     }
 
+    public static void deleteSolution(SQLiteDatabase db, long solution_id) {
+        try {
+            db.beginTransaction();
+            db.delete(SolutionsTable.TABLE_NAME, WHERE_SOLUTION_ID_EQUAL_TO, new String[]{Long.toString(solution_id)});
+            db.setTransactionSuccessful();
+        }
+        finally {
+            db.endTransaction();
+        }
+    }
+
     private static final String SOLUTION_TITLE_QUERY = makeCursorTextForField(SolutionsTable.TABLE_NAME, SolutionsTable.TITLE, WHERE_SOLUTION_ID_EQUAL_TO, "LIMIT 1");
     public static String getSolutionTitle(SQLiteDatabase db, long solution_id) {
         Cursor cursor = db.rawQuery(SOLUTION_TITLE_QUERY, new String[]{Long.toString(solution_id)});
