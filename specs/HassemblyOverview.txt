@@ -1,5 +1,5 @@
 ;This is a comment in Hassembly
-Registers r0 to r15.
+Registers r0 to r15. All registers are 32 bits.
 StackPointer (sp):r13
 LinkRegister (lr):r14
 ProgramCounter (pc):r15
@@ -26,11 +26,11 @@ Words are defined like this. Each word is 32 bits. Be careful that they don't lo
     .word 125464
     .word 0b100100110000111100001111
 
-Flexible second operand / FSO:   The FSO is Flexible and can take on many different forms:
-    Immediate value: #1280; A byte rotated right by an even number of places
+Flexible second operand / FSO:   The FSO (aka Operand2) is Flexible and can take on different forms:
+    Immediate value: #1280; One byte rotated right (ROR) by an even number of places (4bit*2)
     Register: r5; The value of a register
-    Register shifted by value: r5, lsl #6; lsl = Logical shift left; The shift(i.t.c. #6) is 5 bits; range(0,31) ; When shifting the same restrictions apply to the shift as Rn and #sh in the lsl and lsr instructions.
-    Register shifted by register: r3, lsr r2; lsr = Logical shift right. (lsl and lsr are the only shifts supported) The least significant byte of r2 is used; r3>>(r2&0xFF)
+    Register shifted by value: r5, lsl #imm5; lsl = Logical shift left; 5-bit shift; range(0,31);
+    Register shifted by register: r3, lsr r2; lsr = Logical shift right. The least significant byte of r2 is used; r3>>(r2&0xFF)
     Examples using add, mov:
     add r0, r1, r2;             r0=r1+r2;
     add r0, r1, #10;            r0=r1+10;
@@ -39,31 +39,49 @@ Flexible second operand / FSO:   The FSO is Flexible and can take on many differ
     add r0, #6                  r0+=6;
     mov r3, r3, lsl #4          r3=(r3<<4); r3<<=4; r3*=2^4;
 
+Relative expressions / REx:  They are used when pointing to a specific part of memory. This can be done in three ways:
+-  label:                       myNumber
+-  register:                    [r5] ; The value of a register
+-  Immediate offset register:   [Rn, #immed_12] ; The address stored in Rn plus/minus a 12 bit number;
+-  Register offset register:    [Rn, +/-Rm {, shift}] ; The address in Rn +/- Rm. Rm can optionally be shifted using lsl or lsr by a 5 bit number.
+Examples:
+    ldr r1, test
+    ldr r2, [pc]
+    ldr r2, [r3, r4]
+    ldr r1, [r2, r1, lsl #31]
+    ldr r0, [r1, #4095]
+    ldr r1, [r0, #-4095]
+    ldr r0, [r1, -r2, lsr #8]
+
 Rd = destination register
 Rm = input register
 FSO = Flexible second operand
+REx = Relative expressions
 Mnemonics:
     mov Rd, FSO; Copies the value of FSO into Rd;         Example: mov r0,r1; Is in C: r0=r1;
     mov Rd, #imm16; Copies the 16 bit unsigned integer into Rd;         Example: mov r0,#0xFAAF; Is in C: r0=0xFAAF;
-    mvn Rd, FSO; Does that same as mov preforms a bitwise logical NOT on the result put in Rd. Example mvn r0,0xFF00FF00; r0=0x00FF00FF
+    mvn Rd, FSO; Does that same as mov but preforms a bitwise logical NOT on the result put in Rd. Example mvn r0,0xFF00FF00; r0=0x00FF00FF
 
-    add/ ; Addition
-    sub/ ; Subtraction
-    rsb/ ; Reverse subtraction
+    add/ ; Addition; Example: add r0,r1,#5; In C: r0=r1+5;
+    sub/ ; Subtraction; Example: sub r0,r1,#5; In C: r0=r1-5;
+    rsb/ ; Reverse subtraction; Example: rsb r0,r1,#5; In C: r0=5-r1;
+    and/ ; Bitwise and; Example: and r0,r1,#5; In C: r0=r1&5;
+    orr/ ; Bitwise logical or; Example: orr r0,r1,#5; In C: r0=r1|5;
+    eor/ ; Bitwise exclusive or; Example: eor r0,r1,#05; In C: r0=r1^5;
             ___ {Rd,} Rn, FSO; Stores the value of Rm "operator" FSO in Rd (Or Rn if Rd is omitted);
 
-    mul {Rd,} Rn, Multiplies the values from Rn and Rm and stores the 32 least significant bits in Rd (Or Rn if Rd is omitted)
+    mul {Rd,} Rn, Rm Multiplies the values from Rn and Rm and stores the 32 least significant bits in Rd(/Rn)
     mla Rd, Rn, Rm, Ra Multiplies the values from Rn and Rm, adds the value of Ra and stores the sum in Rd
     mls Rd, Rn, Rm, Ra Multiplies the values from Rn and Rm, subtracts the value of Ra and stores the difference in Rd
 
-    sdiv/; Signed Division
-    and/ ; Bitwise and
-    orr/ ; Bitwise or
-    mod  ; Modulo
-
     lsl/ ; Logical shift left
-    lsr  ; Logical shift right
-            ___ Rd, Rn, Rm; Shifts the value of Rn by the least significant byte of Rm. Stores it in Rd;
-            ___ Rd, Rn, #sh; Shifts the value of Rn by #sh. #sh is 5 bits; range(0,31)
+    lsr/ ; Logical shift right
+            ___ {Rd,} Rn, Rm; Shifts the value of Rn by the least significant byte of Rm. Stores it in Rd;
+            ___ {Rd,} Rn, #sh; Shifts the value of Rn by #sh. #sh is 5 bits; range(0,31)
 
-    b
+    ldr Rd, REx ; Loads the 32 bits located at REx into Rd
+    str Rd, REx ; Stores the value of Rd at REx.
+
+    cmp Rn, FSO ;  Compares the two values of Rn and FSO and
+
+
