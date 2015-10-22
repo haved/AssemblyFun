@@ -14,78 +14,75 @@
             Labels are a reference to the address of the line coming after it. Either an instruction or a word. <br>
             <h4>Nicknames</h4>
             You can use <i>.req</i> to assign a nickname to a register. You use <i>.unreq</i> to remove the nickname. Example: <br>
-                <p2 name="asm">r0 .req pinNum<br>
+                <span class="asm">r0 .req pinNum<br>
                     mov pinNum, #0x200000<br>
-                    .unreq pinNum</p2>
+                    .unreq pinNum</span>
 
-            <p class="note" name="register">
+            <div class="note register">
                 <b>Registers</b><br>
                 The are 16 32-bit registers. r0 to r15. r0 to r12 are general use registers. Special registers:<br>
                 r13: Stack pointer (sp)<br>
                 r14: Link register (lr)<br>
                 r15: Program counter (pc)<br>
-            </p>
+            </div>
 
-            <p name="immediateVal" class="note">
+            <div class="note immediateVal">
                 <b>Immediate values</b><br>
                 Immediate values are written in one of three ways:<br>
-                Decimal: <p2 name="asm">#1230</p2><br>
-                Hexadecimal: <p2 name="asm">#0xFF00</p2><br>
-                Binary: <p2 name="asm">#0b1101</p2><br>
+                Decimal: <span class="asm">#1230</span><br>
+                Hexadecimal: <span class="asm">#0xFF00</span><br>
+                Binary: <span class="asm">#0b1101</span><br>
                 Example:<br>
-                <p2 name="asm">
+                <span class="asm">
                     mov r0, #2550<br>
                     mov r1, #0xFF<br>
                     mov r2, #0b10010011<br>
-                </p2>
-                More often than not thou can't express negative immediate values. In the few cases you can, the syntax is: <p2 name="asm">#-4095</p2><br>
-                NB: Please note that not all immediate values fit in all instructions. #imm8 means the immediate value is 8 bit and can't exceed 255. The rules are especially weird for <p3 name="FSO">Flexible Second Operands</p3>
-            </p>
+                </span>
+                More often than not thou can't express negative immediate values. In the few cases you can, the syntax is: <span class="asm">#-4095</span><br>
+                NB: Please note that not all immediate values fit in all instructions. #imm8 means the immediate value is 8 bit and can't exceed 255. The rules are especially weird for <span class="FSO">Flexible Second Operands</span>
+            </div>
 
-            <p name="defaultNote" class="note">
+            <div class="note defaultNote">
                 <b>Mnemonic documentation syntax</b><br>
                 <i>&ltoperation&gt</i> is the operation.<br>
                 <i>{cond}</i> is the <u>optional</u>
-                <p2 name="condition">condition</p2> for the instruction.<br>
-                <i>Rd</i> is the destination <b name="register">register</b>.<br>
-                <i>Rn</i> is the first input <b name="register">register</b>.<br>
-                <i>Rm</i> is the second input <b name="register">register</b>.<br>
-                <i>Rs</i> is the shift <b name="register">register</b>.<br>
-                <i>Ra</i> is the accumulate <b name="register">register</b>.<br>
-                <i>Operand2</i> is a <b name="FSO">Flexible second operand</b>
-            </p>
+                <span class="condition">condition</span> for the instruction.<br>
+                <i>Rd</i> is the destination <b class="register">register</b>.<br>
+                <i>Rn</i> is the first input <b class="register">register</b>.<br>
+                <i>Rm</i> is the second input <b class="register">register</b>.<br>
+                <i>Rs</i> is the shift <b class="register">register</b>.<br>
+                <i>Ra</i> is the accumulate <b class="register">register</b>.<br>
+                <i>Operand2</i> is a <b class="FSO">Flexible second operand</b>
+            </div>
 
-            <p name="shift" class="note">
+            <div class="note shift">
                 <b>Shifting</b><br>
-                In Hassembly there are three methods for shifting:<br>
-                <p2 name="asm">lsl</p2>: Logical shift left<br>
-                <p2 name="asm">lsr</p2>: Logical shift right<br>
-                <p2 name="asm">ror</p2> Rotate right
-            </p>
+                In Hassembly there are three methods of shifting:<br>
+                <span class="asm">lsl</span>: Logical shift left<br>
+                <span class="asm">lsr</span>: Logical shift right<br>
+                <span class="asm">ror</span> Rotate right
+            </div>
 
-            <p name="FSO" class="note">
+            <div class="note FSO">
                 <b>Flexible Second Operand</b>
                 <i>Aliases: FSO, Operand2</i><br>
                 The FSO is flexible and can take one of four forms: <br>
-                <p2 name="immediateVal">Immediate value</p2>: #imm - An 8-bit number rotated right by an even number of places (4 bits*2)<br>
-                <p2 name="register">Register</p2>: Rm - The value of a register<br>
-                <p2 name="register">Register</p2> shifted by <p2 name="immediateVal">immediate value</p2>: Rm, shift #imm5 - The value of Rm <p2 name="shift">shifted</p2> by a 5 bit number<br>
-                <p2 name="register">Register</p2> shifted by <p2 name="register">register</p2>: Rm, shift Rs - The value of Rm <p2 name="shift">shifted</p2> by the last significant byte of Rs<br>
-            </p>
+                <span class="immediateVal">Immediate value</span>: #imm - An 8-bit number rotated right by an even number of places (4 bits*2)<br>
+                <span class="register">Register</span>: Rm - The value of a register<br>
+                <span class="register">Register</span> shifted by <span class="immediateVal">immediate value</span>: Rm, shift #imm5 - The value of Rm <span class="shift">shifted</span> by a 5 bit number<br>
+                <span class="register">Register</span> shifted by <span class="register">register</span>: Rm, shift Rs - The value of Rm <span class="shift">shifted</span> by the last significant byte of Rs<br>
+            </div>
             <h2>Mnemonics</h2>
             <div class="instructionDef">Moving operations:     &ltoperation&gt{cond} Rd,Operand2</div>
-            <div class="instructionDef">Alternative to using Operand2:     &ltoperation&gt{cond} Rd,#imm16</div>
             MOV Rd,Operand2 - Move; Rd=Operand2;<br>
-            MOV Rd,#imm16 - Move; Rd=#imm16;<br>
-            MVN Rd,Operand2 - Move NOT; Rd=0xFFFFFFFF EOR Operand2;
-            <div name="examples">Examples:<br>
-                <div name="asm">
+            MVN Rd,Operand2 - Move NOT; Rd=0xFFFFFFFF EOR Operand2;<br>
+            <div class="examples">Examples:<br>
+                <span class="asm">
                     MOV r0, #0xFF00<br>
-                    MOV r0, r1<br>
-                    MVN r1, #0xFFFF<br>
-                    MOV r3, #65535<br>
-                    MOV r0, r1, lsl #4
-                </div>
+                    MVN r0, r1<br>
+                    MOV r3, #255<br>
+                    MOV r0, r1, lsl #5
+                </span>
             </div>
         </div>
     </body>

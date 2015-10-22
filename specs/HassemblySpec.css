@@ -4,7 +4,7 @@ div.content {
     margin-right: auto;
 }
 
-p.note {
+div.note {
      width: 70%;
      margin-left: auto;
      margin-right: auto;
@@ -15,34 +15,34 @@ div.instructionDef {
     background-color:orange;
 }
 
-[name="asm"] {
+*.asm {
      font: italic 15px arial, sans-serif;
  }
 
-[name="register"] {
+*.register {
      background-color:rgb(230,244,152);
  }
 
-[name="immediateVal"] {
+*.immediateVal {
      background-color:rgb(150,150,200);
  }
 
-[name="shift"] {
+*.shift {
      background-color:rgb(190,150,244);
  }
 
-[name="FSO"] {
+*.FSO {
      background-color:rgb(100,244,152);
  }
 
-[name="condition"] {
+*.condition {
     background-color:rgb(200,154,100);
 }
 
-[name="examples"] {
+*.examples {
     background-color:rgb(160,200,100);
 }
 
-[name="defaultNote"] {
+*.defaultNote {
     background-color:rgb(244,138,152);
 }

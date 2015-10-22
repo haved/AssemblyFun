@@ -59,7 +59,6 @@ FSO = Flexible second operand
 REx = Relative expressions
 Mnemonics:
     mov Rd, FSO; Copies the value of FSO into Rd;         Example: mov r0,r1; Is in C: r0=r1;
-    mov Rd, #imm16; Copies the 16 bit unsigned integer into Rd;         Example: mov r0,#0xFAAF; Is in C: r0=0xFAAF;
     mvn Rd, FSO; Does that same as mov but preforms a bitwise logical NOT on the result put in Rd. Example mvn r0,0xFF00FF00; r0=0x00FF00FF
 
     add/ ; Addition; Example: add r0,r1,#5; In C: r0=r1+5;
