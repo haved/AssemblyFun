@@ -10,6 +10,13 @@ div.note {
      margin-right: auto;
 }
 
+div.innerNote {
+     margin-top: 10px;
+     margin-bottom: 10px;
+     margin-right: 10px;
+     margin-left: 10px;
+}
+
 div.instructionDef {
     font: italic bold 15px arial, sans-serif;
     background-color:orange;
