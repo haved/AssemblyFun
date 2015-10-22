@@ -1,0 +1,48 @@
+div.content {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+p.note {
+     width: 70%;
+     margin-left: auto;
+     margin-right: auto;
+}
+
+div.instructionDef {
+    font: italic bold 15px arial, sans-serif;
+    background-color:orange;
+}
+
+[name="asm"] {
+     font: italic 15px arial, sans-serif;
+ }
+
+[name="register"] {
+     background-color:rgb(230,244,152);
+ }
+
+[name="immediateVal"] {
+     background-color:rgb(150,150,200);
+ }
+
+[name="shift"] {
+     background-color:rgb(190,150,244);
+ }
+
+[name="FSO"] {
+     background-color:rgb(100,244,152);
+ }
+
+[name="condition"] {
+    background-color:rgb(200,154,100);
+}
+
+[name="examples"] {
+    background-color:rgb(160,200,100);
+}
+
+[name="defaultNote"] {
+    background-color:rgb(244,138,152);
+}
