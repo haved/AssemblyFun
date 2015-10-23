@@ -134,6 +134,22 @@
                     EOR r0, r1, r2, ror #4 - r0=r1^(r2&gt&gt 4);<br>
                 </span>
             </div>
+            <br>
+            <div class="instructionDef">Compare instructions:     &ltoperation&gt{cond} Rn,Operand2</div>
+            All these instructions set the compare value. These are used by the
+            <span class="condition">conditional</span> codes.<br>
+            A compare value of 0, for instance, means equal.
+            CMP - Compare two values. Sets the compare value to Rn-Operand2
+            CMN - Compare negative. Sets the compare value to Rn+Operand2
+            TST - bitwise test. Sets the compare value to Rn&Operand2
+            TEQ - bitwise equivalence. Sets the compare value to Rn^Operand2
+            <div class="examples">Examples:<br>
+                <span class="asm">
+                    CMP r0, #50 - Sets the comparison flag to r0-50<br>
+                    CMN r1, r2 - Sets the comparison flag to r1+r2<br>
+                    TST r1, #0b0100 - Sets the comparison flag to r1 AND 0b0100<br>
+                </span>
+            </div>
         </div>
     </body>
 </html>
