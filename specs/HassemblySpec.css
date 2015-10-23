@@ -17,7 +17,7 @@ div.innerNote {
      margin-left: 10px;
 }
 
-div.instructionDef {
+*.instructionDef {
     font: italic bold 15px arial, sans-serif;
     background-color:orange;
 }

@@ -69,11 +69,14 @@
                 <b>Flexible Second Operand</b>
                 <i>Aliases: FSO, Operand2</i><br>
                 The FSO is flexible and can take one of four forms: <br>
-                <span class="immediateVal">Immediate value</span>: #imm - An 8-bit number rotated right by an even number of places (4 bits*2)<br>
-                <span class="register">Register</span>: Rm - The value of a register<br>
-                <span class="register">Register</span> shifted by <span class="immediateVal">immediate value</span>: Rm, shift #imm5 - The value of Rm <span class="shift">shifted</span> by a 5 bit number<br>
+                <span class="immediateVal">Immediate value</span>: <span class="instructionDef">#imm</span> - An 8-bit number rotated right by an even number of places (4 bits*2)<br>
+                <span class="register">Register</span>: <span class="instructionDef">Rm</span>
+                        - The value of a register<br>
+                <span class="register">Register</span> shifted by <span class="immediateVal">immediate value
+                    </span>: <span class="instructionDef">Rm, shift #imm5</span> - The value of Rm <span class="shift">shifted</span> by a 5 bit number<br>
                 <span class="register">Register</span> shifted by
-                        <span class="register">register</span>: Rm, shift Rs
+                        <span class="register">register</span>:
+                        <span class="instructionDef">Rm, shift Rs</span>
                         - The value of Rm <span class="shift">shifted</span>
                         by the last significant byte of Rs<br>
                 <div class="examples innerNote">
@@ -99,6 +102,19 @@
                     MVN r0, r1<br>
                     MOV r3, #255<br>
                     MOV r0, r1, lsl #5
+                </span>
+            </div>
+
+            <div class="instructionDef">Arithmetic operations:     &ltoperation&gt{cond} Rd,Rn,Operand2</div>
+            ADD Rd, Rn, Operand2 - Addition; Rd=Rn+Operand2<br>
+            SUB Rd, Rn, Operand2 - Subtraction; Rd=Rn-Operand2<br>
+            RSB Rd, Rn, Operand2 - Reverse subtraction; Rd=Operand2-Rn<br>
+            <div class="examples">Examples:<br>
+                <span class="asm">
+                    ADD r0, r1, r2; r0=r1+r2;
+                    ADD r0, r0, #10; r0+=10;
+                    SUB r0, r1, r2, lsl #6; r0 = r1-(r2<<6);
+                    RSB r2, r2, r1, lsr #2; r2 = (r1>>2)-r2;
                 </span>
             </div>
         </div>
