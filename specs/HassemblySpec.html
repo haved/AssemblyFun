@@ -16,9 +16,9 @@
             <h4>Nicknames</h4>
             You can use <i>.req</i> to assign a nickname to a register. You use <i>.unreq</i> to remove the nickname. Example: <br>
                 <span class="asm">r0 .req pinNum<br>
-                    mov pinNum, #0x200000<br>
+                    MOV pinNum, #0x200000<br>
                     .unreq pinNum</span>
-
+<!--Registers-->
             <div class="note register">
                 <b>Registers</b><br>
                 The are 16 32-bit registers. r0 to r15. r0 to r12 are general use registers. Special registers:<br>
@@ -27,6 +27,7 @@
                 r15: Program counter (pc)<br>
             </div>
             <br>
+<!--Immediate values-->
             <div class="note immediateVal">
                 <b>Immediate values</b><br>
                 Immediate values are written in one of three ways:<br>
@@ -35,14 +36,15 @@
                 Binary: <span class="asm">#0b1101</span><br>
                 Example:<br>
                 <span class="asm">
-                    mov r0, #2550<br>
-                    mov r1, #0xFF<br>
-                    mov r2, #0b10010011<br>
+                    MOV r0, #2550<br>
+                    MOV r1, #0xFF<br>
+                    MOV r2, #0b10010011<br>
                 </span>
                 More often than not thou can't express negative immediate values. In the few cases you can, the syntax is: <span class="asm">#-4095</span><br>
                 NB: Please note that not all immediate values fit in all instructions. #imm8 means the immediate value is 8 bit and can't exceed 255. The rules are especially weird for <span class="FSO">Flexible Second Operands</span>
             </div>
             <br>
+<!--Mnemonic documentation-->
             <div class="note defaultNote">
                 <b>Mnemonic documentation syntax</b><br>
                 <i>&ltoperation&gt</i> is the operation.<br>
@@ -57,16 +59,44 @@
                 <i>Operand2</i> is a <span class="FSO">Flexible second operand</span>.
             </div>
             <br>
+<!--Shifting-->
             <div class="note shift">
                 <b>Shifting</b><br>
-                In Hassembly there are three methods of shifting:<br>
-                <span class="asm">lsl</span>: Logical shift left<br>
-                <span class="asm">lsr</span>: Logical shift right<br>
-                <span class="asm">ror</span>: Rotate right<br>
-                They can be used as
-                <span class="instructionDef">instructions</span> and in <span class="FSO">Flexible Second Operands</span>
+                In Hassembly there are four methods of shifting:<br>
+                <span class="asm">LSL</span>: Logical shift left<br>
+                <span class="asm">LSR</span>: Logical shift right<br>
+                <span class="asm">ASR</span>: Arithmetic shift right<br>
+                <span class="asm">ROR</span>: Rotate right<br>
+                Shifting is always done by either a 5 bit immediate value, or the least significant byte of a register.<br>
+                Shifting operations can be used as
+                <span class="instructionDef">instructions</span> and in <span class="FSO">Flexible Second Operands</span>.
+                <div class="defaultNote innerNote">
+                    <b>Logical vs Arithmetic shift right</b><br>
+                    The difference between Logical shift right (<span class="asm">LSR</span>) and Arithmetic shift right (<span class="asm">ASR</span>) is that <span class="asm">LSR</span>
+                                        always fills the vacated bit positions (beige) with 0, while <span class="asm">ASR</span> uses the integer's old sign (orange).<br>
+                    Because all positive signed integers have the sign 0 (See: <a href="https://en.wikipedia.org/wiki/Two%27s_complement">Two's compliment</a>),
+                    there is no difference between <span class="asm">LSR</span> and <span class="asm">ASR</span> when shifting positive signed numbers.<br>
+                    This also means <span class="asm">LSR</span> doesn't handle negative (signed) numbers. A common way of thinking about shifting is that you multiply by 2^shiftLeft or divide by 2^shiftRight.
+                                For negative (signed) numbers this is only true with <span class="asm">ASR</span>.<br>
+                    <div class="examples innerNote">
+                        Examples:<br>
+                        <span class="immediateVal">
+                            <span class="orangeMarker">0</span>010 1110 0001 1111</span> >> 4 = <br>
+                        Both Logical shift right and Arithmetic shift right gives:<br>
+                        <span class="immediateVal"><span class="beigeMarker">0000</span> <span class="orangeMarker">0</span>010 1110 0001</span><br>
+                        <br>
+                        <span class="immediateVal">
+                            <span class="orangeMarker">1</span>001 1011 0101 1100</span> >> 4 = <br>
+                        Logical shift right gives:<br>
+                        <span class="immediateVal"><span class="beigeMarker">0000</span> <span class="orangeMarker">1</span>001 1011 0101</span><br>
+                        Arithmetic shift right gives:<br>
+                        <span class="immediateVal"><span class="beigeMarker">1111</span> <span class="orangeMarker">1</span>001 1011 0101</span><br>
+                    </div>
+                    Learn more about <span class="asm">LSL, LSR, ASR</span> and <span class="asm">ROR</span> <a href="http://www.davespace.co.uk/arm/introduction-to-arm/barrel-shifter.html">here!</a>
+                </div>
             </div>
             <br>
+<!--Flexible second operands-->
             <div class="note FSO">
                 <b>Flexible Second Operand</b>
                 <i>Aliases: FSO, Operand2</i><br>
@@ -82,19 +112,20 @@
                         - The value of Rm <span class="shift">shifted</span>
                         by the last significant byte of Rs<br>
                 <div class="examples innerNote">
-                    Examples using <span class="asm">mov Rd,Operand2</span>:<br>
+                    Examples using <span class="asm">MOV Rd,Operand2</span>:<br>
                     <span class="asm">
-                        mov r0, #5<br>
-                        mov r0, r1<br>
-                        mov r0, #0x2A<br>
-                        mov r0, #0xFF000<br>
-                        mov r0, r1, lsl #5<br>
-                        mov r0, r1, lsr r2<br>
+                        MOV r0, #5<br>
+                        MOV r0, r1<br>
+                        MOV r0, #0x2A<br>
+                        MOV r0, #0xFF000<br>
+                        MOV r0, r1, LSL #5<br>
+                        MOV r0, r1, LSR r2<br>
                     </span>
                 </div>
             </div>
-            
+<!--Mnemonics-->
             <h2>Mnemonics</h2>
+<!--Moving instructions-->
             <div class="instructionDef">Moving instructions:     &ltoperation&gt{cond} Rd,Operand2</div>
             MOV - Move; Rd=Operand2;<br>
             MVN - Move NOT; Rd=0xFFFFFFFF EOR Operand2;<br>
@@ -103,10 +134,11 @@
                     MOV r0, #0xFF00<br>
                     MVN r0, r1<br>
                     MOV r3, #255<br>
-                    MOV r0, r1, lsl #5
+                    MOV r0, r1, LSL #5
                 </span>
             </div>
             <br>
+<!--Arithmetic instructions-->
             <div class="instructionDef">Arithmetic instructions:     &ltoperation&gt{cond} Rd,Rn,Operand2</div>
             ADD - Addition; Rd=Rn+Operand2<br>
             SUB - Subtraction; Rd=Rn-Operand2<br>
@@ -115,11 +147,12 @@
                 <span class="asm">
                     ADD r0, r1, r2; r0=r1+r2;<br>
                     ADD r0, r0, #10; r0+=10;<br>
-                    SUB r0, r1, r2, lsl #6; r0 = r1-(r2<<6);<br>
-                    RSB r2, r2, r1, lsr #2; r2 = (r1>>2)-r2;<br>
+                    SUB r0, r1, r2, LSL #6; r0 = r1-(r2<<6);<br>
+                    RSB r2, r2, r1, LSR #2; r2 = (r1>>2)-r2;<br>
                 </span>
             </div>
             <br>
+<!--Logical instructions-->
             <div class="instructionDef">Logical instructions:     &ltoperation&gt{cond} Rd,Rn,Operand2</div>
             AND - Bitwise logical and; Rd=Rn&Operand2<br>
             ORR - Bitwise inclusive or; Rd=Rn|Operand2<br>
@@ -129,25 +162,44 @@
                 <span class="asm">
                     AND r0, r0, #0xFF - r0&=0xFF; //Only the last byte is kept<br>
                     ORR r1, r0, #0b1010 - r1=r0|10; //The bits 1010 will always be true after this<br>
-                    ORR r1, r2, r3, lsl r4 - r1=r2|(r3&lt&lt r4);<br>
+                    ORR r1, r2, r3, LSL r4 - r1=r2|(r3&lt&lt r4);<br>
                     EOR r0, r1, 0xFF - r0=r1^255; //Invert the last byte of r1 and store it in r0<br>
                     EOR r0, r1, r2, ror #4 - r0=r1^(r2&gt&gt 4);<br>
                 </span>
             </div>
             <br>
+<!--Compare instructions-->
             <div class="instructionDef">Compare instructions:     &ltoperation&gt{cond} Rn,Operand2</div>
             All these instructions set the compare value. These are used by the
             <span class="condition">conditional</span> codes.<br>
-            A compare value of 0, for instance, means equal.
-            CMP - Compare two values. Sets the compare value to Rn-Operand2
-            CMN - Compare negative. Sets the compare value to Rn+Operand2
-            TST - bitwise test. Sets the compare value to Rn&Operand2
-            TEQ - bitwise equivalence. Sets the compare value to Rn^Operand2
+            A compare value of 0, for instance, means equal.<br>
+            CMP - Compare two values. Sets the compare value to Rn-Operand2<br>
+            CMN - Compare negative. Sets the compare value to Rn+Operand2<br>
+            TST - bitwise test. Sets the compare value to Rn&Operand2<br>
+            TEQ - bitwise equivalence. Sets the compare value to Rn^Operand2<br>
             <div class="examples">Examples:<br>
                 <span class="asm">
                     CMP r0, #50 - Sets the comparison flag to r0-50<br>
                     CMN r1, r2 - Sets the comparison flag to r1+r2<br>
                     TST r1, #0b0100 - Sets the comparison flag to r1 AND 0b0100<br>
+                </span>
+            </div>
+            <br>
+<!--Shifting instructions-->
+            <div class="instructionDef">Shifting instructions:     &ltoperation&gt{cond} Rd,Rn,Rs</div>
+            <div class="instructionDef">Shifting instructions:     &ltoperation&gt{cond} Rd,Rn,#imm5</div>
+            Choose the one that fits:    byte shift = Rs&0xFF;    byte shift = #imm5;<br>
+            LSL - Logical shift left. Rd=Rn&lt&ltshift<br>
+            LSR - Logical shift right. Rd=Rn>>shift<br>
+            ASR - Arithmetic shift right. Rd=Rn>>shift<br>
+            ROR - Rotate right. Rd=(Rn>>shift) | (Rn&lt&lt(32-shift))<br>
+            See <span class="shift">Shifting</span> for more information.<br>
+            <div class="examples">Examples:<br>
+                <span class="asm">
+                    LSL r0, r0, #4 - r0&lt&lt=4;<br>
+                    LSR r1, r2, r3 - r1=r2>>(r3&0xFF);<br>
+                    ASR r2, r3, #12 - r2=r3>>12;<br>
+                    ROR r1, r1, #12 - r1=(r1>>12)|(r1&lt&lt18);<br>
                 </span>
             </div>
         </div>

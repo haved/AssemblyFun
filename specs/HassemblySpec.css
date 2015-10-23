@@ -38,6 +38,14 @@ div.innerNote {
      background-color:rgb(190,150,244);
  }
 
+ *.orangeMarker {
+    background-color:rgb(250,150,100);
+ }
+
+  *.beigeMarker {
+     background-color:rgb(250,250,200);
+  }
+
 *.FSO {
      background-color:rgb(100,244,152);
  }
