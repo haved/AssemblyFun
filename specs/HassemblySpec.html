@@ -62,7 +62,9 @@
                 In Hassembly there are three methods of shifting:<br>
                 <span class="asm">lsl</span>: Logical shift left<br>
                 <span class="asm">lsr</span>: Logical shift right<br>
-                <span class="asm">ror</span>: Rotate right
+                <span class="asm">ror</span>: Rotate right<br>
+                They can be used as
+                <span class="instructionDef">instructions</span> and in <span class="FSO">Flexible Second Operands</span>
             </div>
             <br>
             <div class="note FSO">
@@ -93,9 +95,9 @@
             </div>
             
             <h2>Mnemonics</h2>
-            <div class="instructionDef">Moving operations:     &ltoperation&gt{cond} Rd,Operand2</div>
-            MOV Rd,Operand2 - Move; Rd=Operand2;<br>
-            MVN Rd,Operand2 - Move NOT; Rd=0xFFFFFFFF EOR Operand2;<br>
+            <div class="instructionDef">Moving instructions:     &ltoperation&gt{cond} Rd,Operand2</div>
+            MOV - Move; Rd=Operand2;<br>
+            MVN - Move NOT; Rd=0xFFFFFFFF EOR Operand2;<br>
             <div class="examples">Examples:<br>
                 <span class="asm">
                     MOV r0, #0xFF00<br>
@@ -104,17 +106,32 @@
                     MOV r0, r1, lsl #5
                 </span>
             </div>
-
-            <div class="instructionDef">Arithmetic operations:     &ltoperation&gt{cond} Rd,Rn,Operand2</div>
-            ADD Rd, Rn, Operand2 - Addition; Rd=Rn+Operand2<br>
-            SUB Rd, Rn, Operand2 - Subtraction; Rd=Rn-Operand2<br>
-            RSB Rd, Rn, Operand2 - Reverse subtraction; Rd=Operand2-Rn<br>
+            <br>
+            <div class="instructionDef">Arithmetic instructions:     &ltoperation&gt{cond} Rd,Rn,Operand2</div>
+            ADD - Addition; Rd=Rn+Operand2<br>
+            SUB - Subtraction; Rd=Rn-Operand2<br>
+            RSB - Reverse subtraction; Rd=Operand2-Rn<br>
             <div class="examples">Examples:<br>
                 <span class="asm">
                     ADD r0, r1, r2; r0=r1+r2;<br>
                     ADD r0, r0, #10; r0+=10;<br>
                     SUB r0, r1, r2, lsl #6; r0 = r1-(r2<<6);<br>
                     RSB r2, r2, r1, lsr #2; r2 = (r1>>2)-r2;<br>
+                </span>
+            </div>
+            <br>
+            <div class="instructionDef">Logical instructions:     &ltoperation&gt{cond} Rd,Rn,Operand2</div>
+            AND - Bitwise logical and; Rd=Rn&Operand2<br>
+            ORR - Bitwise inclusive or; Rd=Rn|Operand2<br>
+            EOR - Bitwise exclusive or; Rd=Rn^Operand2<br>
+            BIC - Bitwise clear; Rd=Rn AND NOT Operand2<br>
+            <div class="examples">Examples:<br>
+                <span class="asm">
+                    AND r0, r0, #0xFF - r0&=0xFF; //Only the last byte is kept<br>
+                    ORR r1, r0, #0b1010 - r1=r0|10; //The bits 1010 will always be true after this<br>
+                    ORR r1, r2, r3, lsl r4 - r1=r2|(r3&lt&lt r4);<br>
+                    EOR r0, r1, 0xFF - r0=r1^255; //Invert the last byte of r1 and store it in r0<br>
+                    EOR r0, r1, r2, ror #4 - r0=r1^(r2&gt&gt 4);<br>
                 </span>
             </div>
         </div>
