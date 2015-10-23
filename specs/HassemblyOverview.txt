@@ -25,6 +25,7 @@ Words are defined like this. Each word is 32 bits. Be careful that they don't lo
     .word 0xFFABCD00
     .word 125464
     .word 0b100100110000111100001111
+    .word label
 
 Flexible second operand / FSO:   The FSO (aka Operand2) is Flexible and can take on different forms:
     Immediate value: #1280; One byte rotated right (ROR) by an even number of places (4bit*2)

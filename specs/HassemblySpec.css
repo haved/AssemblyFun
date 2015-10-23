@@ -1,11 +1,11 @@
 div.content {
-    width: 70%;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
 }
 
 div.note {
-     width: 70%;
+     width: 90%;
      margin-left: auto;
      margin-right: auto;
 }
@@ -17,7 +17,7 @@ div.innerNote {
      margin-left: 10px;
 }
 
-div.instructionDef {
+*.instructionDef {
     font: italic bold 15px arial, sans-serif;
     background-color:orange;
 }
@@ -37,6 +37,14 @@ div.instructionDef {
 *.shift {
      background-color:rgb(190,150,244);
  }
+
+ *.orangeMarker {
+    background-color:rgb(250,150,100);
+ }
+
+  *.beigeMarker {
+     background-color:rgb(250,250,200);
+  }
 
 *.FSO {
      background-color:rgb(100,244,152);
