@@ -44,21 +44,6 @@
                 NB: Please note that not all immediate values fit in all instructions. #imm8 means the immediate value is 8 bit and can't exceed 255. The rules are especially weird for <span class="FSO">Flexible Second Operands</span>
             </div>
             <br>
-<!--Mnemonic documentation-->
-            <div class="note defaultNote">
-                <b>Mnemonic documentation syntax</b><br>
-                <i>&ltoperation&gt</i> is the operation.<br>
-                <span class="asm">{cond}</span> is the <u>optional</u>
-                    <span class="condition">condition</span> for the instruction.<br>
-                <span class="asm">Rd</span> is the destination <span class="register">register</span>.<br>
-                <span class="asm">Rn</span> is the first input <span class="register">register</span>.<br>
-                <span class="asm">Rm</span> is the second input <span class="register">register</span>.<br>
-                <span class="asm">Rs</span> is the shift <span class="register">register</span>.<br>
-                <span class="asm">Ra</span> is the accumulate <span class="register">register</span>.<br>
-                <span class="asm">#imm8</span> is an 8 bit <span class="immediateVal">immediate value</span>.<br>
-                <i>Operand2</i> is a <span class="FSO">Flexible second operand</span>.
-            </div>
-            <br>
 <!--Shifting-->
             <div class="note shift">
                 <b>Shifting</b><br>
@@ -74,10 +59,12 @@
                     <b>Logical vs Arithmetic shift right</b><br>
                     The difference between Logical shift right (<span class="asm">LSR</span>) and Arithmetic shift right (<span class="asm">ASR</span>) is that <span class="asm">LSR</span>
                                         always fills the vacated bit positions (beige) with 0, while <span class="asm">ASR</span> uses the integer's old sign (orange).<br>
+                    This effectively means <span class="asm">LSR</span> doesn't handle negative (signed) numbers as one might expect.<br>
+                    This also means <span class="asm">ASR</span> doesn't handle unsigned numbers as one might expect.<br>
                     Because all positive signed integers have the sign 0 (See: <a href="https://en.wikipedia.org/wiki/Two%27s_complement">Two's compliment</a>),
                     there is no difference between <span class="asm">LSR</span> and <span class="asm">ASR</span> when shifting positive signed numbers.<br>
-                    This also means <span class="asm">LSR</span> doesn't handle negative (signed) numbers. A common way of thinking about shifting is that you multiply by 2^shiftLeft or divide by 2^shiftRight.
-                                For negative (signed) numbers this is only true with <span class="asm">ASR</span>.<br>
+                    A common way of thinking about shifting is that you multiply by 2^shiftLeft or divide by 2^shiftRight.
+                        This is true with <span class="asm">LSR</span> for unsigned numbers, with <span class="asm">ASR</span> for signed numbers.<br>
                     <div class="examples innerNote">
                         Examples:<br>
                         <span class="immediateVal">
@@ -123,6 +110,21 @@
                     </span>
                 </div>
             </div>
+<!--Mnemonic documentation-->
+            <div class="note defaultNote">
+                <b>Mnemonic documentation syntax</b><br>
+                <i>&ltoperation&gt</i> is the operation.<br>
+                <span class="asm">{cond}</span> is the <u>optional</u>
+                <span class="condition">condition</span> for the instruction.<br>
+                <span class="asm">Rd</span> is the destination <span class="register">register</span>.<br>
+                <span class="asm">Rn</span> is the first input <span class="register">register</span>.<br>
+                <span class="asm">Rm</span> is the second input <span class="register">register</span>.<br>
+                <span class="asm">Rs</span> is the shift <span class="register">register</span>.<br>
+                <span class="asm">Ra</span> is the accumulate <span class="register">register</span>.<br>
+                <span class="asm">#imm8</span> is an 8 bit <span class="immediateVal">immediate value</span>.<br>
+                <i>Operand2</i> is a <span class="FSO">Flexible second operand</span>.
+            </div>
+            <br>
 <!--Mnemonics-->
             <h2>Mnemonics</h2>
 <!--Moving instructions-->
@@ -170,18 +172,18 @@
             <br>
 <!--Compare instructions-->
             <div class="instructionDef">Compare instructions:     &ltoperation&gt{cond} Rn,Operand2</div>
-            All these instructions set the compare value. These are used by the
+            All these instructions set the compare flags. Z - Zero, N - Negative, S - Signed bit. These are used by the
             <span class="condition">conditional</span> codes.<br>
             A compare value of 0, for instance, means equal.<br>
-            CMP - Compare two values. Sets the compare value to Rn-Operand2<br>
-            CMN - Compare negative. Sets the compare value to Rn+Operand2<br>
-            TST - bitwise test. Sets the compare value to Rn&Operand2<br>
-            TEQ - bitwise equivalence. Sets the compare value to Rn^Operand2<br>
+            CMP - Compare two values. Sets the compare flags to Rn-Operand2<br>
+            CMN - Compare negative. Sets the compare flags to Rn+Operand2<br>
+            TST - bitwise test. Sets the compare flags to Rn&Operand2<br>
+            TEQ - bitwise equivalence. Sets the compare flags to Rn^Operand2<br>
             <div class="examples">Examples:<br>
                 <span class="asm">
-                    CMP r0, #50 - Sets the comparison flag to r0-50<br>
-                    CMN r1, r2 - Sets the comparison flag to r1+r2<br>
-                    TST r1, #0b0100 - Sets the comparison flag to r1 AND 0b0100<br>
+                    CMP r0, #50 - Sets the comparison flags to r0-50<br>
+                    CMN r1, r2 - Sets the comparison flags to r1+r2<br>
+                    TST r1, #0b0100 - Sets the comparison flags to r1 AND 0b0100<br>
                 </span>
             </div>
             <br>
@@ -201,6 +203,27 @@
                     ASR r2, r3, #12 - r2=r3>>12;<br>
                     ROR r1, r1, #12 - r1=(r1>>12)|(r1&lt&lt18);<br>
                 </span>
+            </div>
+
+<!--Conditional codes-->
+            <div class="note condition">
+                <b>Condition codes</b><br>
+                Condition codes are used to restrict which instructions are done.
+                The code replaces <span class="instructionDef">{cond}</span> when writing the instruction.
+                Without any instruction code, the instruction is always run.<br>
+                The compare flags are: Z - Zero (value==0), N - Negative (value < 0), S - Signed bit (value & 0x8000000); Z implies NOT(S) AND NOT(N)
+                <i>The conditional codes look at ZNS, the compare flags set in the Compare instructions</i>
+                <div class="innerNote defaultNote">
+                    <b>All Condition codes</b><br>
+                    EQ - Equal (Z)
+                    NE - Not equal (!Z)
+                    GT - Signed greater than (!N^S & NOT(Z))
+                    LT - Signed less than (N^S)
+                    GE - Signed greater or equal (!N^S)
+                    LE - Signed less or equal (N^S|Z)
+                    HI - Unsigned higher (!(N|Z))
+                    LS - Unsigned lower or same (N|Z)
+                </div>
             </div>
         </div>
     </body>
