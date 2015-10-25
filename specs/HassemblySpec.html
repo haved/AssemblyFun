@@ -204,25 +204,25 @@
                     ROR r1, r1, #12 - r1=(r1>>12)|(r1&lt&lt18);<br>
                 </span>
             </div>
-
+            <br>
 <!--Conditional codes-->
             <div class="note condition">
                 <b>Condition codes</b><br>
                 Condition codes are used to restrict which instructions are done.
                 The code replaces <span class="instructionDef">{cond}</span> when writing the instruction.
-                Without any instruction code, the instruction is always run.<br>
+                Without any condition code, the instruction will always run.<br>
                 The compare flags are: Z - Zero (value==0), N - Negative (value < 0), S - Signed bit (value & 0x8000000); Z implies NOT(S) AND NOT(N)
                 <i>The conditional codes look at ZNS, the compare flags set in the Compare instructions</i>
                 <div class="innerNote defaultNote">
                     <b>All Condition codes</b><br>
-                    EQ - Equal (Z)
-                    NE - Not equal (!Z)
-                    GT - Signed greater than (!N^S & NOT(Z))
-                    LT - Signed less than (N^S)
-                    GE - Signed greater or equal (!N^S)
-                    LE - Signed less or equal (N^S|Z)
-                    HI - Unsigned higher (!(N|Z))
-                    LS - Unsigned lower or same (N|Z)
+                    EQ - Equal (Z)<br>
+                    NE - Not equal (!Z)<br>
+                    GT - Signed greater than (!N^S & NOT(Z))<br>
+                    LT - Signed less than (N^S)<br>
+                    GE - Signed greater or equal (!N^S)<br>
+                    LE - Signed less or equal (N^S|Z)<br>
+                    HI - Unsigned higher (!(N|Z))<br>
+                    LS - Unsigned lower or same (N|Z)<br>
                 </div>
             </div>
         </div>
