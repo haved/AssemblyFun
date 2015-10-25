@@ -222,7 +222,14 @@
                     GE - Signed greater or equal (!N^S)<br>
                     LE - Signed less or equal (N^S|Z)<br>
                     HI - Unsigned higher (!(N|Z))<br>
-                    LS - Unsigned lower or same (N|Z)<br>
+                    LS - Unsigned lower or same (N|Z)
+                </div>
+                <div class="innerNote examples">
+                    Examples:<br>
+                    <span class="asm">
+                        CMP r1,r0<br>
+                        MOVGT r0, r1 ; If r1 &gt r0, set r0 to r1; Basically r0=max(r0,r1)
+                    </span>
                 </div>
             </div>
         </div>
