@@ -110,6 +110,19 @@
                     </span>
                 </div>
             </div>
+            <br>
+<!--Address-->
+            <div class="note address">
+                <b>Addresses</b><br>
+                An adress can take on multiple forms:<br>
+                <div class="examples innerNote">
+                    Examples using <span class="asm">B/LDR/STR Rd,&lt;address&gt;</span>:<br>
+                    <span class="asm">
+                        
+                    </span>
+                </div>
+            </div>
+            <br>
 <!--Mnemonic documentation-->
             <div class="note defaultNote">
                 <b>Mnemonic documentation syntax</b><br>
@@ -122,7 +135,8 @@
                 <span class="asm">Rs</span> is the shift <span class="register">register</span>.<br>
                 <span class="asm">Ra</span> is the accumulate <span class="register">register</span>.<br>
                 <span class="asm">#imm8</span> is an 8 bit <span class="immediateVal">immediate value</span>.<br>
-                <i>Operand2</i> is a <span class="FSO">Flexible second operand</span>.
+                <span class="asm">Operand2</span> is a <span class="FSO">Flexible second operand</span>.<br>
+                <span class="asm">&lt;address&gt;</span> is an <span class="address">address</span>.<br>
             </div>
             <br>
 <!--Mnemonics-->
@@ -202,6 +216,25 @@
                     LSR r1, r2, r3 - r1=r2>>(r3&amp;0xFF);<br>
                     ASR r2, r3, #12 - r2=r3>>12;<br>
                     ROR r1, r1, #12 - r1=(r1>>12)|(r1&lt;&lt;18);<br>
+                </span>
+            </div>
+            <br>
+<!--Branch instructions-->
+            <div class="instructionDef">Branch instructions:     &lt;operation&gt;{cond} &lt;address&gt;</div>
+            B - Branch to a specific instruction. pc = &lt;address&gt;<br>
+            BL - Branch with Link. pc = &lt;address&gt; and lr = address of next instruction<br>
+            To return to the link register or any other register, use MOV pc, Rd<br>
+            BX Rd is also possible if you want to.<br>
+            <div class="examples">Examples:<br>
+                <span class="asm">
+                	MOV r0, #0<br>
+                	MOV r1, #0<br>
+                    loop:<br>
+                    ADD r0, r1<br>
+                    ADD r1, #1<br>
+                    CMP r0, r2<br>
+                    BLT loop ; If r0&lt;r2, go back to loop and increase r0 and r1 and try again<br>
+                    POP {pc}; Otherwise, return. <br>
                 </span>
             </div>
             <br>
