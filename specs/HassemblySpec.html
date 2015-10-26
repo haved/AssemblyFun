@@ -113,7 +113,7 @@
 <!--Mnemonic documentation-->
             <div class="note defaultNote">
                 <b>Mnemonic documentation syntax</b><br>
-                <i>&ltoperation&gt</i> is the operation.<br>
+                <i>&lt;operation&gt;</i> is the operation.<br>
                 <span class="asm">{cond}</span> is the <u>optional</u>
                 <span class="condition">condition</span> for the instruction.<br>
                 <span class="asm">Rd</span> is the destination <span class="register">register</span>.<br>
@@ -128,7 +128,7 @@
 <!--Mnemonics-->
             <h2>Mnemonics</h2>
 <!--Moving instructions-->
-            <div class="instructionDef">Moving instructions:     &ltoperation&gt{cond} Rd,Operand2</div>
+            <div class="instructionDef">Moving instructions:     &lt;operation&gt;{cond} Rd,Operand2</div>
             MOV - Move; Rd=Operand2;<br>
             MVN - Move NOT; Rd=0xFFFFFFFF EOR Operand2;<br>
             <div class="examples">Examples:<br>
@@ -141,7 +141,7 @@
             </div>
             <br>
 <!--Arithmetic instructions-->
-            <div class="instructionDef">Arithmetic instructions:     &ltoperation&gt{cond} Rd,Rn,Operand2</div>
+            <div class="instructionDef">Arithmetic instructions:     &lt;operation&gt;{cond} Rd,Rn,Operand2</div>
             ADD - Addition; Rd=Rn+Operand2<br>
             SUB - Subtraction; Rd=Rn-Operand2<br>
             RSB - Reverse subtraction; Rd=Operand2-Rn<br>
@@ -155,29 +155,29 @@
             </div>
             <br>
 <!--Logical instructions-->
-            <div class="instructionDef">Logical instructions:     &ltoperation&gt{cond} Rd,Rn,Operand2</div>
-            AND - Bitwise logical and; Rd=Rn&Operand2<br>
+            <div class="instructionDef">Logical instructions:     &lt;operation&gt;{cond} Rd,Rn,Operand2</div>
+            AND - Bitwise logical and; Rd=Rn&amp;Operand2<br>
             ORR - Bitwise inclusive or; Rd=Rn|Operand2<br>
             EOR - Bitwise exclusive or; Rd=Rn^Operand2<br>
             BIC - Bitwise clear; Rd=Rn AND NOT Operand2<br>
             <div class="examples">Examples:<br>
                 <span class="asm">
-                    AND r0, r0, #0xFF - r0&=0xFF; //Only the last byte is kept<br>
+                    AND r0, r0, #0xFF - r0&amp;=0xFF; //Only the last byte is kept<br>
                     ORR r1, r0, #0b1010 - r1=r0|10; //The bits 1010 will always be true after this<br>
-                    ORR r1, r2, r3, LSL r4 - r1=r2|(r3&lt&lt r4);<br>
+                    ORR r1, r2, r3, LSL r4 - r1=r2|(r3&lt;&lt; r4);<br>
                     EOR r0, r1, 0xFF - r0=r1^255; //Invert the last byte of r1 and store it in r0<br>
-                    EOR r0, r1, r2, ror #4 - r0=r1^(r2&gt&gt 4);<br>
+                    EOR r0, r1, r2, ror #4 - r0=r1^(r2&gt;&gt; 4);<br>
                 </span>
             </div>
             <br>
 <!--Compare instructions-->
-            <div class="instructionDef">Compare instructions:     &ltoperation&gt{cond} Rn,Operand2</div>
+            <div class="instructionDef">Compare instructions:     &amp;ltoperation&gt;{cond} Rn,Operand2</div>
             All these instructions set the compare flags. Z - Zero, N - Negative, S - Signed bit. These are used by the
             <span class="condition">conditional</span> codes.<br>
             A compare value of 0, for instance, means equal.<br>
             CMP - Compare two values. Sets the compare flags to Rn-Operand2<br>
             CMN - Compare negative. Sets the compare flags to Rn+Operand2<br>
-            TST - bitwise test. Sets the compare flags to Rn&Operand2<br>
+            TST - bitwise test. Sets the compare flags to Rn&amp;Operand2<br>
             TEQ - bitwise equivalence. Sets the compare flags to Rn^Operand2<br>
             <div class="examples">Examples:<br>
                 <span class="asm">
@@ -188,20 +188,20 @@
             </div>
             <br>
 <!--Shifting instructions-->
-            <div class="instructionDef">Shifting instructions:     &ltoperation&gt{cond} Rd,Rn,Rs</div>
-            <div class="instructionDef">Shifting instructions:     &ltoperation&gt{cond} Rd,Rn,#imm5</div>
-            Choose the one that fits:    byte shift = Rs&0xFF;    byte shift = #imm5;<br>
-            LSL - Logical shift left. Rd=Rn&lt&ltshift<br>
+            <div class="instructionDef">Shifting instructions:     &lt;operation&gt;{cond} Rd,Rn,Rs</div>
+            <div class="instructionDef">Shifting instructions:     &lt;operation&gt;{cond} Rd,Rn,#imm5</div>
+            Choose the one that fits:    byte shift = Rs&amp;0xFF;    byte shift = #imm5;<br>
+            LSL - Logical shift left. Rd=Rn&lt;&lt;shift<br>
             LSR - Logical shift right. Rd=Rn>>shift<br>
             ASR - Arithmetic shift right. Rd=Rn>>shift<br>
-            ROR - Rotate right. Rd=(Rn>>shift) | (Rn&lt&lt(32-shift))<br>
+            ROR - Rotate right. Rd=(Rn>>shift) | (Rn&lt;&lt;(32-shift))<br>
             See <span class="shift">Shifting</span> for more information.<br>
             <div class="examples">Examples:<br>
                 <span class="asm">
-                    LSL r0, r0, #4 - r0&lt&lt=4;<br>
-                    LSR r1, r2, r3 - r1=r2>>(r3&0xFF);<br>
+                    LSL r0, r0, #4 - r0&lt;&lt;=4;<br>
+                    LSR r1, r2, r3 - r1=r2>>(r3&amp;0xFF);<br>
                     ASR r2, r3, #12 - r2=r3>>12;<br>
-                    ROR r1, r1, #12 - r1=(r1>>12)|(r1&lt&lt18);<br>
+                    ROR r1, r1, #12 - r1=(r1>>12)|(r1&lt;&lt;18);<br>
                 </span>
             </div>
             <br>
@@ -217,7 +217,7 @@
                     <b>All Condition codes</b><br>
                     EQ - Equal (Z)<br>
                     NE - Not equal (!Z)<br>
-                    GT - Signed greater than (!N^S & NOT(Z))<br>
+                    GT - Signed greater than (!N^S &amp; NOT(Z))<br>
                     LT - Signed less than (N^S)<br>
                     GE - Signed greater or equal (!N^S)<br>
                     LE - Signed less or equal (N^S|Z)<br>
@@ -228,7 +228,7 @@
                     Examples:<br>
                     <span class="asm">
                         CMP r1,r0<br>
-                        MOVGT r0, r1 ; If r1 &gt r0, set r0 to r1; Basically r0=max(r0,r1)
+                        MOVGT r0, r1 ; If r1 &gt; r0, set r0 to r1; Basically r0=max(r0,r1)
                     </span>
                 </div>
             </div>
