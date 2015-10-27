@@ -114,11 +114,29 @@
 <!--Address-->
             <div class="note address">
                 <b>Addresses</b><br>
-                An adress can take on multiple forms:<br>
+                An address can be defined in multiple ways:<br>
+                A register: <span class="instructionDef">[Rn]</span> - Points to the address stored in Rn<br>
+                A register +/- a register: <span class="instructionDef">[Rn, {-}Rm]{!}</span> - Points to the address stored in Rn, plus/minus the value of Rm.<br>
+                A register +/- a shifted register: <span class="instructionDef">[Rn, {-}Rm, shift]{!}</span> - Points to the address stored in Rn +/- Rm shifted. (See: <span class="shift">Shifting</span>)<br>
+                A register + an immediate value: <span class="instructionDef">[Rn, #+/-imm12][!}</span> - Points to the address stored in Rn, plus/minus #imm12.<br>
+                When the <span class="instructionDef">!</span> is not omitted, the address used (e.g. Rm+4) is stored back into Rm.<br>
+                You can also use post-indexed addresses. By only having Rm in [], and putting the rest after the brackets, the address used is Rm, but afterwards Rm is updated as if you used an exclamation mark after a pre-indexed address.<br>
                 <div class="examples innerNote">
-                    Examples using <span class="asm">B/LDR/STR Rd,&lt;address&gt;</span>:<br>
+                    Examples using <span class="asm">LDR/STR Rd,&lt;address&gt;</span>:<br>
                     <span class="asm">
-                        
+                        ldr r1, myLabel ; Using labels is also a possibility<br>
+                        ldr r1, [r2] ;Loads from [r2]<br>
+                        str r2, [sp, #4] ;Stores r2 at [sp+4]<br>
+                        ldr r2, [pc, #-4095] ;Loads from [pc-4095] (the lowest/highest offset possible)<br>
+                        str r3, [r2, r3] ;Stores r3 at [r2+r3]<br>
+                        str r4, [r2, r3, lsl #1] ;Stores r4 into [r2+(r3&lt;&lt;1)]<br>
+                        str r5, [r2, -r3] ;Stores r5 at [r2-r3]<br>
+                        ldr r2, [r2, #8]! ;Loads from [r2+8] and stores r2+8 into r2<br>
+                        str r3, [sp, #4]! ;Changing the stack pointer before storing r3 on the stack<br>
+                        ldr r3, [r2, -r3, ror #5]! ;Loads from [r2-(r3&gt;&gt;5)] and saves r2-(r3&gt;&gt;5) into r2<br>
+                        ;Post-indexed addresses<br>
+                        str r3, [sp], #4 ; Stores r3 at [sp] and then changes sp to sp+4<br>
+                        ldr r2, [r2], -r3, lsl #2 ; Loads from r2 and then changes r2 to r2-(r3&lt;&lt;2)<br>
                     </span>
                 </div>
             </div>
@@ -136,6 +154,7 @@
                 <span class="asm">Ra</span> is the accumulate <span class="register">register</span>.<br>
                 <span class="asm">#imm8</span> is an 8 bit <span class="immediateVal">immediate value</span>.<br>
                 <span class="asm">Operand2</span> is a <span class="FSO">Flexible second operand</span>.<br>
+                <span class="asm">&lt;label&gt;</span> is a label.<br>
                 <span class="asm">&lt;address&gt;</span> is an <span class="address">address</span>.<br>
             </div>
             <br>
@@ -220,13 +239,15 @@
             </div>
             <br>
 <!--Branch instructions-->
-            <div class="instructionDef">Branch instructions:     &lt;operation&gt;{cond} &lt;address&gt;</div>
-            B - Branch to a specific instruction. pc = &lt;address&gt;<br>
-            BL - Branch with Link. pc = &lt;address&gt; and lr = address of next instruction<br>
+            <div class="instructionDef">Branch instructions:     &lt;operation&gt;{cond} &lt;label&gt;</div>
+            B - Branch to a specific instruction. pc = &lt;label&gt;<br>
+            BL - Branch with Link. pc = &lt;label&gt; and lr = address of next instruction<br>
             To return to the link register or any other register, use MOV pc, Rd<br>
-            BX Rd is also possible if you want to.<br>
+            BX Rd - is also possible if you want to.<br>
             <div class="examples">Examples:<br>
                 <span class="asm">
+                    start:<br>
+                    ADD r2, r2, #1<br>
                 	MOV r0, #0<br>
                 	MOV r1, #0<br>
                     loop:<br>
@@ -234,7 +255,8 @@
                     ADD r1, #1<br>
                     CMP r0, r2<br>
                     BLT loop ; If r0&lt;r2, go back to loop and increase r0 and r1 and try again<br>
-                    POP {pc}; Otherwise, return. <br>
+                    ADD r3, r3, r0<br>
+                    B start<br>
                 </span>
             </div>
             <br>

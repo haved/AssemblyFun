@@ -46,7 +46,7 @@ Relative expressions / REx:  They are used when pointing to a specific part of m
 -  Immediate offset register:   [Rn, #immed_12] ; The address stored in Rn plus/minus a 12 bit number;
 -  Register offset register:    [Rn, +/-Rm {, shift}] ; The address in Rn +/- Rm. Rm can optionally be shifted using lsl or lsr by a 5 bit number.
 Examples:
-    ldr r1, test
+    ldr r1, myLabel
     ldr r2, [pc]
     ldr r2, [r3, r4]
     ldr r1, [r2, r1, lsl #31]
