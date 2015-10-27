@@ -50,6 +50,10 @@ div.innerNote {
      background-color:rgb(100,244,152);
  }
 
+*.address {
+     background-color:rgb(150,100,100);
+ }
+
 *.condition {
     background-color:rgb(200,154,100);
 }
