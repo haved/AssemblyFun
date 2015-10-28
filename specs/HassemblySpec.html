@@ -260,6 +260,26 @@
                 </span>
             </div>
             <br>
+<!--Memory instructions-->
+            <div class="instructionDef">Memory instructions:     &lt;operation&gt;{cond} Rd,&lt;address&gt;</div>
+            LDR - Load 32 bits from memory. Rd=*((int*)<span class="address">&lt;address&gt;</span>)<br>
+            STR - Store register to memory. *((int*)<span class="address">&lt;address&gt;</span>)=Rd<br>
+            <div class="examples">Examples:<br>
+                <span class="asm">
+                    MOV r0, #10<br>
+                    MOV r1, r0, lsl #4<br>
+                    LDR r2, [sp, #-4]<br>
+                    ADD r0, r1, r2<br>
+                    STR r0, [sp]<br>
+                    LDR r4, data<br>
+                    MOV r0, r1, lsr #16<br>
+                    STR r2, [r4, #4, lsl r1]<br>
+                    STR r3, [sp], #4<br>
+                    data:<br>
+                    .word 0xABCDFFFF<br>
+                </span>
+            </div>
+            <br>
 <!--Conditional codes-->
             <div class="note condition">
                 <b>Condition codes</b><br>
