@@ -281,6 +281,20 @@
                 </span>
             </div>
             <br>
+<!--Stack instructions-->
+            <div class="instructionDef">Stack instructions:     &lt;operation&gt;{cond} reglist</div>
+            The stack pointer is always pointing to the item on top of the stack. As the stack gets higher, sp decreases.<br>
+            PUSH - Pushes the registers in reglist (in reverse order) to the stack (at sp-4), and decreases sp by 4 for each register.<br>
+            POP - Pops the stack and saves the popped values into the registers in reglist. Increments the sp by four for each register.<br>
+            <div class="examples">Examples:<br>
+                <span class="asm">
+                PUSH {r0} ; Is the same as STR r0,[sp,#-4]! ; Stores r0 at the stack pointer minus four, and sets sp to the new top element.<br>
+                POP {pc} ; Is the same as LDR pc,[sp],#4 ; Loads from the stack pointer at the top element and then adds 4 to the sp. The sp now points to the previous value on the stack.<br>
+                PUSH {r1,r3-r6} ; Pushes r1,r3,r4,r5,r6 to the stack. First pushes r6, then r5 followed by r4 etc. The registers are pushed in the reverse order so that if you say POP {pc} afterwards, you'll load r1.<br>
+                POP {pc,lr} ; Pops the top value from the stack and stores it in pc, pops the second value and stores it in lr.<br>
+                </span>
+            </div>
+            <br>
 <!--Conditional codes-->
             <div class="note condition">
                 <b>Condition codes</b><br>
