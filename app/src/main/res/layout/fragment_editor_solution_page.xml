@@ -3,13 +3,28 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:layout_width="fill_parent"
+    <me.havard.assemblyfun.util.view.LineNumberText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/solution_editor_solution_text_line_numbers"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textAppearance="@style/SolutionEditorText"
+        android:layout_alignTop="@+id/solution_editor_solution_text_field"
+        android:layout_alignBottom="@+id/solution_editor_solution_text_field" />
+
+    <me.havard.assemblyfun.util.view.ScrollListenEditText
+        android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/solution_editor_solution_text_field"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="top|left" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/solution_editor_solution_text_line_numbers"
+        android:gravity="top|left"
+        android:textAppearance="@style/SolutionEditorText" />
+
 </RelativeLayout>

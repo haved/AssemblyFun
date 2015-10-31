@@ -27,6 +27,8 @@ import me.havard.assemblyfun.data.tables.LocalTaskTable;
 import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
+import me.havard.assemblyfun.util.view.LineNumberText;
+import me.havard.assemblyfun.util.view.ScrollListenEditText;
 
 public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabSelectedListener, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener{
 
@@ -133,17 +135,12 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
     }
 
     public void useSolutionTextCursor(Cursor cursor) {
-        View v = mPagerAdapter.getSolutionFragment().getView();
-        if(v==null) {
-            Log.e("Assembly Fun", "The EditorTaskFragment had no view when trying to use the database cursor");
-            return;
-        }
         cursor.moveToFirst();
         if(cursor.isAfterLast()) {
             Log.i("Assembly Fun", "The solution text cursor didn't have any items.");
             return;
         }
-        ((EditText)v.findViewById(R.id.solution_editor_solution_text_field)).setText(cursor.getString(cursor.getColumnIndex(SolutionsTable.SOLUTION_TEXT)));
+        mPagerAdapter.getSolutionFragment().setSolutionText(cursor.getString(cursor.getColumnIndex(SolutionsTable.SOLUTION_TEXT)));
     }
 
     @Override
@@ -183,7 +180,7 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
         if(mTester == null)
             mTester = new SolutionTester();
 
-        mTester.runAllTests(AFDatabaseInteractionHelper.getTaskTests(((AssemblyFunApplication)getApplication()).getReadableDatabase(), mTaskId), mPagerAdapter.getSolutionFragment().getSolutionText());
+        mTester.runAllTests(AFDatabaseInteractionHelper.getTaskTests(((AssemblyFunApplication) getApplication()).getReadableDatabase(), mTaskId), mPagerAdapter.getSolutionFragment().getSolutionText());
     }
 
     @Override
@@ -322,11 +319,36 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
     }
 
     public static class EditorSolutionFragment extends Fragment {
+
+        private ScrollListenEditText mEditText;
+        private LineNumberText mLineNumberText;
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            return inflater.inflate(
+            View view = inflater.inflate(
                     R.layout.fragment_editor_solution_page, container, false);
+
+            mEditText = (ScrollListenEditText)view.findViewById(R.id.solution_editor_solution_text_field);
+            mLineNumberText = (LineNumberText)view.findViewById(R.id.solution_editor_solution_text_line_numbers);
+            mLineNumberText.setScrollEditText(mEditText);
+
+            return view;
+        }
+
+        public void setSolutionText(String text) {
+
+            if(mEditText==null) {
+                Log.e("Assembly Fun", "The EditorTaskFragment had no EditText instance when trying to set the text");
+                return;
+            }
+            mEditText.setText(text);
+
+            if(mLineNumberText==null) {
+                Log.e("Assembly Fun", "The EditorTaskFragment had no LineNumberText instance when trying to set the text");
+                return;
+            }
+            mLineNumberText.updateLineNumbers();
         }
 
         public String getSolutionText() {
