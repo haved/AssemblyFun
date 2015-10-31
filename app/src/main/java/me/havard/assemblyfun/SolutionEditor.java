@@ -27,6 +27,7 @@ import me.havard.assemblyfun.data.tables.LocalTaskTable;
 import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
+import me.havard.assemblyfun.util.view.LineNumberText;
 
 public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabSelectedListener, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener{
 
@@ -42,8 +43,6 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
     private static final int LOADER_ID_TASK_PAGE_RECORDS_CURSOR = 2;
     private static final int LOADER_ID_SOLUTION_TEXT_CURSOR = 3;
 
-
-    private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private TaskSolutionPagerAdapter mPagerAdapter;
 
@@ -55,14 +54,14 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solution_editor);
 
-        mTabLayout = (TabLayout) findViewById(R.id.solution_editor_tab_layout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.solution_editor_tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.solution_editor_view_pager);
         mPagerAdapter = new TaskSolutionPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setCurrentItem(SOLUTION_PAGE);
-        mTabLayout.setTabsFromPagerAdapter(mPagerAdapter);
-        mTabLayout.setOnTabSelectedListener(this);
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        tabLayout.setTabsFromPagerAdapter(mPagerAdapter);
+        tabLayout.setOnTabSelectedListener(this);
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         Bundle extras = getIntent().getExtras();
         if(extras==null) {
@@ -133,17 +132,12 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
     }
 
     public void useSolutionTextCursor(Cursor cursor) {
-        View v = mPagerAdapter.getSolutionFragment().getView();
-        if(v==null) {
-            Log.e("Assembly Fun", "The EditorTaskFragment had no view when trying to use the database cursor");
-            return;
-        }
         cursor.moveToFirst();
         if(cursor.isAfterLast()) {
             Log.i("Assembly Fun", "The solution text cursor didn't have any items.");
             return;
         }
-        ((EditText)v.findViewById(R.id.solution_editor_solution_text_field)).setText(cursor.getString(cursor.getColumnIndex(SolutionsTable.SOLUTION_TEXT)));
+        mPagerAdapter.getSolutionFragment().setSolutionText(cursor.getString(cursor.getColumnIndex(SolutionsTable.SOLUTION_TEXT)));
     }
 
     @Override
@@ -183,7 +177,7 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
         if(mTester == null)
             mTester = new SolutionTester();
 
-        mTester.runAllTests(AFDatabaseInteractionHelper.getTaskTests(((AssemblyFunApplication)getApplication()).getReadableDatabase(), mTaskId), mPagerAdapter.getSolutionFragment().getSolutionText());
+        mTester.runAllTests(AFDatabaseInteractionHelper.getTaskTests(((AssemblyFunApplication) getApplication()).getReadableDatabase(), mTaskId), mPagerAdapter.getSolutionFragment().getSolutionText());
     }
 
     @Override
@@ -322,11 +316,36 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
     }
 
     public static class EditorSolutionFragment extends Fragment {
+
+        private EditText mEditText;
+        private LineNumberText mLineNumberText;
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            return inflater.inflate(
+            View view = inflater.inflate(
                     R.layout.fragment_editor_solution_page, container, false);
+
+            mEditText = (EditText)view.findViewById(R.id.solution_editor_solution_text_field);
+            mLineNumberText = (LineNumberText)view.findViewById(R.id.solution_editor_solution_text_line_numbers);
+            mLineNumberText.setEditText(mEditText);
+
+            return view;
+        }
+
+        public void setSolutionText(String text) {
+
+            if(mEditText==null) {
+                Log.e("Assembly Fun", "The EditorTaskFragment had no EditText instance when trying to set the text");
+                return;
+            }
+            mEditText.setText(text);
+
+            if(mLineNumberText==null) {
+                Log.e("Assembly Fun", "The EditorTaskFragment had no LineNumberText instance when trying to set the text");
+                return;
+            }
+            mLineNumberText.updateLineNumbers();
         }
 
         public String getSolutionText() {

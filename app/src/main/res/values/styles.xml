@@ -1,23 +1,16 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
     </style>
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
     </style>
-    <!--<style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="SolutionEditorText" parent="AppTheme">
+        <item name="android:textSize">20sp</item>
     </style>
-    <style name="AppThemeWithBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="AppThemeWithBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
-   <!--<style name="TaskBrowserTheme" parent="Theme.AppCompat.Light">
-        <item name="android:actionBarStyle">@style/BlueActionBar</item>
+    <style name="SolutionEditorTextLineNumbers" parent="SolutionEditorText">
+        <item name="android:textColor">#FF888888</item>
     </style>
-    <style name="BlueActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">#16AFF5</item>
-    </style>-->
 
 </resources>

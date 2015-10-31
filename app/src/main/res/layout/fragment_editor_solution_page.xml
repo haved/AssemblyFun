@@ -3,13 +3,42 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
+    <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/solution_editor_solution_text_field"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="top|left" />
+        android:id="@+id/scrollView3" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <me.havard.assemblyfun.util.view.LineNumberText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/solution_editor_solution_text_line_numbers"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textAppearance="@style/SolutionEditorTextLineNumbers"
+                android:layout_alignTop="@+id/solution_editor_solution_text_field"
+                android:layout_alignBottom="@+id/solution_editor_solution_text_field"
+                android:paddingTop="5dp"
+                android:text="1\n2\n1\n1\n1\n1\n1\n1\n1\n9\n" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:id="@+id/solution_editor_solution_text_field"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toRightOf="@+id/solution_editor_solution_text_line_numbers"
+                android:gravity="top|left"
+                android:textAppearance="@style/SolutionEditorText"
+                android:text="Ey\nEy\nEy\nEy\nEy\nHalle" />
+        </RelativeLayout>
+    </ScrollView>
+
 </RelativeLayout>
