@@ -6,8 +6,11 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
     </style>
-    <style name="SolutionEditorText" parent="">
+    <style name="SolutionEditorText" parent="AppTheme">
         <item name="android:textSize">20sp</item>
+    </style>
+    <style name="SolutionEditorTextLineNumbers" parent="SolutionEditorText">
+        <item name="android:textColor">#FF888888</item>
     </style>
 
 </resources>

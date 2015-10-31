@@ -28,7 +28,6 @@ import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
 import me.havard.assemblyfun.util.view.LineNumberText;
-import me.havard.assemblyfun.util.view.ScrollListenEditText;
 
 public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabSelectedListener, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener{
 
@@ -44,8 +43,6 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
     private static final int LOADER_ID_TASK_PAGE_RECORDS_CURSOR = 2;
     private static final int LOADER_ID_SOLUTION_TEXT_CURSOR = 3;
 
-
-    private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private TaskSolutionPagerAdapter mPagerAdapter;
 
@@ -57,14 +54,14 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solution_editor);
 
-        mTabLayout = (TabLayout) findViewById(R.id.solution_editor_tab_layout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.solution_editor_tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.solution_editor_view_pager);
         mPagerAdapter = new TaskSolutionPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setCurrentItem(SOLUTION_PAGE);
-        mTabLayout.setTabsFromPagerAdapter(mPagerAdapter);
-        mTabLayout.setOnTabSelectedListener(this);
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        tabLayout.setTabsFromPagerAdapter(mPagerAdapter);
+        tabLayout.setOnTabSelectedListener(this);
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         Bundle extras = getIntent().getExtras();
         if(extras==null) {
@@ -320,7 +317,7 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
 
     public static class EditorSolutionFragment extends Fragment {
 
-        private ScrollListenEditText mEditText;
+        private EditText mEditText;
         private LineNumberText mLineNumberText;
 
         @Override
@@ -329,9 +326,9 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
             View view = inflater.inflate(
                     R.layout.fragment_editor_solution_page, container, false);
 
-            mEditText = (ScrollListenEditText)view.findViewById(R.id.solution_editor_solution_text_field);
+            mEditText = (EditText)view.findViewById(R.id.solution_editor_solution_text_field);
             mLineNumberText = (LineNumberText)view.findViewById(R.id.solution_editor_solution_text_line_numbers);
-            mLineNumberText.setScrollEditText(mEditText);
+            mLineNumberText.setEditText(mEditText);
 
             return view;
         }

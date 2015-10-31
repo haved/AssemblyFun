@@ -14,7 +14,7 @@ import android.widget.TextView;
  */
 public class LineNumberText extends TextView {
 
-    private ScrollListenEditText mEditText;
+    private EditText mEditText;
     private Watcher mWatcher = new Watcher();
 
     public LineNumberText(Context context){super(context);}
@@ -23,16 +23,9 @@ public class LineNumberText extends TextView {
 
     private int mEditVerticalScroll = 0;
 
-    public void setScrollEditText(ScrollListenEditText text) {
+    public void setEditText(EditText text) {
         mEditText=text;
         text.addTextChangedListener(mWatcher);
-        text.setOnScrollListener(new ScrollListenEditText.OnScrollListener() {
-            @Override
-            public void onScrollChanged(View v, int horizontal, int vertical, int oldHorizontal, int oldVertical) {
-                mEditVerticalScroll = vertical;
-                LineNumberText.this.setScrollY(mEditVerticalScroll);
-            }
-        });
         this.setGravity(text.getGravity());
     }
 
@@ -44,7 +37,6 @@ public class LineNumberText extends TextView {
             builder.append(i).append("\n");
 
         LineNumberText.this.setText(builder.toString());
-        LineNumberText.this.setScrollY(mEditText.getScrollY());
     }
 
     private class Watcher implements TextWatcher {
