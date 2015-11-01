@@ -1,7 +1,10 @@
 package me.havard.assemblyfun.util.view;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.text.Editable;
+import android.text.Layout;
+import android.text.TextPaint;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -30,11 +33,26 @@ public class LineNumberText extends TextView {
     }
 
     public void updateLineNumbers() {
-        Log.d("Assembly Fun", "Updated line numbers");
+        String text = mEditText.getText().toString();
+        Layout layout = mEditText.getLayout();
+        if(layout==null)
+            return;
+        int lineCount = layout.getLineCount();
+
+        int line = 1;
+        int nextNewline = -1;
+
         StringBuilder builder = new StringBuilder();
-        int lineCount = mEditText.getLineCount();
-        for(int i = 1; i <= lineCount; i++)
-            builder.append(i).append("\n");
+        for(int i = 0; i < lineCount; i++) {
+            if(layout.getLineStart(i)>nextNewline) {
+                builder.append(line);
+                line++;
+                nextNewline = text.indexOf("\n", nextNewline+1);
+                if(nextNewline==-1)
+                    nextNewline = text.length();
+            }
+            builder.append("\n");
+        }
 
         LineNumberText.this.setText(builder.toString());
     }
