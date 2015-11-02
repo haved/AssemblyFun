@@ -9,14 +9,14 @@ public enum Difficulty {
 
     TUTORIAL(R.string.label_difficulty_tutorial, R.color.label_difficulty_color_tutorial),
     VERY_EASY(R.string.label_difficulty_very_easy, R.color.label_difficulty_color_very_easy),
-    EASY(R.string.label_difficulty_easy, R.color.label_difficulty_color_very_easy),
-    MEDIUM(R.string.label_difficulty_medium, R.color.label_difficulty_color_very_easy),
-    TOUGH(R.string.label_difficulty_tough, R.color.label_difficulty_color_very_easy),
-    TOUGHER(R.string.label_difficulty_tougher, R.color.label_difficulty_color_very_hard),
-    DIFFICULT(R.string.label_difficulty_difficult, R.color.label_difficulty_color_very_hard),
-    HARD(R.string.label_difficulty_very_hard, R.color.label_difficulty_color_very_hard),
+    EASY(R.string.label_difficulty_easy, R.color.label_difficulty_color_easy),
+    MEDIUM(R.string.label_difficulty_medium, R.color.label_difficulty_color_medium),
+    TOUGH(R.string.label_difficulty_tough, R.color.label_difficulty_color_tough),
+    TOUGHER(R.string.label_difficulty_tougher, R.color.label_difficulty_color_tougher),
+    DIFFICULT(R.string.label_difficulty_difficult, R.color.label_difficulty_color_difficult),
+    HARD(R.string.label_difficulty_very_hard, R.color.label_difficulty_color_hard),
     VERY_HARD(R.string.label_difficulty_very_hard, R.color.label_difficulty_color_very_hard),
-    INSANE(R.string.label_difficulty_insane, R.color.label_difficulty_color_very_hard);
+    INSANE(R.string.label_difficulty_insane, R.color.label_difficulty_color_insane);
 
     private int label_id, color_id;
     Difficulty(int label_id, int color_id)

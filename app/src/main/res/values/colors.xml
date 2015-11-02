@@ -2,6 +2,13 @@
 <resources>
     <color name="main_menu_title_color">#FFFFAE31</color>
     <color name="label_difficulty_color_tutorial">#FFD69999</color>
-    <color name="label_difficulty_color_very_easy">#FF6DCC99</color>
-    <color name="label_difficulty_color_very_hard">#FFFF0059</color>
+    <color name="label_difficulty_color_very_easy">#81C784</color>
+    <color name="label_difficulty_color_easy">#43A047</color>
+    <color name="label_difficulty_color_medium">#F9A825</color>
+    <color name="label_difficulty_color_tough">#FF5722</color>
+    <color name="label_difficulty_color_tougher">#D84315</color>
+    <color name="label_difficulty_color_difficult">#C62828</color>
+    <color name="label_difficulty_color_hard">#B71C1C</color>
+    <color name="label_difficulty_color_very_hard">#D50000</color>
+    <color name="label_difficulty_color_insane">#FF000000</color>
 </resources>
