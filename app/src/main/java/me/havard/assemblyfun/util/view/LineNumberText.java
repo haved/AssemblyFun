@@ -1,14 +1,10 @@
 package me.havard.assemblyfun.util.view;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.text.Editable;
 import android.text.Layout;
-import android.text.TextPaint;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -32,12 +28,18 @@ public class LineNumberText extends TextView {
         this.setGravity(text.getGravity());
     }
 
+    int mPrevLineCount = 0;
+
     public void updateLineNumbers() {
+        int lineCount = mEditText.getLineCount();
+        if(lineCount== mPrevLineCount)
+            return; //No changes have been made
+        mPrevLineCount = lineCount;
+
         String text = mEditText.getText().toString();
         Layout layout = mEditText.getLayout();
         if(layout==null)
             return;
-        int lineCount = layout.getLineCount();
 
         int line = 1;
         int nextNewline = -1;
