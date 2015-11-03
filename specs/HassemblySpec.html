@@ -142,6 +142,26 @@
                 </div>
             </div>
             <br>
+<!--Address-->
+            <div class="note reglist">
+                <b>Register lists</b><br>
+                A register list is a list of registers. It is written in {reglist}.<br>
+                The reglist can contain one, two or three registers. If two of the registers in the list are seperated bya comma, both the registers are in the list. If they are separated by a dash,
+                all the registers from and with to first to and with the last are in the list.<br>
+                <div class="examples innerNote">
+                    Examples using <span class="asm">PUSH/POP reglist</span>:<br>
+                    <span class="asm">
+                        PUSH {r0} ;Pushes r0<br>
+                        POP {r0,r2} ;Pops r0 and r2<br>
+                        PUSH {pc} ;Pushes pc<br>
+                        POP {lr,sp} ;Pops lr and sp<br>
+                        PUSH {r0-r3} ;Pushes r0, r1, r2 and r3<br>
+                        POP {r0,r2,r4} ;Pops r0, r2 and r4<br>
+                        PUSH {r2-r5,r7} ;Pushes r2,r3,r4,r5 and r7<br>
+                    </span>
+                </div>
+            </div>
+            <br>
 <!--Mnemonic documentation-->
             <div class="note defaultNote">
                 <b>Mnemonic documentation syntax</b><br>

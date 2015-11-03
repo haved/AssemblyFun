@@ -54,6 +54,10 @@ div.innerNote {
      background-color:rgb(150,100,100);
  }
 
+*.reglist {
+     background-color:rgb(150,100,250);
+ }
+
 *.condition {
     background-color:rgb(200,154,100);
 }
