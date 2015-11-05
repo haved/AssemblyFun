@@ -62,6 +62,17 @@ public class SolutionTester {
             builder.append("]");
             Log.d("Assembly Fun", builder.toString());
         }
+
+        for(Test test:tests)
+            runTest(test, provider);
+    }
+
+    private void runTest(Test test, AssemblyROMProvider provider) {
+        mRunner.setRAM(provider, 4000); //TODO: Maybe not hard code that in?
+        while(true)
+            if(!mRunner.runCurrentInstruction())
+                break; //There was not runnable instruction at pc, we are done!
+        Log.d("Assembly Fun", "Finished running a test! The speed was " + mRunner.getInstructionCounter());
     }
 }
 

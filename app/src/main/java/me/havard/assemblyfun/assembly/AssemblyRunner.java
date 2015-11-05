@@ -1,47 +1,75 @@
 package me.havard.assemblyfun.assembly;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.util.Log;
+
+import me.havard.assemblyfun.assembly.instructions.Instruction;
 
 /** A class that can run assembly!
  * Created by Havard on 15.10.2015.
  */
 public class AssemblyRunner {
 
-    private static final int MAX_USER_REGISTER = 12;
-    private static final int STACK_POINTER = 13;
-    private static final int LINK_REGISTER = 14;
-    private static final int PROGRAM_COUNTER = 15;
-    private static final int TOTAL_REGISTERS = 16;
+    public static final int STACK_POINTER = 13;
+    public static final int LINK_REGISTER = 14;
+    public static final int PROGRAM_COUNTER = 15;
+    public static final int TOTAL_REGISTERS = 16;
+
+    public static final int FLAG_ZERO = 0b1;
+    public static final int FLAG_NEGATIVE = 0b10;
+    public static final int FLAG_SIGNED = 0b100;
 
     private int mInstructionCounter;
     private int mMemoryCounter;
 
-    Register[] mRegisters;
+    private byte[] mRam;
+    private AssemblyROMProvider mRom;
+    private int mRomPosition;
+    private int[] mRegisters;
+    private int mFlags;
     public AssemblyRunner() {
-        mRegisters = new Register[TOTAL_REGISTERS];
-        for(int i = 0; i <= MAX_USER_REGISTER; i++) {
-            mRegisters[i]=new Register("r"+i);
-        }
-        mRegisters[STACK_POINTER] = new Register("sp");
-        mRegisters[LINK_REGISTER] = new Register("lr");
-        mRegisters[PROGRAM_COUNTER] = new Register("pc");
-    }
-
-    public void runCurrentInstruction() {
 
     }
 
-    public Register programCounter() {
-        return mRegisters[PROGRAM_COUNTER];
+    public void setRAM(AssemblyROMProvider rom, int romPosition) {
+        mRom = rom;
+        mRomPosition = romPosition;
+        mRam =new byte[romPosition+rom.getROMSizeInBytes()];
+
+        mRegisters = new int[TOTAL_REGISTERS];
+        setRegister(STACK_POINTER, romPosition);
+        setRegister(PROGRAM_COUNTER, romPosition);
+        setRegister(LINK_REGISTER, mRam.length);
+        mFlags =FLAG_ZERO;
+        mInstructionCounter = 0;
+        mMemoryCounter = 0;
     }
-}
 
-class Register {
-    public String name;
-    public int value;
+    /** A method that runs the instruction at pc.
+     *
+     * @return True if the instruction ran. False if there was no runnable instruction at pc.
+     */
+    public boolean runCurrentInstruction() {
+        int currentInstruction = getRegister(PROGRAM_COUNTER);
+        setRegister(PROGRAM_COUNTER, getRegister(PROGRAM_COUNTER) + 4);
 
-    public Register(String name) {
-        this.name = name;
+        Instruction instruction = mRom.getInstruction(currentInstruction-mRomPosition);
+        if(instruction==null || !instruction.runnable())
+            return false; //We are done!
+        mInstructionCounter++;
+        instruction.run(this);
+        Log.d("Assembly Fun", "Ran the instruction " + currentInstruction);
+        return true;
+    }
+
+    public int getRegister(int id) {
+        return mRegisters[id];
+    }
+
+    public void setRegister(int id, int value) {
+        mRegisters[id]=value;
+    }
+
+    public int getInstructionCounter() {
+        return mInstructionCounter;
     }
 }

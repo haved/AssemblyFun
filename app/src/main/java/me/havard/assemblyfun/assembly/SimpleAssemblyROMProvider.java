@@ -5,33 +5,40 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.List;
 
+import me.havard.assemblyfun.assembly.instructions.Instruction;
+
 /** A simple implementation of an AssemblyROMProvider
  * Created by Havard on 15.10.2015.
  */
-public class SimpleAssemblyROMProvider implements  AssemblyROMProvider {
+public class SimpleAssemblyROMProvider extends AssemblyROMProvider {
 
-    private List<String> mInstructions;
+    List<Instruction> instructions;
 
     public SimpleAssemblyROMProvider(String text) {
         parseText(text);
     }
 
-    private void parseText(String text) {
-        HashMap<String, Integer> labels = new HashMap<>();
+    public void parseText(String text) {
 
-        String[] lines = text.split("\n");
-        for (String line : lines) {
-            Log.i("Assembly Fun", line);
-        }
     }
 
     @Override
-    public String getInstruction(int address) {
-        return mInstructions.get(address);
+    public Instruction getInstruction(int address) {
+        return null;
+    }
+
+    @Override
+    public byte getROMByte(int address) {
+        return 0;
     }
 
     @Override
     public int getROMSize() {
-        return mInstructions.size();
+        return 0;
+    }
+
+    @Override
+    public int getROMSizeInBytes() {
+        return getROMSize()*4;
     }
 }
