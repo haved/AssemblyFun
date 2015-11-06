@@ -1,10 +1,6 @@
 package me.havard.assemblyfun.assembly.instructions;
 
-import android.os.Build;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import me.havard.assemblyfun.AssemblyException;
 import me.havard.assemblyfun.BuildConfig;
