@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_menu_title">Assembly Fun</string>
+    <string name="main_menu_button_solve_tasks">Solve tasks</string>
+    <string name="main_menu_button_make_tasks">Make tasks</string>
+    <string name="main_menu_button_settings">Settings</string>
+    <string name="main_menu_logo_desc">Background image</string>
+    <string name="main_menu_label_not_logged_in">Not logged in</string>
+
+    <string name="title_activity_solve_options">Solve Tasks</string>
+    <string name="button_solve_option_online">Online Task Browser</string>
+    <string name="button_solve_option_local">Local Tasks</string>
+    <string name="button_solve_option_solved">Solved Tasks</string>
+    <string name="button_solve_option_all_tasks">All tasks</string>
+    <string name="image_solve_options_logo_desc">The Assembly Fun logo</string>
+
+    <string name="title_activity_settings">Settings</string>
+    <string name="switch_settings_keep_unlisted_tasks">Keep unlisted tasks</string>
+    <string name="button_settings_delete_unused_rows">Clean unused database rows</string>
+    <string name="button_settings_vacuum_database">Vacuum database</string>
+    <string name="button_settings_delete_unlisted_tasks">Delete unlisted tasks</string>
+    <string name="button_settings_delete_solved_only_tasks">Delete solved tasks only</string>
+</resources>

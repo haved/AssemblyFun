@@ -33,13 +33,13 @@ public class AssemblyRunner {
     public void setRAM(AssemblyROMProvider rom, int romPosition) {
         mRom = rom;
         mRomPosition = romPosition;
-        mRam =new byte[romPosition+rom.getROMSizeInBytes()];
+        mRam = new byte[romPosition+rom.getROMSizeInBytes()];
 
         mRegisters = new int[TOTAL_REGISTERS];
         setRegister(STACK_POINTER, romPosition);
         setRegister(PROGRAM_COUNTER, romPosition);
         setRegister(LINK_REGISTER, mRam.length);
-        mFlags =FLAG_ZERO;
+        mFlags = FLAG_ZERO;
         mInstructionCounter = 0;
         mMemoryCounter = 0;
     }

@@ -6,6 +6,7 @@ import me.havard.assemblyfun.assembly.AssemblyRunner;
  * Created by Havard on 05.11.2015.
  */
 public abstract class Instruction {
+    public abstract void loadFromString(String s);
     public abstract void run(AssemblyRunner runner);
     public boolean runnable() {
         return true;

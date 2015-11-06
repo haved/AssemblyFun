@@ -8,6 +8,6 @@ import me.havard.assemblyfun.assembly.instructions.Instruction;
 public abstract class AssemblyROMProvider {
     public abstract Instruction getInstruction(int address);
     public abstract byte getROMByte(int address);
-    public abstract int getROMSize();
+    public abstract int getROMWordCount();
     public abstract int getROMSizeInBytes();
 }

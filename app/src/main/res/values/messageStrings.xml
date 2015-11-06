@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="message_error_instruction_alignment">PC is not word aligned when trying to read instructions! Make sure pc is aligned by four.</string>
+    <string name="message_error_rom_out_of_bounds">Tried getting a byte or instruction from ROM at an address outside of ROM.</string>
+    <string name="message_error_rom_address_not_byte">Tried getting a byte from ROM at the address of an instruction, not a word.</string>
+</resources>

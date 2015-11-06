@@ -1,20 +1,6 @@
 <resources>
     <string name="app_name">Assembly Fun</string>
 
-    <string name="main_menu_title">Assembly Fun</string>
-    <string name="main_menu_button_solve_tasks">Solve tasks</string>
-    <string name="main_menu_button_make_tasks">Make tasks</string>
-    <string name="main_menu_button_settings">Settings</string>
-    <string name="main_menu_logo_desc">Background image</string>
-    <string name="main_menu_label_not_logged_in">Not logged in</string>
-
-    <string name="title_activity_solve_options">Solve Tasks</string>
-    <string name="button_solve_option_online">Online Task Browser</string>
-    <string name="button_solve_option_local">Local Tasks</string>
-    <string name="button_solve_option_solved">Solved Tasks</string>
-    <string name="button_solve_option_all_tasks">All tasks</string>
-    <string name="image_solve_options_logo_desc">The Assembly Fun logo</string>
-
     <string name="label_difficulty_tutorial">Tutorial</string>
     <string name="label_difficulty_very_easy">Very easy</string>
     <string name="label_difficulty_easy">Easy</string>
@@ -45,43 +31,7 @@
     <string name="action_copy_solution">Copy</string>
     <string name="action_delete_solution">Delete</string>
 
-    <string name="title_unset">Unset title</string>
-    <string name="title_activity_task_list">Task List</string>
-    <string name="label_task_list_no_filter">No Filter</string>
-    <string name="label_task_list_filtering_by">Filtering by\u0020</string>
-    <string name="label_task_list_filter_local">Local</string>
-    <string name="label_task_list_filter_unsolved">Unsolved</string>
-    <string name="label_task_list_filter_self_published">Self published</string>
-    <string name="label_task_list_filter_favourites">Favourites</string>
-    <string name="label_task_list_sorted_by">Sorted by\u0020</string>
-    <string name="label_task_list_item_shown">Task Shown</string>
-    <string name="label_task_list_items_shown">Tasks Shown</string>
-    <string name="label_task_list_loading_items">Loading Items...</string>
-    <string name="button_task_list_no_filter_desc">a cut icon for removing the filter</string>
-
     <string name="label_loading">Loading...</string>
-
-    <string name="title_activity_task_screen">Task</string>
-    <string name="label_task_screen_store_locally">Download</string>
-    <string name="label_task_screen_remove_locally">Remove locally</string>
-    <string name="label_task_screen_undo_remove_locally">Undo Remove locally</string>
-    <string name="label_task_screen_only_locally">Only exists locally</string>
-    <string name="label_task_screen_see_online">See online</string>
-    <string name="label_task_screen_add_to_online">Add to online channels</string>
-    <string name="label_task_screen_favourite">Favourite</string>
-    <string name="label_task_screen_un_favourite">Un-favourite</string>
-    <string name="label_task_screen_add_solution">Add solution</string>
-    <string name="label_task_screen_only_local_tasks_can_be_solved">Only local tasks can be solved</string>
-
-    <string name="label_task_screen_no_records">No records stored</string>
-    <string name="label_task_screen_records__">Records:</string>
-    <string name="label_task_screen_records_you">You</string>
-    <string name="label_task_screen_speed">Speed</string>
-    <string name="label_task_screen_size">Size</string>
-    <string name="label_task_screen_memuse">Memory usage</string>
-
-    <string name="label_task_screen_solution_failed">Doesn\'t perform to specification</string>
-    <string name="label_task_screen_solution_never_run">Never been tested</string>
 
     <string name="label_month_0">Jan</string>
     <string name="label_month_1">Feb</string>
@@ -95,25 +45,4 @@
     <string name="label_month_9">Oct</string>
     <string name="label_month_10">Nov</string>
     <string name="label_month_11">Dec</string>
-
-    <string name="title_activity_settings">Settings</string>
-    <string name="switch_settings_keep_unlisted_tasks">Keep unlisted tasks</string>
-    <string name="button_settings_delete_unused_rows">Clean unused database rows</string>
-    <string name="button_settings_vacuum_database">Vacuum database</string>
-    <string name="button_settings_delete_unlisted_tasks">Delete unlisted tasks</string>
-    <string name="button_settings_delete_solved_only_tasks">Delete solved tasks only</string>
-    <string name="title_activity_solution_editor">Solution Editor</string>
-
-    <string name="title_solution_editor_solve_tab">Solve</string>
-    <string name="title_solution_editor_task_tab">Task</string>
-    <string name="button_solution_editor_text_solution">Test solution!</string>
-    <string name="label_solution_editor_current_solution">Current solution:</string>
-    <string name="label_solution_editor_personal_records">Personal Records:</string>
-    <string name="label_solution_editor_world_records">World Records:</string>
-    <string name="label_solution_editor_n_a">N/A</string>
-    <string name="label_solution_editor_task_not_local">The task is not downloaded locally and can\'t be tested!</string>
-    <string name="label_solution_editor_None">None</string>
-    <string name="label_solution_editor_world_records_fill">Speed: %1$.2f, %2$s\nSize: %3$d, %4$s\nMemory Usage: %5$.2f, %6$s</string>
-    <string name="label_solution_editor_personal_records_fill">Speed: %1$.2f\nSize: %2$d\nMemory Usage: %3$.2f</string>
-
 </resources>

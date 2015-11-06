@@ -42,7 +42,7 @@
             android:layout_centerHorizontal="true"
             android:src="@drawable/abc_ic_menu_cut_mtrl_alpha"
             android:layout_alignParentRight="true"
-            android:contentDescription="@string/button_task_list_no_filter_desc"
+            android:contentDescription="@string/task_list_button_no_filter_desc"
             android:onClick="onResetSearchButtonPressed"
             android:visibility="visible"
             android:clickable="true" />
