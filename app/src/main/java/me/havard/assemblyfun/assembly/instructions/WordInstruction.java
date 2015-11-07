@@ -1,5 +1,7 @@
 package me.havard.assemblyfun.assembly.instructions;
 
+import java.util.HashMap;
+
 import me.havard.assemblyfun.AssemblyException;
 import me.havard.assemblyfun.assembly.AssemblyRunner;
 
@@ -9,6 +11,7 @@ import me.havard.assemblyfun.assembly.AssemblyRunner;
 public class WordInstruction extends Instruction {
     public static final String MNEMONIC = ".word ";
 
+    private int mValue;
     public WordInstruction() {
 
     }
@@ -18,13 +21,13 @@ public class WordInstruction extends Instruction {
     }
 
     @Override
-    public void loadFromString(String s) {
+    public void loadFromString(String s, HashMap<String, Integer> registerNames) {
 
     }
 
     @Override
     public void run(AssemblyRunner runner) {
-        throw new AssemblyException("WordInstruction is never supposed to be run!");
+        throw new AssemblyException("WordInstruction.run() Not supposed to be called!", AssemblyException.NOT_RUNNABLE_INSTRUCTION_RUN, getClass().getSimpleName());
     }
 
     @Override
@@ -32,7 +35,6 @@ public class WordInstruction extends Instruction {
         return false;
     }
 
-    int mValue;
     public int getValue(){
         return mValue;
     }

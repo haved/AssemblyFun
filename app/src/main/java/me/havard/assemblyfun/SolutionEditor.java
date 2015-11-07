@@ -1,5 +1,6 @@
 package me.havard.assemblyfun;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.database.Cursor;
@@ -27,6 +28,7 @@ import me.havard.assemblyfun.data.tables.LocalTaskTable;
 import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
+import me.havard.assemblyfun.util.DialogHelper;
 import me.havard.assemblyfun.util.view.LineNumberText;
 
 public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabSelectedListener, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener{
@@ -174,10 +176,22 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
     private SolutionTester mTester;
     @Override
     public void onClick(View v) {
-        if(mTester == null)
-            mTester = new SolutionTester();
+        try {
+            if (mTester == null)
+                mTester = new SolutionTester();
 
-        mTester.runAllTests(AFDatabaseInteractionHelper.getTaskTests(((AssemblyFunApplication) getApplication()).getReadableDatabase(), mTaskId), mPagerAdapter.getSolutionFragment().getSolutionText());
+            mTester.runAllTests(AFDatabaseInteractionHelper.getTaskTests(((AssemblyFunApplication) getApplication()).getReadableDatabase(), mTaskId), mPagerAdapter.getSolutionFragment().getSolutionText());
+        } catch(AssemblyException e) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.dialog_title_assembly_error);
+            builder.setMessage(e.getMessage());
+            builder.create();
+            builder.setPositiveButton(R.string.dialog_button_OK, null);
+            builder.setCancelable(true);
+            builder.show();
+        } catch(Exception e) {
+            Log.wtf("Assembly Fun", e);
+        }
     }
 
     @Override

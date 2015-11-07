@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.havard.assemblyfun.AssemblyException;
 import me.havard.assemblyfun.util.HUtil;
 
 import static me.havard.assemblyfun.assembly.TaskTestsTextSpecification.*;
@@ -49,18 +50,8 @@ public class SolutionTester {
             catch (Exception e) {
                 Log.e("Assembly Fun", "Failed to parse a test from the testsText in the SolutionTester");
                 Log.wtf("Assembly Fun", e);
+                throw new AssemblyException("SolutionTester.runAllTests() parse error", AssemblyException.TEST_PARSE_ERROR, e.getMessage());
             }
-        }
-
-        for(Test test:tests) {
-            StringBuilder builder = new StringBuilder("Found a test with type: ").append(test.getType()).append(" text: ").append(test.getTestText()).append(" inputs: [");
-            for(int input:test.getInputs())
-                builder.append(input).append(", ");
-            builder.append("] outputs: [");
-            for(int output:test.getExpectedOutputs())
-                builder.append(output).append(", ");
-            builder.append("]");
-            Log.d("Assembly Fun", builder.toString());
         }
 
         for(Test test:tests)
@@ -68,11 +59,27 @@ public class SolutionTester {
     }
 
     private void runTest(Test test, AssemblyROMProvider provider) {
-        mRunner.setRAM(provider, 4000); //TODO: Maybe not hard code that in?
-        while(true)
-            if(!mRunner.runCurrentInstruction())
-                break; //There was not runnable instruction at pc, we are done!
-        Log.d("Assembly Fun", "Finished running a test! The speed was " + mRunner.getInstructionCounter());
+        try {
+            mRunner.setRAM(provider, 4000); //TODO: Maybe not hard code that in?
+            for(int i = 0; i < test.getInputs().length; i++)
+                mRunner.setRegister(i, test.getInputs()[i]);
+            while (true)
+                if (!mRunner.runCurrentInstruction())
+                    break; //There was not runnable instruction at pc, we are done!
+            Log.d("Assembly Fun", "Finished running a test! The speed was " + mRunner.getInstructionCounter());
+            boolean success = true;
+            for(int i = 0; i < test.getExpectedOutputs().length; i++)
+                if(mRunner.getRegister(i) != test.getExpectedOutputs()[i]) {
+                    success = false;
+                    break;
+                }
+            Log.d("Assembly Fun", "The test was a " + (success ? "success!" : "fail!"));
+        } catch (Exception e) {
+            if(e instanceof AssemblyException)
+                throw e;
+            else
+                throw new AssemblyException("SolutionTester.runTest() Unknown exception.", AssemblyException.UNKNOWN_EXCEPTION, e.getMessage());
+        }
     }
 }
 

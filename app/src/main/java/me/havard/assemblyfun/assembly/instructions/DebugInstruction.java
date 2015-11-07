@@ -2,6 +2,8 @@ package me.havard.assemblyfun.assembly.instructions;
 
 import android.util.Log;
 
+import java.util.HashMap;
+
 import me.havard.assemblyfun.assembly.AssemblyRunner;
 
 /** An instruction that logs a message
@@ -17,7 +19,7 @@ public class DebugInstruction extends Instruction {
     public DebugInstruction(String text) { mText = text; }
 
     @Override
-    public void loadFromString(String s) {
+    public void loadFromString(String s, HashMap<String, Integer> registerNames) {
         if(s.length()<=MNEMONIC.length())
             mText = "Debug message";
         else

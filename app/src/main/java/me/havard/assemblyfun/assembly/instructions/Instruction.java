@@ -1,12 +1,14 @@
 package me.havard.assemblyfun.assembly.instructions;
 
+import java.util.HashMap;
+
 import me.havard.assemblyfun.assembly.AssemblyRunner;
 
 /** An abstract superclass for Instructions
  * Created by Havard on 05.11.2015.
  */
 public abstract class Instruction {
-    public abstract void loadFromString(String s);
+    public abstract void loadFromString(String s, HashMap<String, Integer> registerNames);
     public abstract void run(AssemblyRunner runner);
     public boolean runnable() {
         return true;

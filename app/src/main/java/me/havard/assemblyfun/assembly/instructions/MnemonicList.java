@@ -20,6 +20,8 @@ public class MnemonicList {
         instructions.add(DebugInstruction.class);
         mnemonics.add(WordInstruction.MNEMONIC);
         instructions.add(WordInstruction.class);
+        mnemonics.add(MoveInstruction.MNEMONIC);
+        instructions.add(MoveInstruction.class);
 
         if(BuildConfig.DEBUG && mnemonics.size()!=instructions.size())
             throw new AssertionError();
@@ -41,10 +43,10 @@ public class MnemonicList {
                     return mInstructions[i].newInstance();
                 } catch (InstantiationException e) {
                     e.printStackTrace();
-                    throw new AssemblyException("Failed to make a new instance of an instruction class (" + mInstructions[i].getSimpleName() + ") for the mnemonic " + mMnemonics[i] + ". InstantiationException");
+                    throw new AssemblyException("MnemonicList.newInstance() instance failed to be created. InstantiationException", AssemblyException.INSTRUCTION_INSTANTIATION_FAILED, mMnemonics[i]);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
-                    throw new AssemblyException("Failed to make a new instance of an instruction class (" + mInstructions[i].getSimpleName() + ") for the mnemonic " + mMnemonics[i] + ". IllegalAccessException");
+                    throw new AssemblyException("MnemonicList.newInstance() instance failed to be created. IllegalAccessException", AssemblyException.INSTRUCTION_INSTANTIATION_FAILED, mMnemonics[i]);
                 }
             }
         }

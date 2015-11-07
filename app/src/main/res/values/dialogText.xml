@@ -60,4 +60,6 @@
     <string name="dialog_button_Copy">Copy</string>
     <string name="dialog_button_Delete">Delete</string>
     <string name="dialog_title_search_task_list">Enter search query:</string>
+
+    <string name="dialog_title_assembly_error">Error occurred</string>
 </resources>

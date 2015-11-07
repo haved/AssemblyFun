@@ -72,4 +72,8 @@ public class AssemblyRunner {
     public int getInstructionCounter() {
         return mInstructionCounter;
     }
+    public int getMemoryCounter() {
+        return mMemoryCounter;
+    }
+
 }
