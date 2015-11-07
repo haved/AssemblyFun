@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="asm_dialog_title_assembly_error">Error occurred</string>
+    <string name="asm_dialog_title_assembly_test_failed">Test failed!</string>
+    <string name="asm_wrong_output_public">The program returned the wrong output.\nExpected output was: %1$s, but given output was: %2$s</string>
+    <string name="asm_wrong_output">The program returned the wrong output.</string>
+</resources>

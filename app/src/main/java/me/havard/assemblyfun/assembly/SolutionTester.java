@@ -20,7 +20,7 @@ public class SolutionTester {
         mRunner = new AssemblyRunner();
     }
 
-    public void runAllTests(String testsTexts, String solution) {
+    public TestResult runAllTests(String testsTexts, String solution) {
         SimpleAssemblyROMProvider provider = new SimpleAssemblyROMProvider(solution);
         List<Test> tests = new ArrayList<>();
 
@@ -54,11 +54,26 @@ public class SolutionTester {
             }
         }
 
-        for(Test test:tests)
-            runTest(test, provider);
+        int resultCount = 0;
+        TestResult overallResult = new TestResult(true, 0, 0, 0);
+
+        for(Test test:tests) {
+            TestResult result = runTest(test, provider);
+            overallResult.speed+=result.speed;
+            overallResult.size+=result.size;
+            overallResult.memUsage+=result.memUsage;
+            resultCount++;
+        }
+
+        overallResult.speed/=resultCount;
+        overallResult.size/=resultCount;
+        overallResult.memUsage/=resultCount;
+
+        return overallResult;
     }
 
-    private void runTest(Test test, AssemblyROMProvider provider) {
+    private TestResult runTest(Test test, AssemblyROMProvider provider) {
+        TestResult result = new TestResult(false, 0, 0, 0);
         try {
             mRunner.setRAM(provider, 4000); //TODO: Maybe not hard code that in?
             for(int i = 0; i < test.getInputs().length; i++)
@@ -66,20 +81,41 @@ public class SolutionTester {
             while (true)
                 if (!mRunner.runCurrentInstruction())
                     break; //There was not runnable instruction at pc, we are done!
-            Log.d("Assembly Fun", "Finished running a test! The speed was " + mRunner.getInstructionCounter());
             boolean success = true;
             for(int i = 0; i < test.getExpectedOutputs().length; i++)
                 if(mRunner.getRegister(i) != test.getExpectedOutputs()[i]) {
                     success = false;
                     break;
                 }
-            Log.d("Assembly Fun", "The test was a " + (success ? "success!" : "fail!"));
+            if(success) {
+                result.success = true;
+                result.speed = mRunner.getInstructionCounter();
+                result.size = provider.getROMWordCount();
+                result.memUsage = mRunner.getMemoryCounter();
+            } else {
+                if(test.getType() == TestType.PUBLIC) {
+                    StringBuilder expectedOutput = new StringBuilder();
+                    StringBuilder givenOutput = new StringBuilder();
+                    for(int i = 0; i < test.getExpectedOutputs().length; i++) {
+                        if(i!=0) {
+                            expectedOutput.append(", ");
+                            givenOutput.append(", ");
+                        }
+                        expectedOutput.append(test.getExpectedOutputs()[i]);
+                        givenOutput.append(mRunner.getRegister(i));
+                    }
+                    throw new AssemblyException("SolutionTest.runTest() test failed!", AssemblyException.TEST_FAILED_PUBLIC, expectedOutput.toString(), givenOutput.toString());
+                } else {
+                    throw new AssemblyException("SolutionTest.runTest() test failed!", AssemblyException.TEST_FAILED);
+                }
+            }
         } catch (Exception e) {
             if(e instanceof AssemblyException)
                 throw e;
             else
                 throw new AssemblyException("SolutionTester.runTest() Unknown exception.", AssemblyException.UNKNOWN_EXCEPTION, e.getMessage());
         }
+        return result;
     }
 }
 
@@ -114,6 +150,20 @@ class Test {
 
     public int[] getExpectedOutputs() {
         return mExpectedOutputs;
+    }
+}
+
+class TestResult {
+    public float speed;
+    public int size;
+    public float memUsage;
+    public boolean success;
+
+    public TestResult(boolean success, float speed, int size, float memUsage) {
+        this.success = success;
+        this.speed = speed;
+        this.size = size;
+        this.memUsage = memUsage;
     }
 }
 

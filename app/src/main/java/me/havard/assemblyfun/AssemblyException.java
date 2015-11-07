@@ -38,4 +38,6 @@ public class AssemblyException extends RuntimeException {
     public static final int ROM_BYTE_OUT_OF_BOUNDS = 6;
     public static final int ROM_BYTE_NOT_A_WORD_INSTRUCTION = 7;
     public static final int NOT_RUNNABLE_INSTRUCTION_RUN = 8;
+    public static final int TEST_FAILED_PUBLIC = 9; //Expected output, Given output
+    public static final int TEST_FAILED = 10;
 }

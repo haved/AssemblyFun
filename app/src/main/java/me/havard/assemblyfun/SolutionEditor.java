@@ -28,7 +28,6 @@ import me.havard.assemblyfun.data.tables.LocalTaskTable;
 import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
-import me.havard.assemblyfun.util.DialogHelper;
 import me.havard.assemblyfun.util.view.LineNumberText;
 
 public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabSelectedListener, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener{
@@ -183,8 +182,16 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
             mTester.runAllTests(AFDatabaseInteractionHelper.getTaskTests(((AssemblyFunApplication) getApplication()).getReadableDatabase(), mTaskId), mPagerAdapter.getSolutionFragment().getSolutionText());
         } catch(AssemblyException e) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.dialog_title_assembly_error);
-            builder.setMessage(e.getMessage());
+            if(e.getExceptionID()==AssemblyException.TEST_FAILED_PUBLIC) {
+                builder.setTitle(R.string.asm_dialog_title_assembly_test_failed);
+                builder.setMessage(getResources().getString(R.string.asm_wrong_output_public, e.getParams()[0], e.getParams()[1]));
+            } else  if(e.getExceptionID()==AssemblyException.TEST_FAILED) {
+                builder.setTitle(R.string.asm_dialog_title_assembly_test_failed);
+                builder.setMessage(R.string.asm_wrong_output);
+            } else {
+                builder.setTitle(R.string.asm_dialog_title_assembly_error);
+                builder.setMessage(e.getMessage());
+            }
             builder.create();
             builder.setPositiveButton(R.string.dialog_button_OK, null);
             builder.setCancelable(true);
