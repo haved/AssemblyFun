@@ -17,6 +17,7 @@ public class MoveInstruction extends Instruction {
     public static final String MNEMONIC = "mov ";
 
     private int mRd;
+    private FlexibleSecondOperand mFSO;
 
     @Override
     public void loadFromString(String line, HashMap<String, Integer> registerNames) {
@@ -30,7 +31,7 @@ public class MoveInstruction extends Instruction {
                 if(!registerNames.containsKey(regName))
                     throw new AssemblyException("MoveInstruction.loadFromString() unknownRegisterName", AssemblyException.UNKNOWN_REGISTER_NAME, regName);
                 mRd = registerNames.get(regName);
-
+                mFSO = new FlexibleSecondOperand(line.substring(charIndex+1), registerNames);
             }
         }
     }
@@ -38,7 +39,7 @@ public class MoveInstruction extends Instruction {
     @Override
     public void run(AssemblyRunner runner) {
         Log.d("Assembly Fun", "r"+mRd + " used to be " + runner.getRegister(mRd));
-        runner.setRegister(mRd, runner.getRegister(mRd) + 1);
+        runner.setRegister(mRd, mFSO.getValue(runner));
         Log.d("Assembly Fun", "r" + mRd + " is now " + runner.getRegister(mRd));
     }
 }

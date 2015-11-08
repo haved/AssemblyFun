@@ -181,6 +181,7 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
 
             mTester.runAllTests(AFDatabaseInteractionHelper.getTaskTests(((AssemblyFunApplication) getApplication()).getReadableDatabase(), mTaskId), mPagerAdapter.getSolutionFragment().getSolutionText());
         } catch(AssemblyException e) {
+            e.printStackTrace();
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             if(e.getExceptionID()==AssemblyException.TEST_FAILED_PUBLIC) {
                 builder.setTitle(R.string.asm_dialog_title_assembly_test_failed);

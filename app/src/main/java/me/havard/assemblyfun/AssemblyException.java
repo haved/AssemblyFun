@@ -30,14 +30,30 @@ public class AssemblyException extends RuntimeException {
         return mParams;
     }
 
-    public static final int TEST_PARSE_ERROR = 1;
-    public static final int UNKNOWN_EXCEPTION = 2;
-    public static final int INSTRUCTION_ADDRESS_NOT_ALIGNED = 3;
-    public static final int UNKNOWN_REGISTER_NAME = 4;
-    public static final int INSTRUCTION_INSTANTIATION_FAILED = 5;
-    public static final int ROM_BYTE_OUT_OF_BOUNDS = 6;
-    public static final int ROM_BYTE_NOT_A_WORD_INSTRUCTION = 7;
-    public static final int NOT_RUNNABLE_INSTRUCTION_RUN = 8;
-    public static final int TEST_FAILED_PUBLIC = 9; //Expected output, Given output
-    public static final int TEST_FAILED = 10;
+    public String toString() {
+        StringBuilder b = new StringBuilder().append(getMessage()).append(" ::: ").append(mExceptionId).append(" ::: ").append(mLineNumber).append(" :mParams: ");
+
+        for(String s:mParams)
+            b.append(s).append(" ::: ");
+
+        return b.toString();
+    }
+
+    public static final int UNKNOWN_EXCEPTION = 10; //Exception message
+    public static final int INSTRUCTION_ADDRESS_NOT_ALIGNED = 20; //Address tried
+    public static final int UNKNOWN_REGISTER_NAME = 30; //Register name used
+    public static final int INSTRUCTION_INSTANTIATION_FAILED = 40; //Mnemonic one tried to instantiate
+    public static final int FAILED_TO_PARSE_IMMEDIATE_VALUE = 50; //string given as imm
+    public static final int IMMEDIATE_VALUE_WITHOUT_HASH = 60; //string given as imm
+    public static final int IMMEDIATE_VALUE_NOT_IN_BOUNDS = 70; //value given, min value, max value
+    public static final int FSO_IMMEDIATE_VALUE_NOT_FROM_SHIFT = 80; //value given
+
+    public static final int TEST_PARSE_ERROR = 1000; //Exception message
+
+    public static final int ROM_BYTE_OUT_OF_BOUNDS = 2000; //Address used
+    public static final int ROM_BYTE_NOT_A_WORD_INSTRUCTION = 2001; //Address used
+    public static final int NOT_RUNNABLE_INSTRUCTION_RUN = 2002; //Instruction class simplified name
+
+    public static final int TEST_FAILED_PUBLIC = 3000; //Expected output, Given output
+    public static final int TEST_FAILED = 3001;
 }
