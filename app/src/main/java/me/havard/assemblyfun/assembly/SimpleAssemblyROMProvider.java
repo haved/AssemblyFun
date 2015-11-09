@@ -1,5 +1,7 @@
 package me.havard.assemblyfun.assembly;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,15 +39,18 @@ public class SimpleAssemblyROMProvider extends AssemblyROMProvider {
                 lineNumber++;
             }
             if(text.charAt(charIndex)==';') { //Parse a line before a comment!
-                String line = text.substring(lineStart, charIndex);
-                for(int i = charIndex; i < textLength; i++) {
-                    if(text.charAt(i)=='\n') {
+                if(lineStart<charIndex) {
+                    String line = text.substring(lineStart, charIndex);
+                    parseLine(line, lineNumber);
+                }
+                for(int i = charIndex; i <= textLength; i++) {
+                    if(i==textLength || text.charAt(i)=='\n') {
                         lineStart = i+1;
-                        charIndex = lineStart;
+                        charIndex = i;
                         lineNumber++;
+                        break;
                     }
                 }
-                parseLine(line, lineNumber);
             }
         }
         if(lineStart<textLength) //Parse a final line if there is one without any line break after it.
@@ -53,6 +58,7 @@ public class SimpleAssemblyROMProvider extends AssemblyROMProvider {
     }
 
     private void parseLine(String line, int lineNumber) {
+        Log.d("Assembly Fun", "Parsing line " + line + "    line number: " + lineNumber);
         try {
             Instruction instruction = MnemonicList.newInstance(line);
             if (instruction != null) {

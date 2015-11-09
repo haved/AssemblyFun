@@ -20,6 +20,10 @@ public class FlexibleSecondOperand {
     private int mRn;
 
     public FlexibleSecondOperand(String text, HashMap<String, Integer> registerNames) {
+        int start=0;
+        while(start < text.length() & text.charAt(start)==' ')
+            start++;
+        text = text.substring(start);
         if(text.startsWith("#")) {
             try {
                 mImmediateValue = ImmediateValue.parseImmediateValue(text, 0, Long.MAX_VALUE);
