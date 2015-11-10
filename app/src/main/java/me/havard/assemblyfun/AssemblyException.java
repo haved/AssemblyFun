@@ -53,6 +53,7 @@ public class AssemblyException extends RuntimeException {
     public static final int ROM_BYTE_OUT_OF_BOUNDS = 2000; //Address used
     public static final int ROM_BYTE_NOT_A_WORD_INSTRUCTION = 2001; //Address used
     public static final int NOT_RUNNABLE_INSTRUCTION_RUN = 2002; //Instruction class simplified name
+    public static final int DEBUG_ERROR_MESSAGE = 2003; //Instruction class simplified name
 
     public static final int TEST_FAILED_PUBLIC = 3000; //Expected output, Given output
     public static final int TEST_FAILED = 3001;

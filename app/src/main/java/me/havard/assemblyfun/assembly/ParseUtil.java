@@ -1,11 +1,11 @@
-package me.havard.assemblyfun.assembly.instructions;
+package me.havard.assemblyfun.assembly;
 
 import me.havard.assemblyfun.AssemblyException;
 
 /** A helper class for parsing immediate values.
  * Created by Havard on 08.11.2015.
  */
-public class ImmediateValue {
+public class ParseUtil {
     public static long parseImmediateValue(String imm, long min, long max) {
         if(imm.startsWith("#")) {
             boolean negative = false;
@@ -32,5 +32,13 @@ public class ImmediateValue {
         } else {
             throw new AssemblyException("ImmediateValue.parseImmediateValue() imm doesn't start with a '#'", AssemblyException.IMMEDIATE_VALUE_WITHOUT_HASH, imm);
         }
+    }
+
+    public static int skipChar(String s, char c, int i) {
+        for(;i<s.length();i++) {
+            if(s.charAt(i)!=c)
+                break;
+        }
+        return i;
     }
 }

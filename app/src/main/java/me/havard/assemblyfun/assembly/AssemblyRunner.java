@@ -24,7 +24,7 @@ public class AssemblyRunner {
     private byte[] mRam;
     private AssemblyROMProvider mRom;
     private int mRomPosition;
-    private long[] mRegisters;
+    private int[] mRegisters;
     private int mFlags;
     public AssemblyRunner() {
 
@@ -35,7 +35,7 @@ public class AssemblyRunner {
         mRomPosition = romPosition;
         mRam = new byte[romPosition+rom.getROMSizeInBytes()];
 
-        mRegisters = new long[TOTAL_REGISTERS];
+        mRegisters = new int[TOTAL_REGISTERS];
         setRegister(STACK_POINTER, romPosition);
         setRegister(PROGRAM_COUNTER, romPosition);
         setRegister(LINK_REGISTER, mRam.length);
@@ -49,7 +49,7 @@ public class AssemblyRunner {
      * @return True if the instruction ran. False if there was no runnable instruction at pc.
      */
     public boolean runCurrentInstruction() {
-        int currentInstruction = (int)getRegister(PROGRAM_COUNTER);
+        int currentInstruction = getRegister(PROGRAM_COUNTER);
         setRegister(PROGRAM_COUNTER, getRegister(PROGRAM_COUNTER) + 4);
 
         Instruction instruction = mRom.getInstruction(currentInstruction-mRomPosition);
@@ -61,11 +61,11 @@ public class AssemblyRunner {
         return true;
     }
 
-    public long getRegister(int id) {
+    public int getRegister(int id) {
         return mRegisters[id];
     }
 
-    public void setRegister(int id, long value) {
+    public void setRegister(int id, int value) {
         mRegisters[id]=value;
     }
 

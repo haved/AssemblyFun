@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import me.havard.assemblyfun.AssemblyException;
 import me.havard.assemblyfun.assembly.AssemblyRunner;
+import me.havard.assemblyfun.assembly.ParseUtil;
 
 /** A class for a Flexible Second Operand
  * Created by Havard on 08.11.2015.
@@ -16,17 +17,24 @@ public class FlexibleSecondOperand {
 
     private int mType;
 
-    private long mImmediateValue;
+    private int mImmediateValue;
     private int mRn;
 
     public FlexibleSecondOperand(String text, HashMap<String, Integer> registerNames) {
-        int start=0;
-        while(start < text.length() & text.charAt(start)==' ')
-            start++;
-        text = text.substring(start);
+        text = text.substring(ParseUtil.skipChar(text, ' ', 0));
         if(text.startsWith("#")) {
             try {
-                mImmediateValue = ImmediateValue.parseImmediateValue(text, 0, Long.MAX_VALUE);
+                mImmediateValue = (int) ParseUtil.parseImmediateValue(text, 0, Long.MAX_VALUE);
+                boolean valid = false;
+                for (int i = 2; i < 32; i += 2) {
+                    if(Integer.rotateRight(mImmediateValue, i)<0xFF) {
+                        valid=true;
+                        break;
+                    }
+                }
+                if(!valid) {
+                    throw new AssemblyException("FlexibleSecondOperand() imm not byte ror by even number", AssemblyException.FSO_IMMEDIATE_VALUE_NOT_FROM_SHIFT, Integer.toString(mImmediateValue));
+                }
                 mType = IMMEDIATE_VALUE;
                 Log.d("Assembly Fun", "The text " + text + " turned into the long " + mImmediateValue);
             } catch(Exception e) {
@@ -42,7 +50,7 @@ public class FlexibleSecondOperand {
         }
     }
 
-    public long getValue(AssemblyRunner runner) {
+    public int getValue(AssemblyRunner runner) {
         if(mType==IMMEDIATE_VALUE)
             return mImmediateValue;
         else

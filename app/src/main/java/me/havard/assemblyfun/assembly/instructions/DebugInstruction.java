@@ -1,9 +1,8 @@
 package me.havard.assemblyfun.assembly.instructions;
 
-import android.util.Log;
-
 import java.util.HashMap;
 
+import me.havard.assemblyfun.AssemblyException;
 import me.havard.assemblyfun.assembly.AssemblyRunner;
 
 /** An instruction that logs a message
@@ -28,6 +27,11 @@ public class DebugInstruction extends Instruction {
 
     @Override
     public void run(AssemblyRunner runner) {
-        Log.d("Assembly Fun", "DebugInstruction was run: " + mText);
+        StringBuilder b = new StringBuilder();
+        b.append(".debug ").append(mText).append("\n");
+        for(int i = 0; i < AssemblyRunner.TOTAL_REGISTERS; i++) {
+            b.append("r").append(i).append(":").append(runner.getRegister(i)).append("   ");
+        }
+        throw new AssemblyException(b.toString(), AssemblyException.DEBUG_ERROR_MESSAGE);
     }
 }
