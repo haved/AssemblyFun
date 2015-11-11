@@ -28,6 +28,7 @@ import me.havard.assemblyfun.data.tables.LocalTaskTable;
 import me.havard.assemblyfun.data.tables.SolutionsTable;
 import me.havard.assemblyfun.data.tables.TaskRecordsTable;
 import me.havard.assemblyfun.data.tables.TaskinfoTable;
+import me.havard.assemblyfun.util.DialogHelper;
 import me.havard.assemblyfun.util.view.LineNumberText;
 
 public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabSelectedListener, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener{
@@ -179,7 +180,13 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
             if (mTester == null)
                 mTester = new SolutionTester();
 
-            mTester.runAllTests(AFDatabaseInteractionHelper.getTaskTests(((AssemblyFunApplication) getApplication()).getReadableDatabase(), mTaskId), mPagerAdapter.getSolutionFragment().getSolutionText());
+            SolutionTester.TestResult result = mTester.runAllTests(AFDatabaseInteractionHelper.getTaskTests(((AssemblyFunApplication) getApplication()).getReadableDatabase(), mTaskId),
+                                                mPagerAdapter.getSolutionFragment().getSolutionText());
+
+            //The tests were successful.
+            new AlertDialog.Builder(this).setTitle(R.string.asm_dialog_title_test_worked).setMessage(
+                    String.format(getResources().getString(R.string.asm_dialog_test_worked_details), result.speed, result.size, result.memUsage))
+                    .setPositiveButton(R.string.dialog_button_OK, null).setCancelable(true).create().show();
         } catch(AssemblyException e) {
             e.printStackTrace();
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

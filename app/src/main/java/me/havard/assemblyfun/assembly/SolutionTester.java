@@ -59,6 +59,8 @@ public class SolutionTester {
 
         for(Test test:tests) {
             TestResult result = runTest(test, provider);
+            if(test.getType()==TestType.PRIVATE)
+                continue;
             overallResult.speed+=result.speed;
             overallResult.size+=result.size;
             overallResult.memUsage+=result.memUsage;
@@ -117,66 +119,66 @@ public class SolutionTester {
         }
         return result;
     }
-}
 
-class Test {
-    private TestType mType;
-    private String mTestText;
-    private int[] mInputs;
-    private int[] mExpectedOutputs;
-    public Test(TestType type, String testText) {
-        mType = type;
-        mTestText = testText;
+    public static class Test {
+        private TestType mType;
+        private String mTestText;
+        private int[] mInputs;
+        private int[] mExpectedOutputs;
+        public Test(TestType type, String testText) {
+            mType = type;
+            mTestText = testText;
 
-        String[] io = testText.split(INPUT_OUTPUT_SEPARATOR);
-        if(io.length != 2)
-            throw new IllegalArgumentException("The taskText supplied doesn't have exactly one input/output separator! " + testText);
+            String[] io = testText.split(INPUT_OUTPUT_SEPARATOR);
+            if(io.length != 2)
+                throw new IllegalArgumentException("The taskText supplied doesn't have exactly one input/output separator! " + testText);
 
-        mInputs = HUtil.parseAllIntegers(io[0].split(NUMBER_SEPARATOR));
-        mExpectedOutputs = HUtil.parseAllIntegers(io[1].split(NUMBER_SEPARATOR));
+            mInputs = HUtil.parseAllIntegers(io[0].split(NUMBER_SEPARATOR));
+            mExpectedOutputs = HUtil.parseAllIntegers(io[1].split(NUMBER_SEPARATOR));
+        }
+
+        public TestType getType() {
+            return mType;
+        }
+
+        public String getTestText() {
+            return mTestText;
+        }
+
+        public int[] getInputs() {
+            return mInputs;
+        }
+
+        public int[] getExpectedOutputs() {
+            return mExpectedOutputs;
+        }
     }
 
-    public TestType getType() {
-        return mType;
+    public enum TestType {
+        PUBLIC(PUBLIC_TEST_SUFFIX), HIDDEN(HIDDEN_TEST_SUFFIX), PRIVATE(PRIVATE_TEST_SUFFIX);
+
+        private char mDef;
+
+        TestType(char def) {
+            mDef = def;
+        }
+
+        public char getDef() {
+            return mDef;
+        }
     }
 
-    public String getTestText() {
-        return mTestText;
-    }
+    public static class TestResult {
+        public float speed;
+        public int size;
+        public float memUsage;
+        public boolean success;
 
-    public int[] getInputs() {
-        return mInputs;
-    }
-
-    public int[] getExpectedOutputs() {
-        return mExpectedOutputs;
-    }
-}
-
-class TestResult {
-    public float speed;
-    public int size;
-    public float memUsage;
-    public boolean success;
-
-    public TestResult(boolean success, float speed, int size, float memUsage) {
-        this.success = success;
-        this.speed = speed;
-        this.size = size;
-        this.memUsage = memUsage;
-    }
-}
-
-enum TestType {
-    PUBLIC(PUBLIC_TEST_SUFFIX), HIDDEN(HIDDEN_TEST_SUFFIX), PRIVATE(PRIVATE_TEST_SUFFIX);
-
-    private char mDef;
-
-    TestType(char def) {
-        mDef = def;
-    }
-
-    public char getDef() {
-        return mDef;
+        public TestResult(boolean success, float speed, int size, float memUsage) {
+            this.success = success;
+            this.speed = speed;
+            this.size = size;
+            this.memUsage = memUsage;
+        }
     }
 }
