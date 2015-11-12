@@ -22,6 +22,12 @@ public class MnemonicList {
         instructions.add(WordInstruction.class);
         mnemonics.add(MoveInstruction.MNEMONIC);
         instructions.add(MoveInstruction.class);
+        mnemonics.add(AddInstruction.MNEMONIC);
+        instructions.add(AddInstruction.class);
+        mnemonics.add(SubInstruction.MNEMONIC);
+        instructions.add(SubInstruction.class);
+        mnemonics.add(RsbInstruction.MNEMONIC);
+        instructions.add(RsbInstruction.class);
 
         if(BuildConfig.DEBUG && mnemonics.size()!=instructions.size())
             throw new AssertionError();

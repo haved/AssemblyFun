@@ -37,8 +37,6 @@ public class MoveInstruction extends Instruction {
 
     @Override
     public void run(AssemblyRunner runner) {
-        Log.d("Assembly Fun", "r"+mRd + " used to be " + runner.getRegister(mRd));
         runner.setRegister(mRd, mFSO.getValue(runner));
-        Log.d("Assembly Fun", "r" + mRd + " is now " + runner.getRegister(mRd));
     }
 }

@@ -24,10 +24,11 @@ public class FlexibleSecondOperand {
         text = text.substring(ParseUtil.skipChar(text, ' ', 0));
         if(text.startsWith("#")) {
             try {
-                mImmediateValue = (int) ParseUtil.parseImmediateValue(text, 0, Long.MAX_VALUE);
+                mImmediateValue = ParseUtil.getLongAsInt(ParseUtil.parseImmediateValue(text, 0, 0xFFFFFFFFL));
                 boolean valid = false;
-                for (int i = 2; i < 32; i += 2) {
-                    if(Integer.rotateRight(mImmediateValue, i)<0xFF) {
+                for (int i = 0; i < 32; i += 2) {
+                    int rori = Integer.rotateRight(mImmediateValue, i);
+                    if(0<=rori && rori<=0xFF) {
                         valid=true;
                         break;
                     }
@@ -36,7 +37,6 @@ public class FlexibleSecondOperand {
                     throw new AssemblyException("FlexibleSecondOperand() imm not byte ror by even number", AssemblyException.FSO_IMMEDIATE_VALUE_NOT_FROM_SHIFT, Integer.toString(mImmediateValue));
                 }
                 mType = IMMEDIATE_VALUE;
-                Log.d("Assembly Fun", "The text " + text + " turned into the long " + mImmediateValue);
             } catch(Exception e) {
                 if(e instanceof AssemblyException)
                     throw e;

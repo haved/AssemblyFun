@@ -59,7 +59,6 @@ public class SimpleAssemblyROMProvider extends AssemblyROMProvider {
 
     private void parseLine(String line, int lineNumber) {
         line = line.trim();
-        Log.d("Assembly Fun", "Parsing line " + line + "    line number: " + lineNumber);
         try {
             Instruction instruction = MnemonicList.newInstance(line);
             if (instruction != null) {

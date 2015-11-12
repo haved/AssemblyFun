@@ -1,5 +1,7 @@
 package me.havard.assemblyfun.assembly;
 
+import android.util.Log;
+
 import me.havard.assemblyfun.AssemblyException;
 
 /** A helper class for parsing immediate values.
@@ -32,6 +34,14 @@ public class ParseUtil {
         } else {
             throw new AssemblyException("ImmediateValue.parseImmediateValue() imm doesn't start with a '#'", AssemblyException.IMMEDIATE_VALUE_WITHOUT_HASH, imm);
         }
+    }
+
+    public static int getLongAsInt(long l) {
+        int i = (int)l;
+        if(l<0)
+            i=-i;
+        Log.d("Assembly Fun", "The long "+l+" (" + Long.toString(l, 16) + ") turned into the integer " + i + " (" + Long.toString(i&0xFFFFFFFFL,16)+")");
+        return i;
     }
 
     public static int skipChar(String s, char c, int i) {

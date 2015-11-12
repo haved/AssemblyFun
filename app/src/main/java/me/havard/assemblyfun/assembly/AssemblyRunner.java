@@ -57,7 +57,6 @@ public class AssemblyRunner {
             return false; //We are done!
         mInstructionCounter++;
         instruction.run(this);
-        Log.d("Assembly Fun", "Ran the instruction " + currentInstruction);
         return true;
     }
 
