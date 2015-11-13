@@ -28,6 +28,14 @@ public class MnemonicList {
         instructions.add(SubInstruction.class);
         mnemonics.add(RsbInstruction.MNEMONIC);
         instructions.add(RsbInstruction.class);
+        mnemonics.add(AndInstruction.MNEMONIC);
+        instructions.add(AndInstruction.class);
+        mnemonics.add(OrrInstruction.MNEMONIC);
+        instructions.add(OrrInstruction.class);
+        mnemonics.add(EorInstruction.MNEMONIC);
+        instructions.add(EorInstruction.class);
+        mnemonics.add(BicInstruction.MNEMONIC);
+        instructions.add(BicInstruction.class);
 
         if(BuildConfig.DEBUG && mnemonics.size()!=instructions.size())
             throw new AssertionError();
