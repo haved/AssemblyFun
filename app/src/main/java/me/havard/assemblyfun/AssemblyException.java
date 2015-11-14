@@ -47,6 +47,7 @@ public class AssemblyException extends RuntimeException {
     public static final int IMMEDIATE_VALUE_WITHOUT_HASH = 60; //string given as imm
     public static final int IMMEDIATE_VALUE_NOT_IN_BOUNDS = 70; //value given, min value, max value
     public static final int FSO_IMMEDIATE_VALUE_NOT_FROM_SHIFT = 80; //value given
+    public static final int MNEMONIC_NOT_PARSED = 90; //line given
 
     public static final int TEST_PARSE_ERROR = 1000; //Exception message
 

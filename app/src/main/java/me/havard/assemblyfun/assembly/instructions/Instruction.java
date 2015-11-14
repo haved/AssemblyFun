@@ -8,9 +8,37 @@ import me.havard.assemblyfun.assembly.AssemblyRunner;
  * Created by Havard on 05.11.2015.
  */
 public abstract class Instruction {
+
+    protected ConditionCodes mCondCode;
+
     public abstract void loadFromString(String s, HashMap<String, Integer> registerNames);
     public abstract void run(AssemblyRunner runner);
     public boolean runnable() {
         return true;
+    }
+    public Instruction setConditionCode(ConditionCodes code) {
+        mCondCode = code;
+        return this;
+    }
+
+    public enum ConditionCodes {
+        ALWAYS(""),
+        EQUAL("eq"),
+        NOT_EQUAL("ne"),
+        SIGNED_GREATER_THAN("gt"),
+        SIGNED_LESS_THAN("lt"),
+        SIGNED_GREATER_EQUAL("ge"),
+        SIGNED_LESS_EQUAL("le"),
+        UNSIGNED_HIGHER("hi"),
+        UNSIGNED_LOWER_SAME("ls");
+
+        private String mCode;
+        ConditionCodes(String name) {
+            mCode = name;
+        }
+
+        public String getCode() {
+            return mCode;
+        }
     }
 }

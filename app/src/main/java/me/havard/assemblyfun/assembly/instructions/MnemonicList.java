@@ -1,9 +1,12 @@
 package me.havard.assemblyfun.assembly.instructions;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 import me.havard.assemblyfun.AssemblyException;
 import me.havard.assemblyfun.BuildConfig;
+import me.havard.assemblyfun.assembly.ParseUtil;
 
 /** A List of Instruction classes for mnemonics
  * Created by Havard on 06.11.2015.
@@ -47,24 +50,47 @@ public class MnemonicList {
         instructions.toArray(mInstructions);
     }
 
-    public static Instruction newInstance(String line) {
+    public static Instruction newCondInstance(String line) {
         if(mMnemonics==null)
             makeList();
 
         for(int i = 0; i < mMnemonics.length; i++) {
-            if(line.startsWith(mMnemonics[i])) {
+            String mnemonic = mMnemonics[i];
+            if(line.length()> mnemonic.length()) {
+                if(mnemonic.endsWith(" "))
+                    mnemonic = mnemonic.substring(0, mnemonic.length()-1);
+                boolean correct = true;
+                for(int charIndex = 0; charIndex < mnemonic.length(); charIndex++)
+                    if(mnemonic.charAt(charIndex)!=Character.toLowerCase(line.charAt(charIndex))) {
+                        correct = false;
+                        break;
+                    }
+                if(!correct)
+                    continue;
+
+                String condCode = line.substring(mnemonic.length(), line.indexOf(' ', mnemonic.length())).toLowerCase();
+                Instruction.ConditionCodes usedCode = null;
+                for(Instruction.ConditionCodes code : Instruction.ConditionCodes.values())
+                    if(condCode.equals(code.getCode())) {
+                        usedCode = code;
+                        break;
+                    }
+
+                if(usedCode==null)
+                    continue;
+
                 try {
-                    return mInstructions[i].newInstance();
+                    return mInstructions[i].newInstance().setConditionCode(usedCode);
                 } catch (InstantiationException e) {
                     e.printStackTrace();
-                    throw new AssemblyException("MnemonicList.newInstance() instance failed to be created. InstantiationException", AssemblyException.INSTRUCTION_INSTANTIATION_FAILED, mMnemonics[i]);
+                    throw new AssemblyException("MnemonicList.newCondInstance() instance failed to be created. InstantiationException", AssemblyException.INSTRUCTION_INSTANTIATION_FAILED, mMnemonics[i]);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
-                    throw new AssemblyException("MnemonicList.newInstance() instance failed to be created. IllegalAccessException", AssemblyException.INSTRUCTION_INSTANTIATION_FAILED, mMnemonics[i]);
+                    throw new AssemblyException("MnemonicList.newCondInstance() instance failed to be created. IllegalAccessException", AssemblyException.INSTRUCTION_INSTANTIATION_FAILED, mMnemonics[i]);
                 }
             }
         }
 
-        return null;
+        throw new AssemblyException("MnemonicList.newCondInstance() no mnemonic with that name+condition code found", AssemblyException.MNEMONIC_NOT_PARSED, line);
     }
 }

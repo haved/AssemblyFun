@@ -4,7 +4,7 @@ package me.havard.assemblyfun.assembly.instructions;
  * Created by Havard on 12.11.2015.
  */
 public class EorInstruction extends ArithmeticInstruction {
-    public static final String MNEMONIC = "eor ";
+    public static final String MNEMONIC = "eor";
 
     @Override
     public int getResult(int Rn, int FSO) {

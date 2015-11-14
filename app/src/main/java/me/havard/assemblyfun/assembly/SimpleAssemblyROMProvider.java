@@ -1,7 +1,5 @@
 package me.havard.assemblyfun.assembly;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,8 +57,10 @@ public class SimpleAssemblyROMProvider extends AssemblyROMProvider {
 
     private void parseLine(String line, int lineNumber) {
         line = line.trim();
+        if(line.length()==0)
+            return;
         try {
-            Instruction instruction = MnemonicList.newInstance(line);
+            Instruction instruction = MnemonicList.newCondInstance(line);
             if (instruction != null) {
                 instruction.loadFromString(line, mRegisterNames);
                 mInstructions.add(instruction);

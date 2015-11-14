@@ -18,7 +18,7 @@ public abstract class ArithmeticInstruction extends Instruction {
 
     @Override
     public void loadFromString(String line, HashMap<String, Integer> registerNames) {
-        int sStart = ParseUtil.skipChar(line, ' ', line.indexOf(' ') + 1);
+        int sStart = ParseUtil.findThenSkipChar(line, ' ', line.indexOf(' ') + 1);
         int sLength = line.length();
         for(int charIndex = sStart;charIndex < sLength; charIndex++) {
             if(line.charAt(charIndex)==',') {

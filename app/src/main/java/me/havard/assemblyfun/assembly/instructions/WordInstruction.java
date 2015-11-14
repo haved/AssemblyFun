@@ -9,7 +9,7 @@ import me.havard.assemblyfun.assembly.AssemblyRunner;
  * Created by Havard on 06.11.2015.
  */
 public class WordInstruction extends Instruction {
-    public static final String MNEMONIC = ".word ";
+    public static final String MNEMONIC = ".word";
 
     private int mValue;
     public WordInstruction() {

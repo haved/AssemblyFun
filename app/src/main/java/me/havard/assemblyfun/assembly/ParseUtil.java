@@ -51,4 +51,17 @@ public class ParseUtil {
         }
         return i;
     }
+
+    public static int findThenSkipChar(String s, char c, int i) {
+        boolean found=false;
+        for(;i<s.length();i++) {
+            if(!found && s.charAt(i)==c) {
+                found = true;
+                continue;
+            }
+            if(s.charAt(i)!=c & found)
+                break;
+        }
+        return i;
+    }
 }
