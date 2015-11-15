@@ -19,26 +19,17 @@ public class MnemonicList {
         ArrayList<String> mnemonics = new ArrayList<>();
         ArrayList<Class<? extends Instruction>> instructions = new ArrayList<>();
 
-        mnemonics.add(DebugInstruction.MNEMONIC);
-        instructions.add(DebugInstruction.class);
-        mnemonics.add(WordInstruction.MNEMONIC);
-        instructions.add(WordInstruction.class);
-        mnemonics.add(MoveInstruction.MNEMONIC);
-        instructions.add(MoveInstruction.class);
-        mnemonics.add(AddInstruction.MNEMONIC);
-        instructions.add(AddInstruction.class);
-        mnemonics.add(SubInstruction.MNEMONIC);
-        instructions.add(SubInstruction.class);
-        mnemonics.add(RsbInstruction.MNEMONIC);
-        instructions.add(RsbInstruction.class);
-        mnemonics.add(AndInstruction.MNEMONIC);
-        instructions.add(AndInstruction.class);
-        mnemonics.add(OrrInstruction.MNEMONIC);
-        instructions.add(OrrInstruction.class);
-        mnemonics.add(EorInstruction.MNEMONIC);
-        instructions.add(EorInstruction.class);
-        mnemonics.add(BicInstruction.MNEMONIC);
-        instructions.add(BicInstruction.class);
+        addInstruction(mnemonics, instructions, DebugInstruction.MNEMONIC, DebugInstruction.class);
+        addInstruction(mnemonics, instructions, WordInstruction.MNEMONIC, WordInstruction.class);
+        addInstruction(mnemonics, instructions, MoveInstruction.MNEMONIC, MoveInstruction.class);
+        addInstruction(mnemonics, instructions, AddInstruction.MNEMONIC, AddInstruction.class);
+        addInstruction(mnemonics, instructions, SubInstruction.MNEMONIC, SubInstruction.class);
+        addInstruction(mnemonics, instructions, RsbInstruction.MNEMONIC, RsbInstruction.class);
+        addInstruction(mnemonics, instructions, AndInstruction.MNEMONIC, AndInstruction.class);
+        addInstruction(mnemonics, instructions, OrrInstruction.MNEMONIC, OrrInstruction.class);
+        addInstruction(mnemonics, instructions, EorInstruction.MNEMONIC, EorInstruction.class);
+        addInstruction(mnemonics, instructions, BicInstruction.MNEMONIC, BicInstruction.class);
+        addInstruction(mnemonics, instructions, CmpInstruction.MNEMONIC, CmpInstruction.class);
 
         if(BuildConfig.DEBUG && mnemonics.size()!=instructions.size())
             throw new AssertionError();
@@ -48,6 +39,11 @@ public class MnemonicList {
         //noinspection unchecked
         mInstructions = new Class[instructions.size()];
         instructions.toArray(mInstructions);
+    }
+
+    private static void addInstruction(ArrayList<String> mnemonics, ArrayList<Class<? extends Instruction>> instructions, String mnemonic, Class<? extends Instruction> instruction) {
+        mnemonics.add(mnemonic);
+        instructions.add(instruction);
     }
 
     public static Instruction newCondInstance(String line) {

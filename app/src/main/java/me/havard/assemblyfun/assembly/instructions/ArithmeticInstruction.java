@@ -12,13 +12,13 @@ import me.havard.assemblyfun.assembly.ParseUtil;
  * Created by Havard on 12.11.2015.
  */
 public abstract class ArithmeticInstruction extends Instruction {
-    private int mRd;
-    private int mRn;
-    private FlexibleSecondOperand mFSO;
+    private int mRd=-1;
+    private int mRn=-1;
+    private FlexibleSecondOperand mFSO=null;
 
     @Override
     public void loadFromString(String line, HashMap<String, Integer> registerNames) {
-        int sStart = ParseUtil.findThenSkipChar(line, ' ', line.indexOf(' ') + 1);
+        int sStart = ParseUtil.findThenSkipChar(line, ' ', line.indexOf(' '));
         int sLength = line.length();
         for(int charIndex = sStart;charIndex < sLength; charIndex++) {
             if(line.charAt(charIndex)==',') {
@@ -38,6 +38,9 @@ public abstract class ArithmeticInstruction extends Instruction {
                 mRn = registerNames.get(regName);
                 mFSO = new FlexibleSecondOperand(line.substring(charIndex+1), registerNames);
             }
+        }
+        if(mRd==-1 | mRn==-1 | mFSO == null) {
+            throw new AssemblyException("ArithmeticInstruction.loadFromString()", AssemblyException.LACK_OF_ARGUMENTS, line, "Rd,Rn,FSO");
         }
     }
 

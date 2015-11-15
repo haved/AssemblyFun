@@ -68,6 +68,15 @@ public class AssemblyRunner {
         mRegisters[id]=value;
     }
 
+    public void setFlags(boolean zero, boolean negative, boolean signed) {
+        Log.d("Assembly Fun", "Flags were set! Z="+zero+ " N="+negative + " S="+signed);
+        mFlags = (zero?FLAG_ZERO:0) + (negative?FLAG_NEGATIVE:0) + (signed?FLAG_SIGNED:0);
+    }
+
+    public int getFlags() {
+        return mFlags;
+    }
+
     public int getInstructionCounter() {
         return mInstructionCounter;
     }
