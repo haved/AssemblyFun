@@ -20,6 +20,9 @@ public abstract class Instruction {
         mCondCode = code;
         return this;
     }
+    public ConditionCodes getConditionCode() {
+        return mCondCode;
+    }
 
     public enum ConditionCodes {
         ALWAYS(""),
@@ -39,6 +42,25 @@ public abstract class Instruction {
 
         public String getCode() {
             return mCode;
+        }
+
+        public boolean conditionCodeMet(boolean zero, boolean negative, boolean signed) {
+            return ConditionCodes.conditionMet(this, zero, negative, signed);
+        }
+
+        public static boolean conditionMet(ConditionCodes code, boolean zero, boolean negative, boolean signed) {
+            switch(code) {
+                case ALWAYS: return true;
+                case EQUAL: return zero;
+                case NOT_EQUAL: return !zero;
+                case SIGNED_GREATER_THAN: return !negative^signed & !zero;
+                case SIGNED_LESS_THAN: return negative^signed;
+                case SIGNED_GREATER_EQUAL: return !negative^signed;
+                case SIGNED_LESS_EQUAL: return negative^signed|zero;
+                case UNSIGNED_HIGHER: return !(negative|zero);
+                case UNSIGNED_LOWER_SAME: return negative|zero;
+                default: return true;
+            }
         }
     }
 }

@@ -8,6 +8,6 @@ public class CmpInstruction extends GeneralCompareInstruction {
 
     @Override
     protected long getCompare(int rN, int rM) {
-        return (rN&0xFFFFFFL)-(rM&0xFFFFFFFFL);
+        return (rN&0xFFFFFFFFL)-(rM&0xFFFFFFFFL);
     }
 }

@@ -56,7 +56,8 @@ public class AssemblyRunner {
         if(instruction==null || !instruction.runnable())
             return false; //We are done!
         mInstructionCounter++;
-        instruction.run(this);
+        if(instruction.getConditionCode().conditionCodeMet((mFlags&FLAG_ZERO)!=0, (mFlags&FLAG_NEGATIVE)!=0, (mFlags&FLAG_SIGNED)!=0))
+            instruction.run(this);
         return true;
     }
 

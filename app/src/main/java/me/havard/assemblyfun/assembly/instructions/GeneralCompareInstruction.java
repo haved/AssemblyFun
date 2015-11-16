@@ -41,7 +41,7 @@ public abstract class GeneralCompareInstruction extends Instruction {
     @Override
     public void run(AssemblyRunner runner) {
         long value = getCompare(runner.getRegister(mRn), runner.getRegister(mRm));
-        runner.setFlags(value==0, value<0, (value&(1<<31))!=0);
+        runner.setFlags(value==0, value<0, Math.abs(value)>Integer.MAX_VALUE);
     }
 
     protected abstract long getCompare(int rN, int rM);
