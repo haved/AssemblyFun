@@ -30,6 +30,10 @@ public class MnemonicList {
         addInstruction(mnemonics, instructions, EorInstruction.MNEMONIC, EorInstruction.class);
         addInstruction(mnemonics, instructions, BicInstruction.MNEMONIC, BicInstruction.class);
         addInstruction(mnemonics, instructions, CmpInstruction.MNEMONIC, CmpInstruction.class);
+        addInstruction(mnemonics, instructions, ShiftInstruction.LslShiftInstruction.MNEMONIC, ShiftInstruction.LslShiftInstruction.class);
+        addInstruction(mnemonics, instructions, ShiftInstruction.LsrShiftInstruction.MNEMONIC, ShiftInstruction.LsrShiftInstruction.class);
+        addInstruction(mnemonics, instructions, ShiftInstruction.AsrShiftInstruction.MNEMONIC, ShiftInstruction.AsrShiftInstruction.class);
+        addInstruction(mnemonics, instructions, ShiftInstruction.RorShiftInstruction.MNEMONIC, ShiftInstruction.RorShiftInstruction.class);
 
         if(BuildConfig.DEBUG && mnemonics.size()!=instructions.size())
             throw new AssertionError();
