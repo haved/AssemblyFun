@@ -64,4 +64,13 @@ public class ParseUtil {
         }
         return i;
     }
+
+    public static int indexOfOrEnd(String line, char c, int start) {
+        int charIndex;
+        for(charIndex = start;charIndex<line.length();charIndex++) {
+            if(line.charAt(charIndex)==c)
+                break;
+        }
+        return charIndex;
+    }
 }

@@ -56,7 +56,7 @@ public class MnemonicList {
 
         for(int i = 0; i < mMnemonics.length; i++) {
             String mnemonic = mMnemonics[i];
-            if(line.length()> mnemonic.length()) {
+            if(line.length()>=mnemonic.length()) {
                 if(mnemonic.endsWith(" "))
                     mnemonic = mnemonic.substring(0, mnemonic.length()-1);
                 boolean correct = true;
@@ -68,7 +68,7 @@ public class MnemonicList {
                 if(!correct)
                     continue;
 
-                String condCode = line.substring(mnemonic.length(), line.indexOf(' ', mnemonic.length())).toLowerCase();
+                String condCode = line.substring(mnemonic.length(), ParseUtil.indexOfOrEnd(line, ' ', mnemonic.length())).toLowerCase();
                 Instruction.ConditionCodes usedCode = null;
                 for(Instruction.ConditionCodes code : Instruction.ConditionCodes.values())
                     if(condCode.equals(code.getCode())) {

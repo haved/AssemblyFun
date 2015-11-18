@@ -8,6 +8,6 @@ public class OrrInstruction extends ArithmeticInstruction {
 
     @Override
     public int getResult(int Rn, int FSO) {
-        return Rn&FSO;
+        return Rn|FSO;
     }
 }
