@@ -17,8 +17,8 @@ import me.havard.assemblyfun.assembly.ParseUtil;
 public class MoveInstruction extends Instruction {
     public static final String MNEMONIC = "mov";
 
-    private int mRd;
-    private FlexibleSecondOperand mFSO;
+    protected int mRd;
+    protected FlexibleSecondOperand mFSO;
 
     @Override
     public void loadFromString(String line, HashMap<String, Integer> registerNames) {
@@ -38,5 +38,14 @@ public class MoveInstruction extends Instruction {
     @Override
     public void run(AssemblyRunner runner) {
         runner.setRegister(mRd, mFSO.getValue(runner));
+    }
+
+    public static class MvnInstruction extends MoveInstruction {
+        public static final String MNEMONIC = "mvn";
+
+        @Override
+        public void run(AssemblyRunner runner) {
+            runner.setRegister(mRd, ~mFSO.getValue(runner));
+        }
     }
 }

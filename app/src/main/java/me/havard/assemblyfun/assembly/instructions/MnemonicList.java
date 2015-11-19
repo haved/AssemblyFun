@@ -22,6 +22,7 @@ public class MnemonicList {
         addInstruction(mnemonics, instructions, DebugInstruction.MNEMONIC, DebugInstruction.class);
         addInstruction(mnemonics, instructions, WordInstruction.MNEMONIC, WordInstruction.class);
         addInstruction(mnemonics, instructions, MoveInstruction.MNEMONIC, MoveInstruction.class);
+        addInstruction(mnemonics, instructions, MoveInstruction.MvnInstruction.MNEMONIC, MoveInstruction.MvnInstruction.class);
         addInstruction(mnemonics, instructions, AddInstruction.MNEMONIC, AddInstruction.class);
         addInstruction(mnemonics, instructions, SubInstruction.MNEMONIC, SubInstruction.class);
         addInstruction(mnemonics, instructions, RsbInstruction.MNEMONIC, RsbInstruction.class);
