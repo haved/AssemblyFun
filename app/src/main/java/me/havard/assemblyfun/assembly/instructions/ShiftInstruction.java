@@ -15,7 +15,7 @@ public abstract class ShiftInstruction extends Instruction {
     private int shift=-1;
 
     @Override
-    public void loadFromString(String line, HashMap<String, Integer> registerNames) {
+    public void loadFromString(String line, HashMap<String, Integer> registerNames, HashMap<String, Integer> labels) {
         int sStart = ParseUtil.findThenSkipChar(line, ' ', line.indexOf(' '));
         int sLength = line.length();
         for(int charIndex = sStart;charIndex < sLength; charIndex++) {

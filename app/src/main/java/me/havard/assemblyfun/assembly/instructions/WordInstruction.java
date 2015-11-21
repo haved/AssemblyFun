@@ -21,7 +21,7 @@ public class WordInstruction extends Instruction {
     }
 
     @Override
-    public void loadFromString(String s, HashMap<String, Integer> registerNames) {
+    public void loadFromString(String s, HashMap<String, Integer> registerNames, HashMap<String, Integer> labels) {
 
     }
 

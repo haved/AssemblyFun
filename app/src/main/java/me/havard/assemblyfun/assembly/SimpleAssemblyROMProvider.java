@@ -16,9 +16,11 @@ public class SimpleAssemblyROMProvider extends AssemblyROMProvider {
 
     List<Instruction> mInstructions;
     HashMap<String, Integer> mRegisterNames;
+    HashMap<String, Integer> mLabels;
 
     public SimpleAssemblyROMProvider(String text) {
         mRegisterNames = getRegisterNameChart();
+        mLabels = new HashMap<>();
         parseText(text);
     }
 
@@ -59,10 +61,20 @@ public class SimpleAssemblyROMProvider extends AssemblyROMProvider {
         line = line.trim();
         if(line.length()==0)
             return;
+        if(line.contains(":")) {
+            int colon = line.indexOf(':');
+            if(colon<line.length()-1)
+                throw new AssemblyException("SimpleAssemblyROMProvider.parseLine() chars after colon in label definition", AssemblyException.JUNK_ON_END_OF_LABEL_DEFINE_LINE, line);
+            else if(colon<=0)
+                throw new AssemblyException("SimpleAssemblyROMProvider.parseLine() no chars before colon in label definition", AssemblyException.EMPTY_LABEL, line);
+
+            mLabels.put(line.substring(0, colon), mInstructions.size() * 4); //This puts the address of the next instruction added to the label.
+            return;
+        }
         try {
             Instruction instruction = MnemonicList.newCondInstance(line);
             if (instruction != null) {
-                instruction.loadFromString(line, mRegisterNames);
+                instruction.loadFromString(line, mRegisterNames, mLabels);
                 mInstructions.add(instruction);
             }
         } catch(AssemblyException ae) {

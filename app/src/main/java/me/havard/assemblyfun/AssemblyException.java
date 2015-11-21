@@ -49,6 +49,9 @@ public class AssemblyException extends RuntimeException {
     public static final int FSO_IMMEDIATE_VALUE_NOT_FROM_SHIFT = 80; //value given
     public static final int MNEMONIC_NOT_PARSED = 90; //line given
     public static final int LACK_OF_ARGUMENTS = 100; //line given, arguments wanted
+    public static final int JUNK_ON_END_OF_LABEL_DEFINE_LINE = 110; //line given
+    public static final int EMPTY_LABEL = 120; //line given
+    public static final int LABEL_NOT_RECOGNIZED = 130; //line given, label given
 
     public static final int TEST_PARSE_ERROR = 1000; //Exception message
 

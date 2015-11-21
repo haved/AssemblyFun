@@ -1,5 +1,7 @@
 package me.havard.assemblyfun.assembly.instructions;
 
+import android.content.Intent;
+
 import java.util.HashMap;
 
 import me.havard.assemblyfun.assembly.AssemblyRunner;
@@ -11,7 +13,7 @@ public abstract class Instruction {
 
     protected ConditionCodes mCondCode;
 
-    public abstract void loadFromString(String s, HashMap<String, Integer> registerNames);
+    public abstract void loadFromString(String s, HashMap<String, Integer> registerNames, HashMap<String, Integer> labels);
     public abstract void run(AssemblyRunner runner);
     public boolean runnable() {
         return true;

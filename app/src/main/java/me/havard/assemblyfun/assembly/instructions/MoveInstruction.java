@@ -21,7 +21,7 @@ public class MoveInstruction extends Instruction {
     protected FlexibleSecondOperand mFSO;
 
     @Override
-    public void loadFromString(String line, HashMap<String, Integer> registerNames) {
+    public void loadFromString(String line, HashMap<String, Integer> registerNames, HashMap<String, Integer> labels) {
         int sStart = ParseUtil.findThenSkipChar(line, ' ', MNEMONIC.length());
         int sLength = line.length();
         for(int charIndex = sStart; charIndex < sLength; charIndex++) {

@@ -18,7 +18,7 @@ public class DebugInstruction extends Instruction {
     public DebugInstruction(String text) { mText = text; }
 
     @Override
-    public void loadFromString(String s, HashMap<String, Integer> registerNames) {
+    public void loadFromString(String s, HashMap<String, Integer> registerNames, HashMap<String, Integer> labels) {
         if(s.length()<=MNEMONIC.length())
             mText = "";
         else

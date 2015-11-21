@@ -74,8 +74,8 @@ public class AssemblyRunner {
         mFlags = (zero?FLAG_ZERO:0) + (negative?FLAG_NEGATIVE:0) + (signed?FLAG_SIGNED:0);
     }
 
-    public int getFlags() {
-        return mFlags;
+    public int getROMStart() {
+        return mRomPosition;
     }
 
     public int getInstructionCounter() {
