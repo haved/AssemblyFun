@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -173,39 +174,64 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
         }
     }
 
-    private SolutionTester mTester;
     @Override
     public void onClick(View v) {
-        try {
-            if (mTester == null)
+        mPagerAdapter.getTaskFragment().getTestButton().setEnabled(false);
+        new TaskRunnerAsyncTask(AFDatabaseInteractionHelper.getTaskTests(((AssemblyFunApplication) getApplication()).getReadableDatabase(), mTaskId),
+                mPagerAdapter.getSolutionFragment().getSolutionText()).execute();
+    }
+
+    private class TaskRunnerAsyncTask extends AsyncTask<Object, Object, Object> {
+        private SolutionTester mTester;
+        private String mTaskTests, mSolutionText;
+
+        public TaskRunnerAsyncTask(String taskTests, String solutionText) {
+            this.mTaskTests = taskTests;
+            this.mSolutionText = solutionText;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+            try {
                 mTester = new SolutionTester();
-
-            SolutionTester.TestResult result = mTester.runAllTests(AFDatabaseInteractionHelper.getTaskTests(((AssemblyFunApplication) getApplication()).getReadableDatabase(), mTaskId),
-                                                mPagerAdapter.getSolutionFragment().getSolutionText());
-
-            //The tests were successful.
-            new AlertDialog.Builder(this).setTitle(R.string.asm_dialog_title_test_worked).setMessage(
-                    String.format(getResources().getString(R.string.asm_dialog_test_worked_details), result.speed, result.size, result.memUsage))
-                    .setPositiveButton(R.string.dialog_button_OK, null).setCancelable(true).create().show();
-        } catch(AssemblyException e) {
-            e.printStackTrace();
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            if(e.getExceptionID()==AssemblyException.TEST_FAILED_PUBLIC) {
-                builder.setTitle(R.string.asm_dialog_title_assembly_test_failed);
-                builder.setMessage(getResources().getString(R.string.asm_wrong_output_public, e.getParams()[0], e.getParams()[1]));
-            } else  if(e.getExceptionID()==AssemblyException.TEST_FAILED) {
-                builder.setTitle(R.string.asm_dialog_title_assembly_test_failed);
-                builder.setMessage(R.string.asm_wrong_output);
-            } else {
-                builder.setTitle(R.string.asm_dialog_title_assembly_error);
-                builder.setMessage(e.getMessage());
+                return mTester.runAllTests(mTaskTests, mSolutionText);
+            } catch(Exception e) {
+                return e;
             }
-            builder.create();
-            builder.setPositiveButton(R.string.dialog_button_OK, null);
-            builder.setCancelable(true);
-            builder.show();
-        } catch(Exception e) {
-            Log.wtf("Assembly Fun", e);
+        }
+
+        @Override
+        protected void onPostExecute(Object result) {
+            if(result instanceof SolutionTester.TestResult) {
+                //The tests were successful.
+                SolutionTester.TestResult testResult = (SolutionTester.TestResult) result;
+                new AlertDialog.Builder(SolutionEditor.this).setTitle(R.string.asm_dialog_title_test_worked).setMessage(
+                        String.format(getResources().getString(R.string.asm_dialog_test_worked_details), testResult.speed, testResult.size, testResult.memUsage))
+                        .setPositiveButton(R.string.dialog_button_OK, null).setCancelable(true).create().show();
+            } else if(result instanceof AssemblyException) {
+                AssemblyException e = (AssemblyException) result;
+                e.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(SolutionEditor.this);
+                if(e.getExceptionID()==AssemblyException.TEST_FAILED_PUBLIC) {
+                    builder.setTitle(R.string.asm_dialog_title_assembly_test_failed);
+                    builder.setMessage(getResources().getString(R.string.asm_wrong_output_public, e.getParams()[0], e.getParams()[1]));
+                } else  if(e.getExceptionID()==AssemblyException.TEST_FAILED) {
+                    builder.setTitle(R.string.asm_dialog_title_assembly_test_failed);
+                    builder.setMessage(R.string.asm_wrong_output);
+                } else {
+                    builder.setTitle(R.string.asm_dialog_title_assembly_error);
+                    builder.setMessage(e.getMessage());
+                }
+                builder.create();
+                builder.setPositiveButton(R.string.dialog_button_OK, null);
+                builder.setCancelable(true);
+                builder.show();
+            } else if(result instanceof Exception) {
+                Log.wtf("Assembly Fun", (Exception)result);
+            } else {
+                Log.e("Assembly Fun", "Nothing sensible (not even an Exception was given to SolutionEditor.TaskRunnerAsyncTask.onPostExecute()   Thing given: " + result);
+            }
+            mPagerAdapter.getTaskFragment().getTestButton().setEnabled(true);
         }
     }
 
@@ -390,6 +416,8 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
 
     public static class EditorTaskFragment extends Fragment implements View.OnClickListener {
 
+        private Button mTestButton;
+
         public EditorTaskFragment() {
         }
 
@@ -400,7 +428,8 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
                     R.layout.fragment_editor_task_page, container, false);
 
             ((TextView)view.findViewById(R.id.solution_editor_current_solution_fill_label)).setText("");
-            view.findViewById(R.id.solution_editor_test_solution_button).setOnClickListener(this);
+            mTestButton = (Button)view.findViewById(R.id.solution_editor_test_solution_button);
+            mTestButton.setOnClickListener(this);
 
             return view;
         }
@@ -410,6 +439,10 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
             FragmentActivity activity = getActivity();
             if(activity != null && activity instanceof SolutionEditor)
                 ((SolutionEditor)activity).onClick(v);
+        }
+
+        public Button getTestButton() {
+            return mTestButton;
         }
     }
 }
