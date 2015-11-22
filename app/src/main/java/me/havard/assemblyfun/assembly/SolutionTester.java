@@ -80,9 +80,13 @@ public class SolutionTester {
             mRunner.setRAM(provider, 4000); //TODO: Maybe not hard code that in?
             for(int i = 0; i < test.getInputs().length; i++)
                 mRunner.setRegister(i, test.getInputs()[i]);
-            while (true)
+            while (true) {
                 if (!mRunner.runCurrentInstruction())
                     break; //There was not runnable instruction at pc, we are done!
+                if(mRunner.getTotalInstructionCounter()>4000) {
+                    throw new AssemblyException("SolutionTester.runTest() ran too many instructions!", AssemblyException.TOO_MANY_INSTRUCTIONS, Integer.toString(mRunner.getTotalInstructionCounter()));
+                }
+            }
             boolean success = true;
             for(int i = 0; i < test.getExpectedOutputs().length; i++)
                 if(mRunner.getRegister(i) != test.getExpectedOutputs()[i]) {
@@ -91,7 +95,7 @@ public class SolutionTester {
                 }
             if(success) {
                 result.success = true;
-                result.speed = mRunner.getInstructionCounter();
+                result.speed = mRunner.getTotalInstructionCounter();
                 result.size = provider.getROMWordCount();
                 result.memUsage = mRunner.getMemoryCounter();
             } else {

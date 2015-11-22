@@ -78,7 +78,7 @@ public class AssemblyRunner {
         return mRomPosition;
     }
 
-    public int getInstructionCounter() {
+    public int getTotalInstructionCounter() {
         return mInstructionCounter;
     }
     public int getMemoryCounter() {

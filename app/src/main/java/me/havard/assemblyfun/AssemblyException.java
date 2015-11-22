@@ -61,5 +61,6 @@ public class AssemblyException extends RuntimeException {
     public static final int DEBUG_ERROR_MESSAGE = 2003; //Instruction class simplified name
 
     public static final int TEST_FAILED_PUBLIC = 3000; //Expected output, Given output
-    public static final int TEST_FAILED = 3001;
+    public static final int TEST_FAILED = 3010;
+    public static final int TOO_MANY_INSTRUCTIONS = 3020; //Instructions run
 }
