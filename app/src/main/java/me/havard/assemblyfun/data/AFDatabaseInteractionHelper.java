@@ -283,7 +283,7 @@ public final class AFDatabaseInteractionHelper
         if(quality!=SolutionsTable.QUALITY_SOLVED) //No point in checking any records or flags if the solution isn't a proper one.
             return;
 
-        if(task_id <= 0) //We find the task_id
+        if(task_id < 0) //We find the task_id
             task_id = getTaskIdFromSolutionId(db, solution_id);
 
         int flags = getFlagsFromTaskWithID(db, task_id); //Get the flags we already have

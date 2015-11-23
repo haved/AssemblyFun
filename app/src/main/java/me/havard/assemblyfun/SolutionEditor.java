@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
@@ -147,10 +148,14 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
     public void onPause()
     {
         super.onPause();
+        saveSolutionAndUpdateRecords(SolutionsTable.QUALITY_NEVER_RUN, -1, -1, -1);
+    }
+
+    private void saveSolutionAndUpdateRecords(int quality, float speed, int size, float memUse) {
         String solution = mPagerAdapter.getSolutionFragment().getSolutionText();
         if(solution != null)
             new SaveSolutionTextTask(((AssemblyFunApplication)getApplication()).getDatabase(), mSolutionId,
-                solution).execute();
+                    solution, quality, speed, size, memUse).execute();
         else
             Log.e("Assembly Fun", "Tried saving the solution text to the database, but failed to find the text field");
     }
@@ -160,16 +165,36 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
         private SQLiteOpenHelper mDb;
         private long mSolutionId;
         private String mText;
+        private int mQuality;
+        private float mSpeed, mMemUse;
+        private int mSize;
 
-        public SaveSolutionTextTask(SQLiteOpenHelper db, long solution_id, String text) {
+        public SaveSolutionTextTask(SQLiteOpenHelper db, long solution_id, String text, int quality, float speed, int size, float memUse) {
             mDb = db;
             mSolutionId = solution_id;
             mText = text;
+            mQuality = quality;
+            mSpeed = speed;
+            mSize = size;
+            mMemUse = memUse;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            AFDatabaseInteractionHelper.changeSolutionText(mDb.getWritableDatabase(), AFDatabaseInteractionHelper.getClearedContentValuesInstance(), mSolutionId, mText);
+            Cursor c = mDb.getReadableDatabase().rawQuery(QUERY_SOLUTION_TEXT_CURSOR, new String[]{Long.toString(mSolutionId)});
+            c.moveToFirst();
+            if(c.isAfterLast()) {
+                Log.e("Assembly Fun", "No solution row for the id " + mSolutionId + " found. Cursor empty! Not saving anything!");
+                return null;
+            }
+            String prevTask = c.getString(c.getColumnIndex(SolutionsTable.SOLUTION_TEXT));
+            c.close();
+            if(!mText.equals(prevTask)) {
+                //It was modified. Save the text and update variables!
+                SQLiteDatabase db = mDb.getWritableDatabase();
+                AFDatabaseInteractionHelper.changeSolutionText(db, AFDatabaseInteractionHelper.getClearedContentValuesInstance(), mSolutionId, mText);
+                AFDatabaseInteractionHelper.updateSolutionValues(db, AFDatabaseInteractionHelper.getClearedContentValuesInstance(), mSolutionId, -1, mQuality, mSpeed, mSize, mMemUse);
+            }
             return null;
         }
     }
@@ -208,6 +233,7 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
                 new AlertDialog.Builder(SolutionEditor.this).setTitle(R.string.asm_dialog_title_test_worked).setMessage(
                         String.format(getResources().getString(R.string.asm_dialog_test_worked_details), testResult.speed, testResult.size, testResult.memUsage))
                         .setPositiveButton(R.string.dialog_button_OK, null).setCancelable(true).create().show();
+                saveSolutionAndUpdateRecords(SolutionsTable.QUALITY_SOLVED, testResult.speed, testResult.size, testResult.memUsage);
             } else if(result instanceof AssemblyException) {
                 AssemblyException e = (AssemblyException) result;
                 e.printStackTrace();
@@ -226,6 +252,7 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
                 builder.setPositiveButton(R.string.dialog_button_OK, null);
                 builder.setCancelable(true);
                 builder.show();
+                saveSolutionAndUpdateRecords(SolutionsTable.QUALITY_FAILS, -1, -1, -1);
             } else if(result instanceof Exception) {
                 Log.wtf("Assembly Fun", (Exception)result);
             } else {
