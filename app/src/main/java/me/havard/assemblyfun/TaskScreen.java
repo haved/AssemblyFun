@@ -112,9 +112,14 @@ public class TaskScreen extends AppCompatActivity implements LoaderManager.Loade
 
         Bundle data = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
         mLocalID = data.getLong(EXTRAS_TASK_ID);
-        getLoaderManager().initLoader(LOADER_ID_TASK_CURSOR, null, this);
-        getLoaderManager().initLoader(LOADER_ID_RECORDS_CURSOR, null, this);
-        getLoaderManager().initLoader(LOADER_ID_SOLUTIONS_CURSOR, null, this);
+    }
+
+    @Override
+    public void onStart() {
+        getLoaderManager().restartLoader(LOADER_ID_TASK_CURSOR, null, this);
+        getLoaderManager().restartLoader(LOADER_ID_RECORDS_CURSOR, null, this);
+        getLoaderManager().restartLoader(LOADER_ID_SOLUTIONS_CURSOR, null, this);
+        super.onStart();
     }
 
     protected void useTaskInfoCursor(Cursor cursor)

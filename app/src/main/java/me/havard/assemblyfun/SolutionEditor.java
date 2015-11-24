@@ -76,6 +76,15 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
         mTaskId = extras.getLong(EXTRAS_TASK_ID, -1);
     }
 
+    @Override
+    public void onStart() {
+        SolutionEditor.this.getLoaderManager().restartLoader(LOADER_ID_SOLUTION_TEXT_CURSOR, null, SolutionEditor.this);
+        SolutionEditor.this.getLoaderManager().restartLoader(LOADER_ID_TASK_PAGE_TASK_INFO_CURSOR, null, SolutionEditor.this);
+        SolutionEditor.this.getLoaderManager().restartLoader(LOADER_ID_TASK_PAGE_TASK_TEXT_CURSOR, null, SolutionEditor.this);
+        SolutionEditor.this.getLoaderManager().restartLoader(LOADER_ID_TASK_PAGE_RECORDS_CURSOR, null, SolutionEditor.this);
+        super.onStart();
+    }
+
     public void useTaskPageTaskInfoCursor(Cursor cursor) {
         View v = mPagerAdapter.getTaskFragment().getView();
         if(v==null) {
@@ -356,7 +365,6 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
                 return mSolutionFragment;
 
             mSolutionFragment = new EditorSolutionFragment();
-            SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_SOLUTION_TEXT_CURSOR, null, SolutionEditor.this);
             return mSolutionFragment;
         }
 
@@ -366,9 +374,6 @@ public class SolutionEditor extends FragmentActivity implements TabLayout.OnTabS
                 return mTaskFragment;
 
             mTaskFragment = new EditorTaskFragment();
-            SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_TASK_PAGE_TASK_INFO_CURSOR, null, SolutionEditor.this);
-            SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_TASK_PAGE_TASK_TEXT_CURSOR, null, SolutionEditor.this);
-            SolutionEditor.this.getLoaderManager().initLoader(LOADER_ID_TASK_PAGE_RECORDS_CURSOR, null, SolutionEditor.this);
             return mTaskFragment;
         }
 
