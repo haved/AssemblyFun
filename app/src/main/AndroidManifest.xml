@@ -59,6 +59,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.havard.assemblyfun.AssemblyFunMenu" />
         </activity>
+        <activity android:name=".MakeTaskList" >
+        </activity>
     </application>
 
 </manifest>
